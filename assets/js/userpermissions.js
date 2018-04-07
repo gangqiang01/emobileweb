@@ -5,9 +5,17 @@
 //check out if user due date expired or not	
 var i;
 function LoginStatus(page) {
-	var url = "rmm/v1/accounts/login"
-	api
-					window.location.href = "Login.html";		
+		var url = "rmm/v1/accounts/login"
+		apiget(url).then(
+			function(data){
+				if(data.result){
+					setCookie("page", page, 60);
+				}else {
+					window.href = "Login.html";
+				}
+			}
+		)
+	// }		
 	
 }
 		
@@ -23,8 +31,7 @@ function getCookie(cname) {
 		}
 		if (c.indexOf(name) == 0) {
 			var cvalue = c.substring(name.length, c.length);
-			var decryptedPassword = CryptoJS.AES.decrypt(cvalue, "AIM Secret Passphrase");
-			return decryptedPassword.toString(CryptoJS.enc.Utf8);
+			return cvalue;
 		}
 	}
 	return "";
