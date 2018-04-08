@@ -202,33 +202,37 @@ function SetHTML(html){
 	// 		}
 	// });
 	console.log("GetDevicesName");
-	var sub = "GetDevicesName"; var postdata = {submit: sub};
-	postdata = {
-			company: company,
-			name: UserName,
-			submit: sub
-	}
-	$.post("/golang",
-	postdata,
-	function(data,status){
-		var device = data.split("***");
-		for(var i=0;i<device.length-1;i++){
-			var DeviceInfo = device[i].split("%/%");
+	// var sub = "GetDevicesName"; var postdata = {submit: sub};
+	// postdata = {
+	// 		company: company,
+	// 		name: UserName,
+	// 		submit: sub
+	// }
+	// $.post("/golang",
+	// postdata,
+	// function(data,status){
+		var groupid = sessionStorage["groupid"]
+		var devicegetdata = {};
+        devicegetdata.pageSize = 10000;
+        devicegetdata.no = 1;
+        devicegetdata.orderType = "did";
+        devicegetdata.like = "";
+        devicegetdata._ = new Date().getTime();
+        apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
+			var device = data.groups[0].devices;
+			console.dir(device);
+
+  			var AllDevices = [];
 			var id,name;
-			for(var j=0; j<DeviceInfo.length;j++){
-				var Title = DeviceInfo[j].split(":");
-				if(Title[0] === "id"){
-					id=Title[1];
-				}else if(Title[0] === "name"){
-					name=Title[1];
-				}
+			for(var j=0; j< device.length;j++){
+				AllDevices.push([device[j]["agentid"],device[j]["name"]]);
 			}
-			AllDevices.push([id,name]);
-		}
-		if(location.pathname === "/details.html"){
-			GetDevicesId(AllDevices);
-		}
-	});
+			if(location.pathname.slice(location.pathname.lastIndexOf("/")) === "/details.html"){
+				GetDevicesId(AllDevices);
+			}
+		})
+		
+	// });
 
 }
 

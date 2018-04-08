@@ -90,11 +90,12 @@ function setup() {
 var myObj = "";
 var DeviceTable = "";
 function drawData(data) {
+	
 	myObj = data;
 	console.log(myObj);
 	//---- device table ----//
 	$('#dataTables-example').dataTable( {
-	  "columnDefs": [ {
+		"columnDefs": [ {
 
 		"targets": 5,
 		"className": "dt-center",
@@ -109,22 +110,6 @@ function drawData(data) {
 		  return fa;
 		}
 	  },{
-		"targets": 2,
-		"className": "dt-center",
-		"data": null,
-		"render": function ( data, type, full, meta ) {
-			// var fa = '';
-			// if(data[5]){
-			// 	var id = "'"+data[1]+"'";
-			// 	fa =data[2]+'<a href="javascript: void(0)" onclick="DeviceNameUpdate('+id+')"><i class="fa fa-pencil-square-o pull-right" align="right"></i></a>';
-			// }else{
-				fa = data[2];
-			// }
-
-
-		  return fa;
-		}
-	  },{
 		"targets": 6,
 		"className": "dt-center",
 		"data": null,
@@ -132,7 +117,7 @@ function drawData(data) {
 			var fa = '';
 
 			var id = "'"+data[1]+"'";
-			fa = '<a href="/details.html?d%'+data[1]+'" <i class="fa fa-eye" align="center"></i></a>';
+			fa = '<a href="details.html?d%'+data[1]+'" <i class="fa fa-eye" align="center"></i></a>';
 
 		  return fa;
 		}
@@ -140,10 +125,12 @@ function drawData(data) {
 		orderable: false,
 		className: 'select-checkbox',
 		targets:   0
-	} ],select: {
+	} ],
+	select: {
 		style:    'os',
 		selector: 'td:first-child'
-	}, "order": [[ 1, "asc" ]],
+	}, 
+	"order": [[ 5, "desc" ]],
 	rowReorder: {
 		selector: 'td:nth-child(0)'
 	},
@@ -154,7 +141,17 @@ function drawData(data) {
 	$('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
 
 		 var Data = DeviceTable.rows( this ).data().toArray();
-		 var rowData = (Data[0]);
+		 console.dir(Data);
+		 var commentgetdata = {};
+		 commentgetdata._ = new Date().getTime();
+		 if(Data[0][5]){
+			// apiget('rmm/v1/data/device/'+1+'/capability', commentgetdata).then(function(data){
+			// 	console.log("comment",data);
+			//  })
+			 $(this).toggleClass('selected');
+		 }
+		 
+		//  var rowData = (Data[0]);
 		 // if(rowData[5] === "offline"){
 			// var Title = "Warning!"
 			// var MsgBody = "Your device is offline.";
@@ -162,7 +159,7 @@ function drawData(data) {
 			// document.getElementById("AlertMsgEvent").style.display = "none";
 			// document.getElementById("AlertMsgBtn").style.display = "none";
 		 // }else{
-			$(this).toggleClass('selected');
+			// $(this).toggleClass('selected');
 		 //}
 	} );
 
@@ -915,13 +912,15 @@ function GetAllDevices() {
   devgetdata.like = "";
   devgetdata._ = new Date().getTime();
   apiget("rmm/v1/accounts", devgetdata).then(function(data){
-    var accountsid = data.accounts[0].aid;
+	var accountsid = data.accounts[0].aid;
+	sessionStorage["accoundsid"] = accountsid;
     console.log(accountsid);
     groupgetdata = {};
     groupgetdata._ = new Date().getTime();
     apiget("rmm/v1/accounts/"+accountsid+"/groups", groupgetdata).then(
       function(data){
-        var groupid = data.accounts[0].groups[0].gid;
+		var groupid = data.accounts[0].groups[0].gid;
+		sessionStorage["groupid"] = groupid;
         var devicegetdata = {};
         devicegetdata.pageSize = 10000;
         devicegetdata.no = 1;
@@ -930,7 +929,8 @@ function GetAllDevices() {
         devicegetdata._ = new Date().getTime();
         apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
             console.log(data);
-            var tableData = data.groups[0].devices;
+			var tableData = data.groups[0].devices;
+			// sessionStorage["devicedata"] = tableData;
             var table = $('#dataTables-example').DataTable();
             table.clear();
             if(tableData === ""){
