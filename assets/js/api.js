@@ -11,7 +11,7 @@ function apipost(myurl,object){
                 resolve(data)
             }
        });
-   })	
+   })
 }
 
 function apifile(myurl,data){
@@ -19,18 +19,18 @@ function apifile(myurl,data){
         $.ajax({
             type:"post",
             url: myurl,
-            data:formData,  
+            data:formData,
             contentType:false,
             processData: false,
             timeout:5000,
             success:function(data){
                 resolve(data)
             },
-            error:function(err){ 
-                alert("网络连接失败,稍后重试",err); 
+            error:function(err){
+                alert("网络连接失败,稍后重试",err);
             }
         });
-   })	
+   })
 }
 
 function apiget(myurl,object){
@@ -44,7 +44,7 @@ function apiget(myurl,object){
     }else{
         var geturl = baseurl + "/"+myurl;
     }
-    
+
     return new Promise(function(resolve,reject){
         $.ajax({
             type:"get",
@@ -56,9 +56,13 @@ function apiget(myurl,object){
             success:function(data){
                 resolve(data)
             },
-            // error:function(err){ 
-            //     alert("网络连接失败,稍后重试",err); 
-            // }
+            error:function(err){
+                if(err.status == 401){
+                  window.location.href = "Login.html"
+                }else{
+                  alert("网络错误")
+                }
+            }
         });
     })
 }

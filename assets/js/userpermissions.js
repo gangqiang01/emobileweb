@@ -1,8 +1,8 @@
 
-//this file is used in all pagination 
-//function used commonly can write down here. 
+//this file is used in all pagination
+//function used commonly can write down here.
 
-//check out if user due date expired or not	
+//check out if user due date expired or not
 var i;
 function LoginStatus(page) {
 		var url = "rmm/v1/accounts/login"
@@ -10,16 +10,14 @@ function LoginStatus(page) {
 			function(data){
 				if(data.result){
 					setCookie("page", page, 60);
-				}else {
-					window.href = "Login.html";
 				}
 			}
 		)
-	// }		
-	
+	// }
+
 }
-		
-//get user cookie and decrypt		
+
+//get user cookie and decrypt
 function getCookie(cname) {
 	var name = cname + "=";
 	var decodedCookie = decodeURIComponent(document.cookie);
@@ -37,7 +35,7 @@ function getCookie(cname) {
 	return "";
 }
 
-//get user cookie without decrypt		
+//get user cookie without decrypt
 function getUserCookie(cname) {
 	var name = cname + "=";
 	var decodedCookie = decodeURIComponent(document.cookie);
@@ -75,13 +73,13 @@ function setCookie(cname, cvalue, exmins) {
 	i = setInterval(function() { alert("Your cookie is about to timeout due to inactivity");window.location.href = "Login.html"; }, exmins* 60 * 1000);
 }
 
-// delete user cookies 
+// delete user cookies
 function DeleteCookie() {
 	setCookie('UserName', '000', 0);
 	setCookie('Password', '000', 0);
 }
-	
-//set HTML (notification bell, profile card)	
+
+//set HTML (notification bell, profile card)
 var AllDevices = [];
 var ProfileInfo;
 function SetHTML(html){
@@ -98,7 +96,7 @@ function SetHTML(html){
 		$("#collapse").removeClass("in");
 	}
 	$("#btnCollapse").on("click", function(){
-		
+
 		if (localStorage.getItem("col") === "in"){
 			localStorage.removeItem("col");
 		}else{
@@ -107,86 +105,102 @@ function SetHTML(html){
 	});
 	$('.notification-body').css( 'cursor', 'pointer' );
 	//document.getElementById(html).className = "menu-top-active";
-	$('#'+html).addClass('menu-top-active');
-	var company = localStorage.getItem("Company");
-	console.log("GetUserInfo");
-	var sub = "GetUserInfo"; var postdata = {submit: sub};
-	postdata = {
-			company: company,
-			name: UserName,
-			submit: sub
-	}
-	$.post("/golang",
-	postdata,
-	function(data,status){
-		ProfileInfo = data;
-		document.getElementById("card-email").innerHTML+=data.EMAIL;
-		document.getElementById("card-name").innerHTML='<h1>'+data.NAME+'</h1>';
-		if(data.SUBSCRIBE === ""){
-			document.getElementById("card-deives").innerHTML+='0';
-		}else{
-			var d = data.SUBSCRIBE.split("/");
-			document.getElementById("card-deives").innerHTML+=d.length-1;
-		}
-		if(data.INVITER === ""){
-			//SetNotificationBell(0);
-		}else{
-			var invite = data.INVITER.split("/");
-			for(var j=0;j<invite.length-1;j++){
-				var inviter = invite[j].split("#");
-				var device = "'"+inviter[0]+"'";var accept = "'accept'";var refuse = "'refuse'";
-				var invitecontent = SetSubscribeNotification(inviter[0], inviter[1], device, accept, refuse );
-				document.getElementById("notification_content").innerHTML += invitecontent;							
-			}
-			var count = inviter.length-1;
-			SetNotificationBell(count);	
-		}
-		
-		if(location.pathname === "/profile.html"){
+  $('#'+html).addClass('menu-top-active');
+  var data = {};
+  data._now =  new Date().getTime();
+  apiget("rmm/v1/accounts/myself",data).then(function(data){
+    console.log("user",data);
+    document.getElementById("card-email").innerHTML+=data["accounts"][0].mail;
+    document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
+
+    document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(data["accounts"][0].login_unix_ts)+'</p>';
+
+
+    if(location.pathname === "/profile.html"){
 			GetAccountInfo();
 		}else if(location.pathname === "/management.html"){
 			SetPermissionContent();
 		}else if(location.pathname === "/contact-us.html"){
 			GetQuestion();
 		}
-		
-		
-	});
-	
-	console.log("GetLogInfo");
-	var sub = "GetLogInfo"; var postdata = {submit: sub};
-	postdata = {
-			company: company,
-			name: UserName,
-			days: 3,
-			submit: sub
-	}
-	$.post("/golang",
-	postdata,
-	function(data,status){
-		if(data !== undefined){
-			
-				
-				var times = [];
-				for(var i=0;i<Object.keys(data).length;i++){
-					if(data[i].FROM === "user" && data[i].COMMAND === "UserLogin"){
-						times.push(data[i].TIME);
-					}
-					if(data[i].TYPE === "schedule" && data[i].VIEW === "false"){
-						SetNotificationBell("add");
-						var LogsId = data[i].ID;
-						var invitecontent = SetScheduleNotification("Task Completed", data[i].TIME, LogsId );
-						document.getElementById("notification_content").innerHTML += invitecontent;	
-					}
-				}
-				times.sort(function(a, b){return b-a});
-				if(times.length === 1){
-					document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(times[0])+'</p>';
-				}else{
-					document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(times[1])+'</p>';
-				}
-			}
-	});
+  })
+
+  var dvdata = {};
+  dvdata._ = new Date().getTime();
+  apiget("rmm/v1/devices/own/status/number", dvdata).then(
+    function(data){
+      document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
+    }
+  )
+
+	// var company = localStorage.getItem("Company");
+	// console.log("GetUserInfo");
+	// var sub = "GetUserInfo"; var postdata = {submit: sub};
+	// postdata = {
+	// 		company: company,
+	// 		name: UserName,
+	// 		submit: sub
+	// }
+	// $.post("/golang",
+  // postdata,
+
+	// function(data,status){
+		// ProfileInfo = data;
+		// if(data.SUBSCRIBE === ""){
+		// 	document.getElementById("card-deives").innerHTML+='0';
+		// }else{
+		// 	var d = data.SUBSCRIBE.split("/");
+		// 	document.getElementById("card-deives").innerHTML+=d.length-1;
+		// }
+		// if(data.INVITER === ""){
+		// 	//SetNotificationBell(0);
+		// }else{
+		// 	var invite = data.INVITER.split("/");
+		// 	for(var j=0;j<invite.length-1;j++){
+		// 		var inviter = invite[j].split("#");
+		// 		var device = "'"+inviter[0]+"'";var accept = "'accept'";var refuse = "'refuse'";
+		// 		var invitecontent = SetSubscribeNotification(inviter[0], inviter[1], device, accept, refuse );
+		// 		document.getElementById("notification_content").innerHTML += invitecontent;
+		// 	}
+		// 	var count = inviter.length-1;
+		// 	SetNotificationBell(count);
+		// }
+	// });
+
+	// console.log("GetLogInfo");
+	// var sub = "GetLogInfo"; var postdata = {submit: sub};
+	// postdata = {
+	// 		company: company,
+	// 		name: UserName,
+	// 		days: 3,
+	// 		submit: sub
+	// }
+	// $.post("/golang",
+	// postdata,
+	// function(data,status){
+	// 	if(data !== undefined){
+
+
+	// 			var times = [];
+	// 			for(var i=0;i<Object.keys(data).length;i++){
+	// 				if(data[i].FROM === "user" && data[i].COMMAND === "UserLogin"){
+	// 					times.push(data[i].TIME);
+	// 				}
+	// 				if(data[i].TYPE === "schedule" && data[i].VIEW === "false"){
+	// 					SetNotificationBell("add");
+	// 					var LogsId = data[i].ID;
+	// 					var invitecontent = SetScheduleNotification("Task Completed", data[i].TIME, LogsId );
+	// 					document.getElementById("notification_content").innerHTML += invitecontent;
+	// 				}
+	// 			}
+	// 			times.sort(function(a, b){return b-a});
+	// 			if(times.length === 1){
+	// 				document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(times[0])+'</p>';
+	// 			}else{
+	// 				document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(times[1])+'</p>';
+	// 			}
+	// 		}
+	// });
 	console.log("GetDevicesName");
 	var sub = "GetDevicesName"; var postdata = {submit: sub};
 	postdata = {
@@ -215,40 +229,40 @@ function SetHTML(html){
 			GetDevicesId(AllDevices);
 		}
 	});
-	
+
 }
 
-//date to time (e.g. date:[Fri Nov 24 2017 10:18:17 GMT+0800 (台北標準時間)] to time(2017/9/24 10:18:17))	
+//date to time (e.g. date:[Fri Nov 24 2017 10:18:17 GMT+0800 (台北標準時間)] to time(2017/9/24 10:18:17))
 function DateToTime(date){
 	var d = date;
 	var time = "";
 	var Day = d.getUTCDate();if(Day<10) Day = "0"+Day;var Month = (d.getUTCMonth()+1);if(Month<10) Month = "0"+Month;
 	var Hours = d.getHours();if(Hours<10) Hours = "0"+Hours;var Min = d.getUTCMinutes();if(Min<10) Min = "0"+Min;
 	var Sec = d.getUTCSeconds();if(Sec<10) Sec = "0"+Sec;
-	time = d.getUTCFullYear()+"/"+Month+"/"+Day+" "+Hours+":"+Min+":"+Sec;	
+	time = d.getUTCFullYear()+"/"+Month+"/"+Day+" "+Hours+":"+Min+":"+Sec;
 	return time;
 }
 
 //date to ori time(e.g. date:[Fri Nov 24 2017 10:18:17 GMT+0800 (台北標準時間)] to ori(20170924101817))
 function GetInputTimeToOriginal(date){
-	
+
 	var d = date;
 	var time = "";
 	var Day = d.getDate();if(Day<10) Day = "0"+Day;var Month = (d.getMonth()+1);if(Month<10) Month = "0"+Month;
 	var Hours = d.getHours();if(Hours<10) Hours = "0"+Hours;var Min = d.getMinutes();if(Min<10) Min = "0"+Min;
 	var Sec = d.getSeconds();if(Sec<10) Sec = "0"+Sec;
-	time = d.getFullYear()+""+Month+""+Day+""+Hours+""+Min+""+Sec;	
+	time = d.getFullYear()+""+Month+""+Day+""+Hours+""+Min+""+Sec;
 	return time;
 
 }
 
-//time stamp to time (e.g. unix(1511489897579) to time(2017/9/24 10:18:17))		
+//time stamp to time (e.g. unix(1511489897579) to time(2017/9/24 10:18:17))
 function UnixToTime(unix){
-	var date = new Date(parseInt(unix)*1000);
+	var date = new Date(parseInt(unix));
 	return DateToTime(date);
 }
 
-//time stamp to date (e.g. unix(1511489897579) to date:[Fri Nov 24 2017 10:18:17 GMT+0800 (台北標準時間)])		
+//time stamp to date (e.g. unix(1511489897579) to date:[Fri Nov 24 2017 10:18:17 GMT+0800 (台北標準時間)])
 function UnixToDate(unix){
 	var date = new Date(parseInt(unix)*1000);
 	return date;
@@ -265,9 +279,9 @@ function GetNowUnix(){
 	var d = new Date();
 	return Math.round((d.getTime() / 1000));
 }
-		
-		
-//set notification bell		
+
+
+//set notification bell
 function SetNotificationBell(value){
 	if(value === "add"){
 		var el = document.querySelector('.notification');
@@ -280,7 +294,7 @@ function SetNotificationBell(value){
 			el.classList.add('show-count');
 			$( ".notification_content" ).remove( ":contains('No New Notifications!')" );
 		}
-		
+
 	}else if(value === "subtract"){
 		var el = document.querySelector('.notification');
 		var count = Number(el.getAttribute('data-count')) || 0;
@@ -290,8 +304,8 @@ function SetNotificationBell(value){
 		el.classList.add('notify');
 		if(count-1 === 0){
 			el.classList.remove('show-count');
-			var invitecontent = SetNoneNotification();	
-			document.getElementById("notification_content").innerHTML += invitecontent;	
+			var invitecontent = SetNoneNotification();
+			document.getElementById("notification_content").innerHTML += invitecontent;
 		}
 	}else{
 		var el = document.querySelector('.notification');
@@ -305,13 +319,13 @@ function SetNotificationBell(value){
 		}else if(count === 0){
 			el.classList.remove('show-count');
 			var invitecontent = SetNoneNotification();
-			document.getElementById("notification_content").innerHTML += invitecontent;	
+			document.getElementById("notification_content").innerHTML += invitecontent;
 		}
 	}
-	
+
 }
 
-//write notification bell content 		
+//write notification bell content
 function SetSubscribeNotification(inviter, unix, device, accept, refuse){
 	var content = '<li class="notification_content">'+
 		'<div class="notification_content-icon">'+
@@ -325,10 +339,10 @@ function SetSubscribeNotification(inviter, unix, device, accept, refuse){
 			'<button class="btn btn-success" style="width:50%;" onclick="SetSubscribe('+device+','+accept+')"><i class="fa fa-check" style="padding-right:5px;" aria-hidden="true"></i>accept</button>'+
 			'<button class="btn btn-danger" style="width:50%;"  onclick="SetSubscribe('+device+','+refuse+')"><i class="fa fa-times" style="padding-right:5px;" aria-hidden="true"></i>refuse</button>'+
 		'</div>'+
-	'</li>';	
+	'</li>';
 	return content;
 }
-		
+
 function SetNoneNotification(){
 	var content = '<li class="notification_content">'+
 			'<div class="notification_content-icon">'+
@@ -338,10 +352,10 @@ function SetNoneNotification(){
 				'<h3>No New Notifications!</h3>'+
 				'<p>all caught up</p>'+
 			'</div>'+
-		'</li>';	
+		'</li>';
 	return content;
 }
-		
+
 function SetScheduleNotification(title, unix, id){
 	var logid = "'"+id+"'";
 	var content = '<li class="notification_content">'+
@@ -355,12 +369,12 @@ function SetScheduleNotification(title, unix, id){
 		'</div>'+
 		'<div class="notification_content-button">'+
 			'<button class="btn btn-primary" style="width:100%;" onclick="SetLogsView('+logid+')"><i class="fa fa-check" style="padding-right:5px;" aria-hidden="true"></i>ok</button>'+
-			
+
 		'</div>'+
-	'</li>';	
+	'</li>';
 	return content;
 }
-		
+
 function GetLogDetailById(id){
 	var postdata = {
 			logid: id,
@@ -370,7 +384,7 @@ function GetLogDetailById(id){
 	postdata,
 		function(data,status){
 			if(data !== undefined){
-				
+
 				var logs = data.split("***");
 				var times = [];
 				for(var i=0;i<logs.length-1;i++){
@@ -389,7 +403,7 @@ function GetLogDetailById(id){
 						else if(LogsDetails[0] === "logid") {LogsId = LogsDetails[1];}
 						else if(LogsDetails[0] === "view") {LogsView = LogsDetails[1];}
 					}
-					
+
 					document.getElementById("AlertMsgEvent").innerHTML = '<i class="fa fa-tags" aria-hidden="true" style="color:#428bca;padding-right:5px;"></i>Devices target:<br><input type="text" id="devicetag" />';
 					document.getElementById("AlertMsgEvent").style.display = "";
 					$('#devicetag').tagsinput({
@@ -400,12 +414,12 @@ function GetLogDetailById(id){
 						itemText: 'text',
 					});
 					var target = LogsTarget.split("/");
-				
+
 					for(var j=0;j<target.length-1;j++){
 						var name = GetAllDevicesName(target[j]);
 						$('#devicetag').tagsinput('add', { "value": target[j] , "text": name});
 					}
-					
+
 					var Title = 'Schedule detail';
 					var MsgBody= '<i class="fa fa-tags" aria-hidden="true" style="color:#428bca;padding-right:5px;"></i>Command selected:<br><input type="text" id="commandtag" />';;
 					SetAlertMsgInnerHTML(Title, MsgBody);
@@ -424,16 +438,16 @@ function GetLogDetailById(id){
 						}else{
 							$('#commandtag').tagsinput('add', { "value": t[j] , "text": t[j]});
 						}
-						
+
 					}
 					$('.bootstrap-tagsinput').find('.tag').removeClass('tag');
-					
+
 				}
-				
+
 			}
 		});
 }
-		
+
 function GetAllDevicesName(id){
 	for(var i=0;i<Object.keys(AllDevices).length;i++){
 		if(AllDevices[i][0] === id)
@@ -442,11 +456,11 @@ function GetAllDevicesName(id){
 			}else{
 				return AllDevices[i][1];
 			}
-			
+
 	}
 	return id;
 }
-		
+
 function SetLogsView(id){
 	var company = localStorage.getItem("Company");
 	var name = getCookie("UserName");
@@ -463,8 +477,8 @@ function SetLogsView(id){
 			SetNotificationBell("subtract");
 		});
 }
-		
-		
+
+
 function SetAlertMsgInnerHTML(myModalLabel, AlertMsgBody){
 	document.getElementById("AlertMsgTools").style.display = "none";
 	document.getElementById("ShowInfoBtn").style.display = "none";
@@ -484,20 +498,20 @@ function SetNavbar(){
 
 						'<img src="assets/img/AIMobile-Logo-3.png" />'+
 					'</a>'+
-					
+
 					'<ul class="nav navbar-nav navbar-right">'+
 						'<button id="btnCollapse" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;">'+
 						'<span class="icon-bar"></span>'+
 						'<span class="icon-bar"></span>'+
 						'<span class="icon-bar"></span>'+
 					'</button>'+
-						
+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
 							'<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
-							
+
 							'<div class="card dropdown-menu" id="card">'+
 								'<div class="card-pic">'+
-								'<img src="/assets/img/face_black.png" style="width:120px;">'+
+								'<img src="./assets/img/face_black.png" style="width:120px;">'+
 								'</div>'+
 								'<div class="card-info">'+
 									'<div class="card-name" id="card-name">'+
@@ -506,12 +520,11 @@ function SetNavbar(){
 									'<div class="card-title">'+
 										'<a href="#" id="card-email"><i class="fa fa-envelope"></i></a> '+
 										'<p id="card-deives">device bound : </p>'+
-									'</div>'+
-								'</div>'+
-								
-								'<div id="card-login">'+
+                  '</div>'+
+                  '<div id="card-login">'+
 									'<p>Last Accessed :</p>'+
-									
+
+								  '</div>'+
 								'</div>'+
 								'<div class="card-bottom">'+
 									'<a href="profile.html" class="btn btn-primary card-bottom-left">PROFILE</a>'+
@@ -520,25 +533,25 @@ function SetNavbar(){
 							'</div>'+
 						'</li>'+
 						'<li class="notification-body" style="padding-top:25px;float:right;padding-right:10px;" >'+
-							
+
 							'<div class="container-bell">'+
 								'<div class="notification" ></div>'+
 							'</div>'+
 							'<ul class="dropdown-menu scrollable-menu" id="notification_content">'+
 							'</ul>'+
-							
+
 						'</li>'+
 					'</ul>'+
-					
-					
+
+
 
 				'</div>'+
 
-				
-				
+
+
 			'</div>'+
 		'</div>'+
-		
+
 		'<section class="menu-section">'+
 			'<div class="container">'+
 				'<div class="row ">'+
@@ -546,7 +559,7 @@ function SetNavbar(){
 						'<div id="collapse" class="navbar-collapse collapse in">'+
 							'<ul id="menu-top" class="nav navbar-nav navbar-right">'+
 								'<li><a id="barset_index" href="index.html">MainPage</a></li>'+
-							   
+
 								'<li>'+
 									'<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="barset_management">Management<i class="fa fa-angle-down"></i></a>'+
 									'<ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">'+
@@ -554,20 +567,20 @@ function SetNavbar(){
 										'<li id="dropdown-alldevice" role="presentation"><a role="menuitem" tabindex="-1" href="AllDevice.html">Device Managemnet</a></li>'+
 										'<li id="dropdown-alldevice" role="presentation"><a role="menuitem" tabindex="-1" href="details.html">Device Details</a></li>'+
 									'</ul>'+
-									
+
 								'</li>'+
 								'<li>'+
-									
+
 									'<a id="barset_analysis" href="analysis.html">Analysis</a></li>'+
-									
+
 								'</li>'+
 								'<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
 								'<li><a id="barset_instructions" href="index.html">Instructions</a></li>'+
 								'<li><a id="barset_contact" href="contact-us.html">Contact Us</a></li>'+
-								
+
 							'</ul>'+
 						'</div>'+
-						
+
 					'</div>'+
 
 				'</div>'+
@@ -580,14 +593,14 @@ function SetNavbar(){
 			$(this).parent().toggleClass('open');
 		});
 		$('html').on('click', function (e) {
-			if (!$('#user-circle').is(e.target) 
-				&& $('div.card').has(e.target).length === 0 
+			if (!$('#user-circle').is(e.target)
+				&& $('div.card').has(e.target).length === 0
 				&& $('li.card-body').has(e.target).length === 0
 			) {
 				$('li.card-body').removeClass('open');
 			}
-			if (!$('.notification').is(e.target) 
-				&& $('#notification_content').has(e.target).length === 0 
+			if (!$('.notification').is(e.target)
+				&& $('#notification_content').has(e.target).length === 0
 			) {
 				$('li.notification-body').removeClass('open');
 			}
@@ -616,13 +629,13 @@ function SetAlertNotification(){
 									'<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>'+
 								  '</span>'+
 								'</p>'+
-								'<uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>		'+											
+								'<uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>		'+
 							'</div>'+
 						'</div>'+
-						
+
 					'</div>'+
 					'<div id="AlertMsgBody" class="modal-body">'+
-					
+
 					'</div>'+
 					'<div class="modal-footer" id="AlertMsgFooter">'+
 						'<button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>'+
@@ -632,11 +645,11 @@ function SetAlertNotification(){
 				'</div>'+
 			'</div>'+
 		'</div>');
-		
+
 		$('#password').numpad({
 			displayTpl: '<input class="form-control" type="password" />',
 			hidePlusMinusButton: true,
-			hideDecimalButton: true	
+			hideDecimalButton: true
 		});
 }
 
@@ -653,12 +666,12 @@ function SetSubscribe(device, value){
 	var company = localStorage.getItem("Company");
 	var UserName = getCookie("UserName");
 	if(value === "accept"){
-		
+
 		var subscribe = device + "/";
 		var postdata = {
 				name: UserName,
 				company: company,
-				subscribe: subscribe, 
+				subscribe: subscribe,
 				submit: "SetSubscribeDevices"
 		}
 		$.post("/golang",
@@ -672,8 +685,8 @@ function SetSubscribe(device, value){
 					if(location.pathname === "/AllDevice.html"){
 						GetAllDevices();
 					}
-					
-					
+
+
 				}
 			});
 	}else if(value === "refuse"){
@@ -682,7 +695,7 @@ function SetSubscribe(device, value){
 		var s = ':contains('+d+')';
 		$( ".notification_content" ).remove( s );
 	}
-	
+
 	var postdata1 = {
 			name: UserName,
 			company: company,
@@ -694,10 +707,10 @@ function SetSubscribe(device, value){
 	postdata1,
 		function(data,status){
 			if(data === "success"){
-				
+
 			}
 		});
-	
-}	
-		
+
+}
+
 

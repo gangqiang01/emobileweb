@@ -14,18 +14,18 @@
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
 	<link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
     <!-- FONT AWESOME STYLE  -->
-    
+
 	<!-- DATATABLE STYLE  -->
     <!--<link href="assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />-->
 	<!-- <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script> -->
 	<script src="https://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
-	
+
 	<!-- Alert Notification -->
 	<script src="assets/js/jquery.numpad.js"></script>
 	<link rel="stylesheet" href="assets/css/jquery.numpad.css">
 	<link href="assets/css/bootstrap-tagsinput.css" rel="stylesheet">
 	<!-- Alert Notification -->
-	
+
 	<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" type='text/css'/>
 	<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
 	<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular-animate.min.js"></script>
@@ -33,14 +33,14 @@
 	<!-- datatables select v -->
 	<link href="https://cdn.datatables.net/select/1.2.2/css/select.dataTables.min.css" rel="stylesheet" type='text/css'/>
     <!-- CUSTOM STYLE  -->
-	
+
 	<script src="assets/js/p5.min.js" type='text/javascript'></script>
-	
+
 	<script src="assets/js/watch.js"></script>
 	<!--numpad -->
-	
-	
-	
+
+
+
 	<!-- One drive api -->
 	<!-- <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>  -->
 	<!-- <script> -->
@@ -56,34 +56,35 @@
 	<!-- } -->
 	<!-- </script> -->
 	<!-- One drive api -->
-	
+
 	<!-- google drive api-->
-	
-	
+
+
 	<!-- google drive api-->
-	
-	<link href="assets/css/AllDevice.css" rel="stylesheet" />	
+
+	<link href="assets/css/AllDevice.css" rel="stylesheet" />
     <link href="assets/css/style.css" rel="stylesheet" />
 	<link href="assets/css/main.css" rel="stylesheet">
 	<link rel="stylesheet" href="assets/css/app.css">
 	<link href="assets/css/select.dataTables.min.css" rel="stylesheet">
 	<link href="assets/css/bootstrap-tagsinput.css" rel="stylesheet">
-	
+
     <!-- GOOGLE FONT -->
-   
+
 	<link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/css/bootstrap-slider.css' rel='stylesheet' type='text/css' />
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>	
+
+  <script src="assets/js/api.js"></script>
 	<script src="assets/js/userpermissions.js" type='text/javascript'></script>
 	<script src="assets/js/command.js" type='text/javascript'></script>
-	<script language=JavaScript src="assets/mqtt/mqttws31.js"></script>
+  <script language=JavaScript src="assets/mqtt/mqttws31.js"></script>
+  <script src="assets/js/api.js"></script>
 	<script src="assets/js/mqtt_client.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/bootstrap-slider.js"></script>
-	<script src="assets/js/AllDevice.js"></script> 
-	
+	<script src="assets/js/AllDevice.js"></script>
+
 </head>
 <body id="CookieListener">
-	
+
     <div class="navbar-fixed-top"></div>
      <!-- MENU SECTION END-->
     <div class="content-wrapper" >
@@ -96,8 +97,8 @@
             <div class="row">
                 <div class="col-md-8 col-sm-7 panel-devices-col">
                     <!-- Advanced Tables -->
-				
-   
+
+
                     <div class="panel panel-default panel-devices">
                         <div class="panel-heading">
                             All Devices
@@ -105,14 +106,14 @@
 									<button class="btn btn-default " onclick="AllSelect()">Select All</button>
 									<button class="btn btn-default " onclick="AllCancel()">Deselect All </button>
 								</div>
-							
+
 								<div class="btn-group pull-right" style="margin-right:5px;font-size:large">
 									<a href="javascript: void(0)" onclick="AddNewDevice()" id="AddDevice" >
 										<i class="fa fa-plus-square-o "></i>
 										Add device
 									</a>
 								</div>
-							
+
                         </div>
 							 <link rel="import" href="test2.html">
                         <div class="panel-body">
@@ -130,11 +131,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-											
+
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                         </div>
                     </div>
 					<div class="panel panel-danger navbar-fixed-bottom" style="margin-bottom:0px;">
@@ -154,9 +155,9 @@
 									<li class="divider"></li>
 									<li><a href="javascript: void(0)" onclick="GetLogInfo(182)" value="Half a year ago">Half a year ago</a></li>
 								</ul>
-								
+
 							</div>
-							
+
                         </div>
                         <div class="panel-body" id="LogBody">
 							<i id="log-spinner" class="fa fa-spinner fa-5x fa-spin log-spinner" aria-hidden="true" style="z-index:1003; display:none;"></i>
@@ -170,18 +171,18 @@
 										<th>Content</th>
 									</tr>
 								</thead>
-								<tbody>	
-									
+								<tbody>
+
 								</tbody>
 							</table>
-							
+
                         </div>
-						
+
                     </div>
 					<button id="btn-device-add" type="button" class="btn btn-danger btn-circle btn-xl" style="display:none;"><i class="fa fa-plus-square"></i></button>
                     <!--End Advanced Tables -->
                 </div>
-				
+
 				<ul class="command-tags" style="right:0;position:fixed;bottom:15%;">
 					<li><a href="#" class="command-tag command-tag-red" >Set command</a></li>
 					<li><a href="#" class="command-tag command-tag-blue">Add devices</a></li>
@@ -189,12 +190,12 @@
 				</ul>
 				<div class="col-md-4 col-sm-5 panel-command-col" style="position:fixed;right:0;top:20%">
 					<div class="panel panel-default">
-						
+
                         <div class="panel-heading panel-commands">
 							Command
 							<span class="command-clickable pull-right"><i class="fa fa-angle-double-right fa-2x"></i></span>
                         </div>
-						
+
                         <div class="panel-body">
                             <ul class="nav nav-tabs" style="padding-left: 0px;">
                                 <li class="active" style="width:33.33%;text-align:center;"><a href="#category" data-toggle="tab" style="padding: 10px 0.4em 10px 0.4em;font-size: 0.5em;">Category</a>
@@ -238,12 +239,12 @@
 												<div id="manage" class="panel-collapse collapse">
 													<div class="panel-body">
 														<ul id="subManage">
-															
+
 														</ul>
 													</div>
 												</div>
 											</div>
-											
+
 											<div class="panel panel-default">
 												<div class="panel-heading">
 													<h4 class="panel-title">
@@ -256,12 +257,12 @@
 												<div id="secure" class="panel-collapse collapse">
 													<div class="panel-body">
 														<ul id="subSecure">
-															
+
 														</ul>
 													</div>
 												</div>
 											</div>
-											
+
 											<div class="panel panel-default">
 												<div class="panel-heading">
 													<h4 class="panel-title">
@@ -274,12 +275,12 @@
 												<div id="extend" class="panel-collapse collapse">
 													<div class="panel-body">
 														<ul id="subExtend">
-															
+
 														</ul>
 													</div>
 												</div>
 											</div>
-											
+
 										</div><!--/category-products-->
 									</div>
                                 </div>
@@ -287,7 +288,7 @@
                                     <div class="left-sidebar">
 										<h2>A~Z</h2>
 										<div class="panel-group category-products panel-scroll" id="alphabetcategory"><!--category-productsr-->
-										
+
 										</div><!--/category-products-->
 									</div>
 								</div>
@@ -295,28 +296,28 @@
                                     <div class="left-sidebar">
 										<h2>Frequency</h2>
 										<div class="panel-group category-products panel-scroll" id="frequencyused"><!--category-productsr-->
-											
+
 										</div><!--/category-products-->
 									</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-					
+
 				</div>
             </div>
                 <!-- /. ROW  -->
-				
-			
+
+
     </div>
     </div>
-				
+
      <!-- CONTENT-WRAPPER SECTION END-->
     <section class="footer-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                   &copy; 2017<a href="http://www.aimobile.com.tw/" target="_blank"  >Aimobile </a> |<a href="http://www.binarytheme.com/" target="_blank"  > Designed by : binarytheme.com</a> 
+                   &copy; 2017<a href="http://www.aimobile.com.tw/" target="_blank"  >Aimobile </a> |<a href="http://www.binarytheme.com/" target="_blank"  > Designed by : binarytheme.com</a>
                 </div>
 
             </div>

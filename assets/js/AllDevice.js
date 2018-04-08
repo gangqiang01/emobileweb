@@ -3,7 +3,7 @@ var demo4Rows = [];
 var datatimes;
 
 //for GetAllDevices
-var GetUpdateDevice = ""; var m_Update = false;var m_devices = []; 
+var GetUpdateDevice = ""; var m_Update = false;var m_devices = [];
 
 $(function() {
 	LoginStatus("UserDuedateCheck","AllDevice.html");
@@ -11,7 +11,7 @@ $(function() {
 	$('.panel-commands').css( 'cursor', 'pointer' );
 		$('.command-tag-red').slideUp();
 		$('.panel-commands').on('click', function(e){
-			
+
 			var $this = $(this).find('.command-clickable');
 			if(!$this.hasClass('panel-collapsed')) {
 				$this.parents('.panel-command-col').slideUp();
@@ -24,9 +24,9 @@ $(function() {
 				$this.parents('.panel').find('.panel-body').slideDown();
 				$this.removeClass('panel-collapsed');
 				$this.find('i').removeClass('fa fa-angle-double-left fa-2x').addClass('fa fa-angle-double-right fa-2x');
-				
+
 			}
-			
+
 
 		});
 		$('.command-tag-red').on('click', function(e){
@@ -45,7 +45,7 @@ $(function() {
 			m_Update = true;
 			GetAllDevices();
 		});
-		
+
 		$(".clickable").addClass('panel-collapsed');
 		$(".clickable").parents('.panel').find('.panel-body').slideUp();
 		$(".clickable").find('i').removeClass('fa fa-angle-double-down fa-2x').addClass('fa fa-angle-double-up fa-2x');
@@ -67,15 +67,15 @@ $(function() {
 		});
 		var AllAlphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 		var Alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
-		
+
 		for(var i=0; i< 26; i++){
 			var AlphBig = 'Alphabet-'+AllAlphabet[i];
 			var Alpha = 'Alphabet-'+Alphabet[i];
 			document.getElementById("alphabetcategory").innerHTML += '<div id="panel-'+AllAlphabet[i]+'"class="panel panel-default" style="display:none;"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#alphabetcategory" href="#'+AlphBig+'"><span class="badge pull-right"><i class="fa fa-plus"></i></span>'+
 																AllAlphabet[i]+'</a></h4></div><div class="panel-collapse collapse" id="'+AlphBig+'" ><div class="panel-body"><ul id="'+Alpha+'"></ul></div></div></div>';
 		}
-		
-		
+
+
 });
 
 var company = localStorage.getItem("Company");	var type="";
@@ -95,16 +95,17 @@ function drawData(data) {
 	//---- device table ----//
 	$('#dataTables-example').dataTable( {
 	  "columnDefs": [ {
+
 		"targets": 5,
 		"className": "dt-center",
 		"data": null,
 		"render": function ( data, type, full, meta ) {
-			if(data[5] === "online"){
-				var fa ='<i class="fa fa-child" style="color:green">'+data[5]+'</i>';
-			}else if(data[5] === "offline"){
-				var fa ='<i class="fa fa-minus-circle" style="color:red">'+data[5]+'</i>';
+			if(data[5]){
+				var fa ='<i class="fa fa-child" style="color:green">online</i>';
+			}else{
+				var fa ='<i class="fa fa-minus-circle" style="color:red">offline</i>';
 			}
-			
+
 		  return fa;
 		}
 	  },{
@@ -112,15 +113,15 @@ function drawData(data) {
 		"className": "dt-center",
 		"data": null,
 		"render": function ( data, type, full, meta ) {
-			var fa = '';
-			if(data[5] === "online"){
-				var id = "'"+data[1]+"'";
-				fa =data[2]+'<a href="javascript: void(0)" onclick="DeviceNameUpdate('+id+')"><i class="fa fa-pencil-square-o pull-right" align="right"></i></a>';			
-			}else{
+			// var fa = '';
+			// if(data[5]){
+			// 	var id = "'"+data[1]+"'";
+			// 	fa =data[2]+'<a href="javascript: void(0)" onclick="DeviceNameUpdate('+id+')"><i class="fa fa-pencil-square-o pull-right" align="right"></i></a>';
+			// }else{
 				fa = data[2];
-			}
-			
-			
+			// }
+
+
 		  return fa;
 		}
 	  },{
@@ -129,10 +130,10 @@ function drawData(data) {
 		"data": null,
 		"render": function ( data, type, full, meta ) {
 			var fa = '';
-			
+
 			var id = "'"+data[1]+"'";
-			fa = '<a href="/details.html?d%'+data[1]+'" <i class="fa fa-eye" align="center"></i></a>';			
-			
+			fa = '<a href="/details.html?d%'+data[1]+'" <i class="fa fa-eye" align="center"></i></a>';
+
 		  return fa;
 		}
 	  },{
@@ -151,7 +152,7 @@ function drawData(data) {
 
 	DeviceTable = $('#dataTables-example').DataTable();
 	$('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
-		
+
 		 var Data = DeviceTable.rows( this ).data().toArray();
 		 var rowData = (Data[0]);
 		 // if(rowData[5] === "offline"){
@@ -164,13 +165,13 @@ function drawData(data) {
 			$(this).toggleClass('selected');
 		 //}
 	} );
-	
+
 	$('#dataTables-example tbody').on( 'contextmenu', 'tr', function (e, dt, type, indexes) {
 		$(this).addClass('selected');
-		
+
 	} );
 	//---- device table ----//
-	
+
 	//---- log table ----//
 	 $('#LogTable').DataTable( {
 		"scrollY":        "200px",
@@ -178,7 +179,7 @@ function drawData(data) {
 		"paging":         false,
 		"order": [[ 0, "desc" ]]
 	} );
-	
+
 	//---- log table ----//
 	var subCare = "";
 	var numCare = [2,3,7,8,9,10,11,19,20,22,23,33,34,35,36,44,45,48,49,50,51,53];
@@ -189,10 +190,10 @@ function drawData(data) {
 			subCare += '<li><a href="javascript: void(0)" onclick="SendCommand('+numCare[i]+')">'+command+'</a></li>';
 		}
 		//var commandTitle = "'"+numCare[i]+"'";
-		
+
 	}
 	document.getElementById("subCare").innerHTML = subCare;
-	
+
 	var subManage = "";
 	var numManage = [1,4,12,13,14,18,24,25,26,29,31,32,37,38,39,40,41,42,52,54,55,56,57,59,60,61,62,63,64];
 	for(var i=0; i< numManage.length; i++){
@@ -203,7 +204,7 @@ function drawData(data) {
 		//var commandTitle = "'"+numManage[i]+"'";
 	}
 	document.getElementById("subManage").innerHTML = subManage;
-	
+
 	var subSecure = "";
 	var numSecure = [5,6,15,16,17,21,27,28,43,46,47,58];
 	for(var i=0; i< numSecure.length; i++){
@@ -212,10 +213,10 @@ function drawData(data) {
 			subSecure += '<li><a href="javascript: void(0)" onclick="SendCommand('+numSecure[i]+')">'+command+'</a></li>';
 		}
 		//var commandTitle = "'"+numSecure[i]+"'";
-		
+
 	}
 	document.getElementById("subSecure").innerHTML = subSecure;
-	
+
 	var subExtend = "";
 	var numExtend = [];
 	for(var i=0; i< numExtend.length; i++){
@@ -224,16 +225,16 @@ function drawData(data) {
 			subExtend += '<li><a href="javascript: void(0)" onclick="SendCommand('+numExtend[i]+')">'+command+'</a></li>';
 		}
 		//var commandTitle = "'"+numExtend[i]+"'";
-		
+
 	}
 	document.getElementById("subExtend").innerHTML = subExtend;
-	
+
 	//--------------
 	var AllAlphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 	var Alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 	var AlphBig = 'Alphabet-'+AllAlphabet[i];
 	var Alpha = 'Alphabet-'+Alphabet[i];
-	
+
 	var objlength = Object.keys(myObj).length;
 	for(var i=1; i< objlength+1; i++){
 		var command = GetCommand(i, "CommTitle");
@@ -318,12 +319,12 @@ function drawData(data) {
 					document.getElementById("Alphabet-u").innerHTML += sub;
 					document.getElementById("panel-U").style.display = "";
 					break;
-				
+
 			}
 		}
-		
+
 	}
-	
+
 	//--------------
 	//ex. 10/13/1/4/...
 	var postdata = {
@@ -331,12 +332,12 @@ function drawData(data) {
 		company: localStorage.getItem("Company"),
 		submit: "GetCommandTimes"
 	}
-		
-	
+
+
 	$.post("/golang",
 	postdata,
 	function(data,status){
-		var scores = []; 
+		var scores = [];
 		console.log(data);
 		datatimes = data;
 		document.getElementById("frequencyused").innerHTML = "";
@@ -345,7 +346,7 @@ function drawData(data) {
 		for(var i=0; i<t.length-1; i++){
 			var a = t[i].split(":");
 			scores.push({item:a[0],times:parseInt(a[1])});
-			
+
 		}
 		scores.sort(function (a, b) {
 			return a.times < b.times ? 1 : -1;
@@ -361,11 +362,11 @@ function drawData(data) {
 				document.getElementById("frequencyused").innerHTML += fa;
 			}
 		}
-		
-		
+
+
 	});
 	GetAllDevices();
-	GetLogInfo(3);		
+	GetLogInfo(3);
 }
 function GetLogInfo(days){
 	document.getElementById("log-spinner").style.display = "block";
@@ -381,7 +382,7 @@ function GetLogInfo(days){
 		document.getElementById("daysRecord").innerHTML = 'Half a year ago<span class="caret"></span>';
 	}else{tmp = false; document.getElementById("daysRecord").innerHTML = 'Three days ago<span class="caret"></span>';
 	document.getElementById("daysRecord").value = 3;}
-	
+
 	if(tmp){
 		var postdata = {
 			company: localStorage.getItem("Company"),
@@ -396,7 +397,7 @@ function GetLogInfo(days){
 		function(data,status){
 			if(data !== undefined){
 				var logtable = $('#LogTable').DataTable();
-				logtable.clear(); 
+				logtable.clear();
 				for(var i=0;i<Object.keys(data).length;i++){
 					var LogsName, LogsTarget,LogsCommand, LogsContent,LogsFrom, LogsTime = "";
 					LogsName = data[i].NAME;LogsTarget = data[i].TARGET;
@@ -415,8 +416,8 @@ function GetLogInfo(days){
 							] ).draw( false ).node();
 						}
 				}
-				
-					
+
+
 			}
 			document.getElementById("log-spinner").style.display = "none";
 		})
@@ -432,7 +433,7 @@ function GetNowTimes(){
 	var Day = d.getUTCDate();if(Day<10) Day = "0"+Day;var Month = (d.getUTCMonth()+1);if(Month<10) Month = "0"+Month;
 	var Hours = d.getHours();if(Hours<10) Hours = "0"+Hours;var Min = d.getUTCMinutes();if(Min<10) Min = "0"+Min;
 	var Sec = d.getUTCSeconds();if(Sec<10) Sec = "0"+Sec;
-	time = d.getUTCFullYear()+"/"+Month+"/"+Day+" "+Hours+":"+Min+":"+Sec;	
+	time = d.getUTCFullYear()+"/"+Month+"/"+Day+" "+Hours+":"+Min+":"+Sec;
 	return time;
 }
 
@@ -456,7 +457,7 @@ function ExpandMore(){
 	}
 }
 function SendCommand(sub){
-	
+
 	// if(DeviceTable.rows('.selected').data().length === 0){
 		// var Title = "Error Message!"
 		// var MsgBody = "Please select rows by click the table";
@@ -466,7 +467,7 @@ function SendCommand(sub){
 	// }else{
 		document.getElementById("AlertMsgEvent").innerHTML = '<i class="fa fa-tags" aria-hidden="true" style="color:#428bca;padding-right:5px;"></i>Devices selected:<br><input type="text" id="devicetag" />'+
 																 '<br><a href="javascript: void(0)" onclick="ExpandMore()"><i class="fa fa-plus" aria-hidden="true" style="color:#428bca;padding-right:5px;"></i>Add more devices:</a><br><div class="expand"><input type="text" id="moretag" /></div>';
-		
+
 		var devicetag = $('#devicetag').tagsinput({
 			tagClass: function(item) {
 				switch (item.continent) {
@@ -491,7 +492,7 @@ function SendCommand(sub){
 		container[0].className += " taginputHide" ;
 		var indexes = DeviceTable.rows().eq( 0 ).filter( function (rowIdx) {
 			var data = DeviceTable.cell(rowIdx, 5 ).data();
-			if(data[5] === "online"){
+			if(data[5]){
 				var tmp = true;
 				for (var i = 0; i < DeviceTable.rows('.selected').data().length; i++) {
 					if(data[1] === DeviceTable.rows('.selected').data()[i][1]){
@@ -506,13 +507,13 @@ function SendCommand(sub){
 						$('#moretag').tagsinput('add', { "value": cell[1] , "text": cell[1], "continent": cell[5]});
 					}
 				}
-				
-				
-				
+
+
+
 			}
 		} );
-		
-		
+
+
 		for (var i = 0; i < DeviceTable.rows('.selected').data().length; i++) {
 			if(DeviceTable.rows('.selected').data()[i][5] === "online")
 				if(DeviceTable.rows('.selected').data()[i][2] !== "-"){
@@ -523,12 +524,12 @@ function SendCommand(sub){
 		}
 		var container = devicetag[0].$container;
 		container[0].className += " device-taginput" ;
-		
+
 		document.getElementById("AlertMsgEvent").style.display = "";
 		document.getElementById("devicetag").disabled = true;
 		TagRemoveEvent();
 		SetCommandItem(sub,"device-management");
-		
+
 		//setcommandtimes
 		console.log(datatimes);
 		var newrecord = "";
@@ -542,9 +543,9 @@ function SendCommand(sub){
 			}
 			newrecord += t[i]+"/";
 				//newrecord += parseInt(sub)+":"+"1"+"/";
-			
-				
-			
+
+
+
 		}
 		if(tmp === false){
 				newrecord += parseInt(sub)+":"+"1"+"/";
@@ -557,12 +558,12 @@ function SendCommand(sub){
 			commandtimes: datatimes,
 			submit: "SetCommandTimes"
 		}
-			
+
 
 		$.post("/golang",
 		postdata,
 		function(data,status){
-			var scores = []; 
+			var scores = [];
 			console.log(data);
 			datatimes = data;
 			document.getElementById("frequencyused").innerHTML = "";
@@ -571,12 +572,12 @@ function SendCommand(sub){
 			for(var i=0; i<t.length-1; i++){
 				var a = t[i].split(":");
 				scores.push({item:a[0],times:parseInt(a[1])});
-				
+
 			}
 			scores.sort(function (a, b) {
 				return a.times < b.times ? 1 : -1;
 				});
-			
+
 			if(t.length-1 >= 10){
 				for(var i=0; i< 10;i++){
 					var fa = '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a href="javascript: void(0)" onclick="SendCommand('+scores[i].item+')">'+GetCommand(scores[i].item, "CommTitle")+'<label class="pull-right">'+scores[i].times+'</label></a></h4></div></div>';
@@ -590,25 +591,25 @@ function SendCommand(sub){
 			}
 		});
 	//}
-		
-	
-		
-	
+
+
+
+
 }
 
 function TagRemoveEvent(){
 	$('.more').css( 'cursor', 'pointer' );
-	
-	
+
+
 	var $dragging = null;
 	// 滑鼠按下：拖曳效果啟動
 	var h,w;
 	$(".more").on("mousedown", function (e) {
-	  
+
 		$(".device-taginput").addClass('tag-blink');
 	  // 這行最重要，將要被拖曳的元素，存進 $dragging 變數當中。
 	  $dragging = $(e.target);
-	  
+
 	  h = $(e.target).height();
 	  w = $(e.target).width();
 	$dragging.offset({
@@ -639,17 +640,17 @@ function TagRemoveEvent(){
 		var areapostop = areapos.top;
 		var areawidth = $( '.device-taginput' ).width();
 		var areaheight = $( '.device-taginput' ).height();
-		
+
 	  if($dragging){
-		
-		if( tagpostop < areapostop-(tagheight/2) || tagpostop > areapostop+areaheight+(tagheight/2) 
+
+		if( tagpostop < areapostop-(tagheight/2) || tagpostop > areapostop+areaheight+(tagheight/2)
 			|| tagposleft < areaposleft-(tagwidth/2) || tagposleft > areaposleft+areawidth+(tagwidth/2)){
 			$dragging.animate({
 				top: 0,
 				left: 0
 			});
 		}else{
-			
+
 			var k = $(".device-taginput").find("input");
 			var newtag = $( $dragging ).insertBefore( k );
 			$dragging.offset({
@@ -660,7 +661,7 @@ function TagRemoveEvent(){
 				top: 0,
 				left: 0
 			});
-			
+
 			$(newtag).removeClass('more');
 			$(newtag).prop('mousedown',null).off('mousedown');
 			//$(".device-taginput").append($dragging);
@@ -670,9 +671,9 @@ function TagRemoveEvent(){
 		console.log(mousedown);
 		$('#devicetag').tagsinput('add', mousedown);
 		$('#moretag').tagsinput('remove', mousedown);
-		
+
 		//$($dragging).fadeOut(function(){ $(this).remove() });
-		
+
 		// 這行最重要，$dragging 重新設定成 null，表示該元素拖曳結束，以上程式碼都可以自行客製化。
 		$dragging = null;
 	  }
@@ -697,8 +698,8 @@ function LogRecord(deviceid, command, content){
 		command,
 		content,
 	] ).draw( false ).node();
-		
-	
+
+
 }
 
 function SendMsgToDevices(){
@@ -707,9 +708,9 @@ function SendMsgToDevices(){
 		var value = document.getElementById("txtMsg").value;
 		var items = $('#devicetag').tagsinput('items');
 		for (var i = 0; i < items.length; i++) {
-			AllDevicesID += items[i].value +"/"; 
+			AllDevicesID += items[i].value +"/";
 		}
-		SendByGolang(AllDevicesID, GetCommand(53, "Comm")+";;;"+value, GetCommand(53, "Comm"), value, "user");	
+		SendByGolang(AllDevicesID, GetCommand(53, "Comm")+";;;"+value, GetCommand(53, "Comm"), value, "user");
 	}
 	document.getElementById("txtMsg").value = "";
 }
@@ -724,19 +725,19 @@ function DeviceNameUpdate(id){
 	$('#myModal').modal('toggle');
 	document.getElementById("AlertMsgBtn").onclick = function() {
 		var devicevalue = document.getElementById("DeviceName").value;
-		
+
 		if(localStorage.getItem("Company") === "Guest"){
 			SetDeviceName(id, devicevalue);
 		}else{
-			
-			SendByGolang(id+"/", GetCommand(52, "Comm")+"@%@"+GetCommand(52, "Path")+"@%@;;;"+GetCommand(52, "Param")+devicevalue , GetCommand(52, "CommTitle"), GetCommand(52, "Param")+devicevalue, "user");			
+
+			SendByGolang(id+"/", GetCommand(52, "Comm")+"@%@"+GetCommand(52, "Path")+"@%@;;;"+GetCommand(52, "Param")+devicevalue , GetCommand(52, "CommTitle"), GetCommand(52, "Param")+devicevalue, "user");
 			SetDeviceName(id, devicevalue);
 		}
 	};
 }
 
 function SetDeviceName(id, devicevalue){
-	
+
 	var postdata = {
 		name: getCookie('UserName'),
 		company: localStorage.getItem("Company"),
@@ -754,7 +755,7 @@ function SetDeviceName(id, devicevalue){
 function AddNewDevice(){
 	var Title = "Add your device";
 	document.getElementById("AlertMsgEvent").innerHTML = '<input type="text" id="devicetag" />';
-	
+
 	$('#devicetag').tagsinput({
 		itemValue: 'value',
 		itemText: 'text',
@@ -764,7 +765,7 @@ function AddNewDevice(){
 	document.getElementById("AlertMsgEvent").style.display = "";
 	var MsgBody= 'Enter the identification code which you received on your phone.<br><font color="red"><label id="result"></label></font><br><input type="text" id="txtDeviceName" placeholder="Identification Code" style="margin-right:20px;"><button id="btnAddNewDevice" type="button" class="btn btn-primary" >add</button>';
 	SetAlertMsgInnerHTML(Title, MsgBody);
-	var x = 0;			
+	var x = 0;
 	document.getElementById("btnAddNewDevice").onclick = function() {
 		var postdata = {
 			name: getCookie('UserName'),
@@ -779,7 +780,7 @@ function AddNewDevice(){
 			var items = $('#devicetag').tagsinput('items');
 			//if(items.length === 3) data = "oversub";
 			if(data === "success"){
-				$('#devicetag').tagsinput('add', { "value":  document.getElementById("txtDeviceName").value, "text": document.getElementById("txtDeviceName").value}); x++;						
+				$('#devicetag').tagsinput('add', { "value":  document.getElementById("txtDeviceName").value, "text": document.getElementById("txtDeviceName").value}); x++;
 			}else if(data === "error"){
 				document.getElementById("result").innerHTML = "Oops , your device id is wrong!<br>";
 			}else if(data === "used"){
@@ -789,17 +790,17 @@ function AddNewDevice(){
 			}
 			document.getElementById("txtDeviceName").value = "";
 		});
-		
-		
+
+
 	}
-	
+
 	document.getElementById("AlertMsgBtn").style.display = "";
 	document.getElementById("AlertMsgBtn").onclick = function() {
-		
+
 		var items = $('#devicetag').tagsinput('items');
 		var subscribe = "";
 		for (var i = 0; i < items.length; i++) {
-			subscribe += items[i].value + "/"; 
+			subscribe += items[i].value + "/";
 		}
 		var postdata = {
 			name: getCookie('UserName'),
@@ -814,7 +815,7 @@ function AddNewDevice(){
 				GetAllDevices();
 				window.location.href = "AllDevice.html";
 			}
-			
+
 		});
 	}
 }
@@ -822,7 +823,7 @@ function AddNewDevice(){
 function Unsubscribe(topic){
 	var unsubscribe = "";
 	for (var i = 0; i < DeviceTable.rows('.selected').data().length; i++) {
-		unsubscribe += DeviceTable.rows('.selected').data()[i][1]	+ "/";	 
+		unsubscribe += DeviceTable.rows('.selected').data()[i][1]	+ "/";
 	}
 
 	var postdata = {
@@ -848,11 +849,11 @@ function selectDownloadType(){
 		if (form.platform[i].checked)
 		{
 			var platform = form.platform[i].value;
-			
+
 			if(platform === "GoogleDrive"){
 				var MsgBody= '<form id="DownloadType"><label style="margin-right:5px;"><input onclick="selectDownloadType()" name="platform" type="radio" value="GoogleDrive" checked>GoogleDrive</label><label><input onclick="selectDownloadType()" name="platform" type="radio" value="URL">URL</label></form>';
-				MsgBody += 'Select file from Google drive, and download to your cellphone. <div class="fatooltip" style="color:red;">*<span class="falargetooltiptext">In order to make sure file can be downloaded,  please click <i class="fa fa-link" aria-hidden="true"></i> when uploading or downloading.</span></div><br>';		
-				MsgBody += '<div class="btn-group"><button class="btn btn-black" onclick="initPicker();" data-dismiss="modal"><img style="padding-right:3px;"height="20" weight="20" src="https://avatars3.githubusercontent.com/u/3708359?v=4&s=200">Google Drive</button></button><button type="button"  class="btn btn-black dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button><ul id="GoogledriveSelect" class="dropdown-menu"></ul></div><br>';						
+				MsgBody += 'Select file from Google drive, and download to your cellphone. <div class="fatooltip" style="color:red;">*<span class="falargetooltiptext">In order to make sure file can be downloaded,  please click <i class="fa fa-link" aria-hidden="true"></i> when uploading or downloading.</span></div><br>';
+				MsgBody += '<div class="btn-group"><button class="btn btn-black" onclick="initPicker();" data-dismiss="modal"><img style="padding-right:3px;"height="20" weight="20" src="https://avatars3.githubusercontent.com/u/3708359?v=4&s=200">Google Drive</button></button><button type="button"  class="btn btn-black dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button><ul id="GoogledriveSelect" class="dropdown-menu"></ul></div><br>';
 				document.getElementById("AlertMsgBody").innerHTML = MsgBody;
 			}else if(platform === "URL"){
 				var MsgBody= '<form id="DownloadType"><label style="margin-right:5px;"><input onclick="selectDownloadType()" name="platform" type="radio" value="GoogleDrive">GoogleDrive</label><label><input onclick="selectDownloadType()" name="platform" type="radio" value="URL" checked>URL</label></form>';
@@ -881,7 +882,7 @@ function MenuShow(){
 	  /* group actions by their id to make use of separators between
 	   * them in the context menu. Actions not added to any group with
 	   * this option will appear in a default group of their own. */
-	 
+
 	  /* you can declare 'actions' as an object instead of an array,
 	   * and its keys will be used as action ids. */
 	  actions: {
@@ -899,7 +900,7 @@ function MenuShow(){
 			Unsubscribe(row.deviceid);
 			console.log("'Delete device' clicked on '" + row.deviceid + "'");
 		  }
-		  
+
 		}
 	  }
 	});
@@ -907,65 +908,147 @@ function MenuShow(){
 
 
 function GetAllDevices() {
-	var postdata = {
-			company: localStorage.getItem("Company"),
-			name: getCookie("UserName"),
-			   submit: "GetAllDevices"
-		}
+  var devgetdata = {};
+  devgetdata.pageSize = 10000;
+  devgetdata.no = 1;
+  devgetdata.orderType = "aid";
+  devgetdata.like = "";
+  devgetdata._ = new Date().getTime();
+  apiget("rmm/v1/accounts", devgetdata).then(function(data){
+    var accountsid = data.accounts[0].aid;
+    console.log(accountsid);
+    groupgetdata = {};
+    groupgetdata._ = new Date().getTime();
+    apiget("rmm/v1/accounts/"+accountsid+"/groups", groupgetdata).then(
+      function(data){
+        var groupid = data.accounts[0].groups[0].gid;
+        var devicegetdata = {};
+        devicegetdata.pageSize = 10000;
+        devicegetdata.no = 1;
+        devicegetdata.orderType = "did";
+        devicegetdata.like = "";
+        devicegetdata._ = new Date().getTime();
+        apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
+            console.log(data);
+            var tableData = data.groups[0].devices;
+            var table = $('#dataTables-example').DataTable();
+            table.clear();
+            if(tableData === ""){
+              table.clear().draw();
+            //	return;
+            }else{
+              GetUpdateDevice = "";
+              for(var i=0;i<Object.keys(tableData).length;i++){
+                var deviceid, devicename, agentversion,devicemodel,stat, time = "";
+                deviceid = tableData[i].agentid;
+                devicename = tableData[i].name;
+                agentversion = tableData[i].version;
+                devicemodel = tableData[i].ostype;
+                stat = tableData[i].connected;
+                console.log("stat", stat);
 
-		console.log("deviceid:");
-		$.post("/golang",
-		postdata,
-		function(data,status){
-			var table = $('#dataTables-example').DataTable();
-			table.clear(); 
-			if(data === "DeviceNotFound"){
-				table.clear().draw(); 
-			//	return;
-			}else{
-			GetUpdateDevice = "";
-			for(var i=0;i<Object.keys(data).length;i++){
-				var deviceid, devicename, agentversion,devicemodel,stat, time = "";
-				deviceid = data[i].DEVICEID;devicename = data[i].DEVICENAME;
-				agentversion = data[i].AGENTVERSION;devicemodel = data[i].DEVICEMODEL;
-				stat = data[i].STATUS;time = data[i].TIME;
-				
-				GetUpdateDevice += deviceid +"/";
-				m_devices.push([deviceid,false]);
-					var rowNode = table.row.add( [
-						"",
-						deviceid,
-						devicename,
-						agentversion,
-						devicemodel,
-						stat,
-						"",
-					] ).draw( false ).node();
-					$( rowNode ).addClass('demo4TableRow');
-					$( rowNode ).attr('data-row-id',i);
-					demo4Rows.push({ deviceid: deviceid });
-					var tmp;
-			}
-			}	
-			$($.fn.dataTable.tables(true)).DataTable()
-			 .columns.adjust()
-			 .responsive.recalc();
-			MenuShow();
-			if(m_Update === true){
-				SendByGolang(GetUpdateDevice, GetCommand(1, "Comm"), GetCommand(1, "Comm"), "", "system");
-				var timer = setTimeout(function(){ 
-					for(var i=0;i<Object.keys(m_devices).length;i++){
-						if(m_devices[i][1] === false){
-							console.log("deviceid:"+m_devices[i][0]+"status:"+m_devices[i][1]);
-							UpdateDevicesStatus(m_devices[i][0], "offline");
-						}
-					}
-					m_Update = false;
-				}, 10000);
-				
-			}
-				
-		});
+                time = UnixToTime(tableData[i].create_unit_ts);
+
+                GetUpdateDevice += deviceid +"/";
+                m_devices.push([deviceid,false]);
+                //add row in table
+                var rowNode = table.row.add( [
+                  "",
+                  deviceid,
+                  devicename,
+                  agentversion,
+                  devicemodel,
+                  stat,
+                  "",
+                ] ).draw( false ).node();
+                $( rowNode ).addClass('demo4TableRow');
+                $( rowNode ).attr('data-row-id',i);
+                demo4Rows.push({ deviceid: deviceid });
+                var tmp;
+              }
+            }
+            $($.fn.dataTable.tables(true)).DataTable()
+             .columns.adjust()
+             .responsive.recalc();
+            MenuShow();
+            if(m_Update === true){
+              SendByGolang(GetUpdateDevice, GetCommand(1, "Comm"), GetCommand(1, "Comm"), "", "system");
+              var timer = setTimeout(function(){
+                for(var i=0;i<Object.keys(m_devices).length;i++){
+                  if(m_devices[i][1] === false){
+                    console.log("deviceid:"+m_devices[i][0]+"status:"+m_devices[i][1]);
+                    UpdateDevicesStatus(m_devices[i][0], "offline");
+                  }
+                }
+                m_Update = false;
+              }, 10000);
+
+            }
+        })
+
+      }
+    )
+  })
+
+  	// var postdata = {
+		// 	company: localStorage.getItem("Company"),
+		// 	name: getCookie("UserName"),
+		// 	   submit: "GetAllDevices"
+		// }
+
+		// console.log("deviceid:");
+		// $.post("/golang",
+		// postdata,
+		// function(data,status){
+		// 	var table = $('#dataTables-example').DataTable();
+		// 	table.clear();
+		// 	if(data === "DeviceNotFound"){
+		// 		table.clear().draw();
+		// 	//	return;
+		// 	}else{
+		// 	GetUpdateDevice = "";
+		// 	for(var i=0;i<Object.keys(data).length;i++){
+		// 		var deviceid, devicename, agentversion,devicemodel,stat, time = "";
+		// 		deviceid = data[i].DEVICEID;devicename = data[i].DEVICENAME;
+		// 		agentversion = data[i].AGENTVERSION;devicemodel = data[i].DEVICEMODEL;
+		// 		stat = data[i].STATUS;time = data[i].TIME;
+
+		// 		GetUpdateDevice += deviceid +"/";
+		// 		m_devices.push([deviceid,false]);
+		// 			var rowNode = table.row.add( [
+		// 				"",
+		// 				deviceid,
+		// 				devicename,
+		// 				agentversion,
+		// 				devicemodel,
+		// 				stat,
+		// 				"",
+		// 			] ).draw( false ).node();
+		// 			$( rowNode ).addClass('demo4TableRow');
+		// 			$( rowNode ).attr('data-row-id',i);
+		// 			demo4Rows.push({ deviceid: deviceid });
+		// 			var tmp;
+		// 	}
+		// 	}
+		// 	$($.fn.dataTable.tables(true)).DataTable()
+		// 	 .columns.adjust()
+		// 	 .responsive.recalc();
+		// 	MenuShow();
+		// 	if(m_Update === true){
+		// 		SendByGolang(GetUpdateDevice, GetCommand(1, "Comm"), GetCommand(1, "Comm"), "", "system");
+		// 		var timer = setTimeout(function(){
+		// 			for(var i=0;i<Object.keys(m_devices).length;i++){
+		// 				if(m_devices[i][1] === false){
+		// 					console.log("deviceid:"+m_devices[i][0]+"status:"+m_devices[i][1]);
+		// 					UpdateDevicesStatus(m_devices[i][0], "offline");
+		// 				}
+		// 			}
+		// 			m_Update = false;
+		// 		}, 10000);
+
+		// 	}
+
+		// });
 }
 
 function UpdateDevicesStatus(id,stat){
@@ -1002,12 +1085,12 @@ function SetSubscribe(device, value){
 	var company = localStorage.getItem("Company");
 	var UserName = getCookie("UserName");
 	if(value === "accept"){
-		
+
 		var subscribe = device + "/";
 		var postdata = {
 				name: UserName,
 				company: company,
-				subscribe: subscribe, 
+				subscribe: subscribe,
 				submit: "SetSubscribeDevices"
 		}
 		$.post("/golang",
@@ -1021,8 +1104,8 @@ function SetSubscribe(device, value){
 					if(location.pathname === "/AllDevice.html"){
 						GetAllDevices();
 					}
-					
-					
+
+
 				}
 			});
 	}else if(value === "refuse"){
@@ -1031,7 +1114,7 @@ function SetSubscribe(device, value){
 		var s = ':contains('+d+')';
 		$( ".notification_content" ).remove( s );
 	}
-	
+
 	var postdata1 = {
 			name: UserName,
 			company: company,
@@ -1043,10 +1126,10 @@ function SetSubscribe(device, value){
 	postdata1,
 		function(data,status){
 			if(data === "success"){
-				
+
 			}
 		});
-	
+
 }
 var notag=true;
 function noTagSelect(length){
@@ -1062,18 +1145,18 @@ function noTagSelect(length){
 		notag = true;
 	}
 	return notag;
-	
+
 }
-					
+
 
 function GetCommand(number, title){
-	var str = ""+number+""; 
+	var str = ""+number+"";
 	var dd = myObj[str];
 	var command="";
 	if(dd[1].Enabled === "false"){
 		return "false";
 	}
-	if(title === "CommTitle"){ 
+	if(title === "CommTitle"){
 		command = dd[0].CommTitle;
 	}else if(title === "Enabled"){
 		command = dd[1].Enabled;
