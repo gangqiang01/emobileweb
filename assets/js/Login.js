@@ -5,7 +5,7 @@ function submitDB() {
 	var form = {};
 	form.username = $("#UserName").val();
 	form.password = $("#PassWord").val();
-	form._now = Date.parse(new Date()); 
+	form._now = Date.parse(new Date());
 	form.redirectUri = "172.21.73.144/emobile/login.html";
 	apiget("rmm/v1/accounts/sso/login", form).then(
 		function(data){
@@ -31,7 +31,7 @@ function submitDB() {
 								window.location.href =  "index.html";
 							}
 						}
-					}
+					}   
 				)
 			}
 
@@ -55,20 +55,20 @@ function getCookie(cname) {
 	return "";
 }
 
-// remember user name 
-(function RememberMe(){	
+// remember user name
+(function RememberMe(){
 	if(localStorage["UserName"]!==null && localStorage["Password"]!==null && localStorage["UserName"] !=="" && localStorage["Password"] !=="" && localStorage["Password"] !==undefined && localStorage["UserName"] !== undefined){
 		var decryptedUserName = CryptoJS.AES.decrypt(localStorage["UserName"], "AIM Secret Passphrase");
 	var decryptedPassword = CryptoJS.AES.decrypt(localStorage["Password"], "AIM Secret Passphrase")
 	document.getElementById("UserName").value = decryptedUserName.toString(CryptoJS.enc.Utf8);
 	document.getElementById("Password").value = decryptedPassword.toString(CryptoJS.enc.Utf8);
 	}
-	
+
 	if(localStorage["isCheck"]==="true"){
 		var checkboxstatus = document.getElementById("check");
 		checkboxstatus.checked = true;
 	}
-	
+
 })();
 
 

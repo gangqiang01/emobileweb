@@ -6,6 +6,26 @@ function apipost(myurl,object){
             type:"post",
             url: posturl,
             data: object,
+            crossDomain: true,
+            xhrFields: { withCredentials: true },
+            timeout:10000,
+            success:function(data){
+                resolve(data)
+            }
+       });
+   })
+}
+
+function apiput(myurl,object){
+    var posturl = baseurl+"/"+myurl;
+    return new Promise(function(resolve, reject){
+       $.ajax({
+            type:"put",
+            url: posturl,
+            crossDomain: true,
+            xhrFields: { withCredentials: true },
+            contentType:'application/json;charset=utf-8', 
+            data: JSON.stringify(object),
             timeout:10000,
             success:function(data){
                 resolve(data)
@@ -22,6 +42,8 @@ function apifile(myurl,data){
             data:formData,
             contentType:false,
             processData: false,
+            crossDomain: true,
+            xhrFields: { withCredentials: true },
             timeout:5000,
             success:function(data){
                 resolve(data)
@@ -50,6 +72,7 @@ function apiget(myurl,object){
             type:"get",
             url: geturl,
             timeout:5000,
+            crossDomain: true,
             xhrFields: {
                 withCredentials: true
             },

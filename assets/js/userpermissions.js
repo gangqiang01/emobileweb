@@ -211,27 +211,28 @@ function SetHTML(html){
 	// $.post("/golang",
 	// postdata,
 	// function(data,status){
-		var groupid = sessionStorage["groupid"]
-		var devicegetdata = {};
-        devicegetdata.pageSize = 10000;
-        devicegetdata.no = 1;
-        devicegetdata.orderType = "did";
-        devicegetdata.like = "";
-        devicegetdata._ = new Date().getTime();
-        apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
-			var device = data.groups[0].devices;
-			console.dir(device);
+    var groupid = sessionStorage["groupid"]
+    if(groupid !=undefined){
+      var devicegetdata = {};
+          devicegetdata.pageSize = 10000;
+          devicegetdata.no = 1;
+          devicegetdata.orderType = "did";
+          devicegetdata.like = "";
+          devicegetdata._ = new Date().getTime();
+          apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
+        var device = data.groups[0].devices;
+        console.dir(device);
 
-  			var AllDevices = [];
-			var id,name;
-			for(var j=0; j< device.length;j++){
-				AllDevices.push([device[j]["agentid"],device[j]["name"]]);
-			}
-			if(location.pathname.slice(location.pathname.lastIndexOf("/")) === "/details.html"){
-				GetDevicesId(AllDevices);
-			}
-		})
-		
+          var AllDevices = [];
+        var id,name;
+        for(var j=0; j< device.length;j++){
+          AllDevices.push([device[j]["agentid"],device[j]["name"]]);
+        }
+        if(location.pathname.slice(location.pathname.lastIndexOf("/")) === "/details.html"){
+          GetDevicesId(AllDevices);
+        }
+      })
+    }
 	// });
 
 }

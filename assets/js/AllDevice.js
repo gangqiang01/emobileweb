@@ -140,16 +140,16 @@ function drawData(data) {
 	DeviceTable = $('#dataTables-example').DataTable();
 	$('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
 
-		 var Data = DeviceTable.rows( this ).data().toArray();
-		 console.dir(Data);
-		 var commentgetdata = {};
-		 commentgetdata._ = new Date().getTime();
-		 if(Data[0][5]){
+		//  var Data = DeviceTable.rows( this ).data().toArray();
+		//  console.dir(Data);
+		//  var commentgetdata = {};
+		//  commentgetdata._ = new Date().getTime();
+        //  if(Data[0][5] || $(this).hasClass("selected")){
 			// apiget('rmm/v1/data/device/'+1+'/capability', commentgetdata).then(function(data){
 			// 	console.log("comment",data);
 			//  })
 			 $(this).toggleClass('selected');
-		 }
+		//  }
 		 
 		//  var rowData = (Data[0]);
 		 // if(rowData[5] === "offline"){
@@ -161,7 +161,7 @@ function drawData(data) {
 		 // }else{
 			// $(this).toggleClass('selected');
 		 //}
-	} );
+	});
 
 	$('#dataTables-example tbody').on( 'contextmenu', 'tr', function (e, dt, type, indexes) {
 		$(this).addClass('selected');
@@ -222,7 +222,7 @@ function drawData(data) {
 			subExtend += '<li><a href="javascript: void(0)" onclick="SendCommand('+numExtend[i]+')">'+command+'</a></li>';
 		}
 		//var commandTitle = "'"+numExtend[i]+"'";
-
+        n
 	}
 	document.getElementById("subExtend").innerHTML = subExtend;
 
@@ -401,7 +401,7 @@ function GetLogInfo(days){
 					LogsCommand = data[i].COMMAND;LogsContent = data[i].CONTENT;
 					LogsFrom = data[i].FROM;LogsTime = data[i].TIME;
 					var t = LogsTarget.split("/");var target="";
-					for(var j=0;j<t.length-1;j++)
+					for(var j=0;j<t.length-1;j++){
 						target += t[j]+"<br>";
 						if(LogsFrom === "user"){
 							var rowNode = logtable.row.add( [
@@ -411,7 +411,8 @@ function GetLogInfo(days){
 								LogsCommand,
 								LogsContent,
 							] ).draw( false ).node();
-						}
+                        }
+                    }
 				}
 
 
@@ -750,93 +751,75 @@ function SetDeviceName(id, devicevalue){
 }
 
 function AddNewDevice(){
-	var Title = "Add your device";
-	document.getElementById("AlertMsgEvent").innerHTML = '<input type="text" id="devicetag" />';
+    window.location.href = "Adddevice.html"
+	// var Title = "Add your device";
+	// document.getElementById("AlertMsgEvent").innerHTML = '<input type="text" id="devicetag" />';
 
-	$('#devicetag').tagsinput({
-		itemValue: 'value',
-		itemText: 'text',
-	});
-	document.getElementById("devicetag").disabled = true;
-	$("#devicetag").parent().find('.bootstrap-tagsinput').addClass('taginputHide');
-	document.getElementById("AlertMsgEvent").style.display = "";
-	var MsgBody= 'Enter the identification code which you received on your phone.<br><font color="red"><label id="result"></label></font><br><input type="text" id="txtDeviceName" placeholder="Identification Code" style="margin-right:20px;"><button id="btnAddNewDevice" type="button" class="btn btn-primary" >add</button>';
-	SetAlertMsgInnerHTML(Title, MsgBody);
-	var x = 0;
-	document.getElementById("btnAddNewDevice").onclick = function() {
-		var postdata = {
-			name: getCookie('UserName'),
-			company: localStorage.getItem("Company"),
-			deviceid: document.getElementById("txtDeviceName").value,
-			submit: "GetDeviceId"
-		}
-		$.post("/golang",
-		postdata,
-		function(data,status){
-			document.getElementById("result").innerHTML = "";
-			var items = $('#devicetag').tagsinput('items');
-			//if(items.length === 3) data = "oversub";
-			if(data === "success"){
-				$('#devicetag').tagsinput('add', { "value":  document.getElementById("txtDeviceName").value, "text": document.getElementById("txtDeviceName").value}); x++;
-			}else if(data === "error"){
-				document.getElementById("result").innerHTML = "Oops , your device id is wrong!<br>";
-			}else if(data === "used"){
-				document.getElementById("result").innerHTML = "Oops , your device id is already add in your list!<br>";
-			}else if(data === "oversub"){
-				document.getElementById("result").innerHTML = "Oops , your account subscribes too many devices!<br>";
-			}
-			document.getElementById("txtDeviceName").value = "";
-		});
+	// $('#devicetag').tagsinput({
+	// 	itemValue: 'value',
+	// 	itemText: 'text',
+	// });
+	// document.getElementById("devicetag").disabled = true;
+	// $("#devicetag").parent().find('.bootstrap-tagsinput').addClass('taginputHide');
+	// document.getElementById("AlertMsgEvent").style.display = "";
+	// var MsgBody= 'Enter the identification code which you received on your phone.<br><font color="red"><label id="result"></label></font><br><input type="text" id="txtDeviceName" placeholder="Identification Code" style="margin-right:20px;"><button id="btnAddNewDevice" type="button" class="btn btn-primary" >add</button>';
+	// SetAlertMsgInnerHTML(Title, MsgBody);
+	// var x = 0;
+	// document.getElementById("btnAddNewDevice").onclick = function() {
+	// 	var postdata = {
+	// 		name: getCookie('UserName'),
+	// 		company: localStorage.getItem("Company"),
+	// 		deviceid: document.getElementById("txtDeviceName").value,
+	// 		submit: "GetDeviceId"
+	// 	}
+	// 	$.post("/golang",
+	// 	postdata,
+	// 	function(data,status){
+	// 		document.getElementById("result").innerHTML = "";
+	// 		var items = $('#devicetag').tagsinput('items');
+	// 		//if(items.length === 3) data = "oversub";
+	// 		if(data === "success"){
+	// 			$('#devicetag').tagsinput('add', { "value":  document.getElementById("txtDeviceName").value, "text": document.getElementById("txtDeviceName").value}); x++;
+	// 		}else if(data === "error"){
+	// 			document.getElementById("result").innerHTML = "Oops , your device id is wrong!<br>";
+	// 		}else if(data === "used"){
+	// 			document.getElementById("result").innerHTML = "Oops , your device id is already add in your list!<br>";
+	// 		}else if(data === "oversub"){
+	// 			document.getElementById("result").innerHTML = "Oops , your account subscribes too many devices!<br>";
+	// 		}
+	// 		document.getElementById("txtDeviceName").value = "";
+	// 	});
 
 
-	}
+	// }
 
-	document.getElementById("AlertMsgBtn").style.display = "";
-	document.getElementById("AlertMsgBtn").onclick = function() {
+	// document.getElementById("AlertMsgBtn").style.display = "";
+	// document.getElementById("AlertMsgBtn").onclick = function() {
 
-		var items = $('#devicetag').tagsinput('items');
-		var subscribe = "";
-		for (var i = 0; i < items.length; i++) {
-			subscribe += items[i].value + "/";
-		}
-		var postdata = {
-			name: getCookie('UserName'),
-			company: localStorage.getItem("Company"),
-			subscribe: subscribe,
-			submit: "SetSubscribeDevices"
-		}
-		$.post("/golang",
-		postdata,
-		function(data,status){
-			if (data === "success"){
-				GetAllDevices();
-				window.location.href = "AllDevice.html";
-			}
+	// 	var items = $('#devicetag').tagsinput('items');
+	// 	var subscribe = "";
+	// 	for (var i = 0; i < items.length; i++) {
+	// 		subscribe += items[i].value + "/";
+	// 	}
+	// 	var postdata = {
+	// 		name: getCookie('UserName'),
+	// 		company: localStorage.getItem("Company"),
+	// 		subscribe: subscribe,
+	// 		submit: "SetSubscribeDevices"
+	// 	}
+	// 	$.post("/golang",
+	// 	postdata,
+	// 	function(data,status){
+	// 		if (data === "success"){
+	// 			GetAllDevices();
+	// 			window.location.href = "AllDevice.html";
+	// 		}
 
-		});
-	}
+	// 	});
+	// }
 }
 
-function Unsubscribe(topic){
-	var unsubscribe = "";
-	for (var i = 0; i < DeviceTable.rows('.selected').data().length; i++) {
-		unsubscribe += DeviceTable.rows('.selected').data()[i][1]	+ "/";
-	}
 
-	var postdata = {
-		name: getCookie('UserName'),
-		company: localStorage.getItem("Company"),
-		unsubscribe: unsubscribe,
-		submit: "UnsubscribeDevices"
-	}
-		$.post("/golang",
-		postdata,
-		function(data,status){
-			if (data === "success"){
-				GetAllDevices();
-			}
-		});
-}
 
 function selectDownloadType(){
 	var form = document.getElementById("DownloadType");
@@ -873,7 +856,8 @@ function AllCancel(){
 function MenuShow(){
 		var menu = new BootstrapMenu('.demo4TableRow', {
 	  fetchElementData: function($rowElem) {
-		var rowId = $rowElem.data('rowId');
+        var rowId = $rowElem.data('rowId');
+        console.log(rowId)
 		return demo4Rows[rowId];
 	  },
 	  /* group actions by their id to make use of separators between
@@ -887,6 +871,7 @@ function MenuShow(){
 		  name: 'Add New devices',
 		  iconClass: 'fa-pencil',
 		  onClick: function(row) {
+            //   console.log(row);
 			AddNewDevice();
 		  }
 		},
@@ -894,7 +879,7 @@ function MenuShow(){
 		  name: 'Delete device',
 		  iconClass: 'fa-trash-o',
 		  onClick: function(row) {
-			Unsubscribe(row.deviceid);
+			deletedevice(row);
 			console.log("'Delete device' clicked on '" + row.deviceid + "'");
 		  }
 
@@ -902,7 +887,56 @@ function MenuShow(){
 	  }
 	});
 }
+function deletedevice(did){
+    // var dddata = new FormData();
+    // var ddval = [{did: did.deviceid, grounpIds:[]}];
+    // dddata.append("devices", ddval);
+    var dddata = {devices:[{did: did.deviceid, groupIds:[]}]};    
+    apiput("rmm/v1/devices", dddata).then(function(data){
+        console.log("deletedevice",data);
+        if (data.result){
+            GetAllDevices();
+        }
+    })
+    // unsubscribe += DeviceTable.rows('.selected').data()[i][1]	+ "/";
 
+
+// var postdata = {
+// 	name: getCookie('UserName'),
+// 	company: localStorage.getItem("Company"),
+// 	unsubscribe: unsubscribe,
+// 	submit: "UnsubscribeDevices"
+// }
+// 	$.post("/golang",
+// 	postdata,
+// 	function(data,status){
+// 		if (data === "success"){
+// 			GetAllDevices();
+// 		}
+// 	});
+}
+
+function GetUnassDevicesId(data){
+	var txtdevice = "";
+	var getDevice = getUrlVars()["d"];
+	for(var i=0;i<Object.keys(data).length;i++){
+		if(data[i][0] === getDevice){
+			txtdevice = '<option data-subtext='+data[i][0]+'>'+data[i][1]+'</option>'+ txtdevice;
+			GetDeivceDetails(data[i][0]);
+		}else{
+			txtdevice = txtdevice+ '<option data-subtext='+data[i][0]+'>'+data[i][1]+'</option>';
+		}
+	}
+	if(jQuery.isEmptyObject(getDevice)){
+		txtdevice = '<option class="bs-title-option" value="">select device</option>'+ txtdevice;
+	}
+	$("#devId").html(txtdevice).selectpicker('refresh');
+	$("#devId").on("changed.bs.select", function(e, clickedIndex, newValue, oldValue) {
+		var selectedD = $(this).find('option').eq(clickedIndex).text();
+		document.getElementById("AllPackage").innerHTML = '';
+		GetDeivceDetails(ChangeNametoId(data, selectedD));
+	});
+}
 
 function GetAllDevices() {
   var devgetdata = {};
@@ -939,22 +973,23 @@ function GetAllDevices() {
             }else{
               GetUpdateDevice = "";
               for(var i=0;i<Object.keys(tableData).length;i++){
-                var deviceid, devicename, agentversion,devicemodel,stat, time = "";
-                deviceid = tableData[i].agentid;
+                var agentid, devicename, agentversion,devicemodel,stat, did,time = "";
+                agentid = tableData[i].agentid;
                 devicename = tableData[i].name;
                 agentversion = tableData[i].version;
                 devicemodel = tableData[i].ostype;
                 stat = tableData[i].connected;
+                did = tableData[i].did;
                 console.log("stat", stat);
 
                 time = UnixToTime(tableData[i].create_unit_ts);
 
-                GetUpdateDevice += deviceid +"/";
-                m_devices.push([deviceid,false]);
+                GetUpdateDevice += agentid +"/";
+                m_devices.push([agentid,false]);
                 //add row in table
                 var rowNode = table.row.add( [
                   "",
-                  deviceid,
+                  agentid,
                   devicename,
                   agentversion,
                   devicemodel,
@@ -963,7 +998,7 @@ function GetAllDevices() {
                 ] ).draw( false ).node();
                 $( rowNode ).addClass('demo4TableRow');
                 $( rowNode ).attr('data-row-id',i);
-                demo4Rows.push({ deviceid: deviceid });
+                demo4Rows.push({ deviceid: did });
                 var tmp;
               }
             }
