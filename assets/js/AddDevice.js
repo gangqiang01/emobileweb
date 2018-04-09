@@ -1,19 +1,21 @@
 $(function(){
+    var unassigneddid = [];
+    var selectedrowids=[];
     LoginStatus("UserDuedateCheck","AllDevice.html");
 	SetHTML("barset_management");
 	$('.panel-commands').css( 'cursor', 'pointer' );
     getunassigneddevices();
     function AllSelect(){
-        $("#dataTables-example tbody tr").addClass("selected");
+        $("#UnassignedDevicesTables tbody tr").addClass("selected");
     }
     
     function AllCancel(){
-        $("#dataTables-example tbody tr").removeClass("selected");
+        $("#UnassignedDevicesTables tbody tr").removeClass("selected");
     }
     function getunassigneddevices(){
 
         //---- device table ----//
-        $('#dataTables-example').dataTable({
+        $('#UnassignedDevicesTables').dataTable({
             "columnDefs": 
             [{
             orderable: false,
@@ -30,10 +32,17 @@ $(function(){
             },
             responsive: true
         });
-    
-        DeviceTable = $('#dataTables-example').DataTable();
-        $('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
-                 $(this).toggleClass('selected');
+        var table = $('#UnassignedDevicesTables').DataTable()
+        $('#UnassignedDevicesTables tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
+            console.log(table.row( this ).index() )
+            var rowid = table.row( this ).index();
+            $(this).toggleClass('selected');
+            // console.log($(this).hasClass("selected"))
+            if($(this).hasClass("selected")){
+                    selectedrowids.push(rowid); 
+            }else{
+                selectedrowids.remove(rowid);
+            }
         });
 
 
@@ -45,7 +54,7 @@ $(function(){
         devgetdata._ = new Date().getTime();
         apiget("rmm/v1/devices/unassigned", devgetdata).then(function(data){
             var tableData = data.devices;
-            var table = $('UnassignedDevicesTables').DataTable();
+            var table = $('#UnassignedDevicesTables').DataTable();
             table.clear();
             if(tableData === ""){
               table.clear().draw();
@@ -53,9 +62,9 @@ $(function(){
             }else{
                 for(var i=0;i<Object.keys(tableData).length;i++){
                     var devicename, Agentid , did , time = "";
-                    Agentid = tableData[i].agentid;
+                    Agentid = tableData[i].agentId;
                     devicename = tableData[i].name;
-    
+                    did = tableData[i].did;
                     time = UnixToTime(tableData[i].create_unit_ts);
                     //add row in table
                     var rowNode = table.row.add( [
@@ -65,9 +74,31 @@ $(function(){
                     ] ).draw( false ).node();
                     $( rowNode ).addClass('demo4TableRow');
                     $( rowNode ).attr('data-row-id',i);
-                    // demo4Rows.push({ deviceid: did });
+                    unassigneddid.push({ deviceid: did });
                 }
             }
         })
     }
+    $("#adddevice").on("click", function(){
+        // var adddata = {devices:[{did: did.deviceid, groupIds:[]}]};
+        var adddata = {};
+        adddata.devices = [];
+        if(!selectedrowids){
+            return;
+        }
+    
+        var groupid = sessionStorage["groupid"]
+        for (var i=0 ;i< selectedrowids.length;i++){
+            adddata.devices[i] = {};
+            adddata.devices[i].did = unassigneddid[selectedrowids[i]].deviceid; 
+            adddata.devices[i].groudIds = []
+            adddata.devices[i].groudIds[0] = groupid+"";
+        }    
+        apiput("rmm/v1/devices", adddata).then(function(data){
+        console.log("deletedevice",data);
+        if (data.result){
+            // window.location.href = "AllDevice.html"
+        }
+    })
+    })
 })

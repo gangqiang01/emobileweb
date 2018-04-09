@@ -4,6 +4,21 @@
 
 //check out if user due date expired or not
 var i;
+Array.prototype.in_array = function (element) { 
+　　for (var i = 0; i < this.length; i++) { 
+		if (this[i] == element) { 
+			return true; 
+		} 
+	} 
+	return false; 
+	 
+}
+Array.prototype.remove = function(val) {
+	var index = this.indexOf(val);
+	if (index > -1) {
+		this.splice(index, 1);
+	}
+};
 function LoginStatus(page) {
 		var url = "rmm/v1/accounts/login"
 		apiget(url).then(
