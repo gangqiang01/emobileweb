@@ -1,8 +1,3 @@
-
-//this file is used in all pagination
-//function used commonly can write down here.
-
-//check out if user due date expired or not
 var i;
 Array.prototype.in_array = function (element) { 
 　　for (var i = 0; i < this.length; i++) { 
@@ -19,6 +14,7 @@ Array.prototype.remove = function(val) {
 		this.splice(index, 1);
 	}
 };
+//verify user and save in page
 function LoginStatus(page) {
 		var url = "rmm/v1/accounts/login"
 		apiget(url).then(
@@ -28,30 +24,10 @@ function LoginStatus(page) {
 				}
 			}
 		)
-	// }
-
-}
-
-//get user cookie and decrypt
-function getCookie(cname) {
-	var name = cname + "=";
-	var decodedCookie = decodeURIComponent(document.cookie);
-	var ca = decodedCookie.split(';');
-	for (var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			var cvalue = c.substring(name.length, c.length);
-			return cvalue;
-		}
-	}
-	return "";
 }
 
 //get user cookie without decrypt
-function getUserCookie(cname) {
+function getCookie(cname) {
 	var name = cname + "=";
 	var decodedCookie = decodeURIComponent(document.cookie);
 	var ca = decodedCookie.split(';');
@@ -120,25 +96,25 @@ function SetHTML(html){
 	});
 	$('.notification-body').css( 'cursor', 'pointer' );
 	//document.getElementById(html).className = "menu-top-active";
-  $('#'+html).addClass('menu-top-active');
-  var data = {};
-  data._now =  new Date().getTime();
-  apiget("rmm/v1/accounts/myself",data).then(function(data){
-    console.log("user",data);
-    document.getElementById("card-email").innerHTML+=data["accounts"][0].mail;
-    document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
+    $('#'+html).addClass('menu-top-active');
+    var data = {};
+    data._now =  new Date().getTime();
+    apiget("rmm/v1/accounts/myself",data).then(function(data){
+        console.log("user",data);
+        document.getElementById("card-email").innerHTML+=data["accounts"][0].mail;
+        document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
 
-    document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(data["accounts"][0].login_unix_ts)+'</p>';
+        document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(data["accounts"][0].login_unix_ts)+'</p>';
 
 
-    if(location.pathname === "/profile.html"){
-			GetAccountInfo();
-		}else if(location.pathname === "/management.html"){
-			SetPermissionContent();
-		}else if(location.pathname === "/contact-us.html"){
-			GetQuestion();
-		}
-  })
+        if(location.pathname === "/profile.html"){
+            GetAccountInfo();
+        }else if(location.pathname === "/management.html"){
+            SetPermissionContent();
+        }else if(location.pathname === "/contact-us.html"){
+            GetQuestion();
+        }
+    })
 
   var dvdata = {};
   dvdata._ = new Date().getTime();
@@ -147,106 +123,32 @@ function SetHTML(html){
       document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
     }
   )
+    if(location.pathname === "/details.html"){
+        var groupid = sessionStorage["groupid"]
+        if(groupid != undefined){
+            var devicegetdata = {};
+            devicegetdata.pageSize = 10000;
+            devicegetdata.no = 1;
+            devicegetdata.orderType = "did";
+            devicegetdata.like = "";
+            devicegetdata._ = new Date().getTime();
+            apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
+                var device = data.groups[0].devices;
+                console.dir(device);
 
-	// var company = localStorage.getItem("Company");
-	// console.log("GetUserInfo");
-	// var sub = "GetUserInfo"; var postdata = {submit: sub};
-	// postdata = {
-	// 		company: company,
-	// 		name: UserName,
-	// 		submit: sub
-	// }
-	// $.post("/golang",
-  // postdata,
-
-	// function(data,status){
-		// ProfileInfo = data;
-		// if(data.SUBSCRIBE === ""){
-		// 	document.getElementById("card-deives").innerHTML+='0';
-		// }else{
-		// 	var d = data.SUBSCRIBE.split("/");
-		// 	document.getElementById("card-deives").innerHTML+=d.length-1;
-		// }
-		// if(data.INVITER === ""){
-		// 	//SetNotificationBell(0);
-		// }else{
-		// 	var invite = data.INVITER.split("/");
-		// 	for(var j=0;j<invite.length-1;j++){
-		// 		var inviter = invite[j].split("#");
-		// 		var device = "'"+inviter[0]+"'";var accept = "'accept'";var refuse = "'refuse'";
-		// 		var invitecontent = SetSubscribeNotification(inviter[0], inviter[1], device, accept, refuse );
-		// 		document.getElementById("notification_content").innerHTML += invitecontent;
-		// 	}
-		// 	var count = inviter.length-1;
-		// 	SetNotificationBell(count);
-		// }
-	// });
-
-	// console.log("GetLogInfo");
-	// var sub = "GetLogInfo"; var postdata = {submit: sub};
-	// postdata = {
-	// 		company: company,
-	// 		name: UserName,
-	// 		days: 3,
-	// 		submit: sub
-	// }
-	// $.post("/golang",
-	// postdata,
-	// function(data,status){
-	// 	if(data !== undefined){
-
-
-	// 			var times = [];
-	// 			for(var i=0;i<Object.keys(data).length;i++){
-	// 				if(data[i].FROM === "user" && data[i].COMMAND === "UserLogin"){
-	// 					times.push(data[i].TIME);
-	// 				}
-	// 				if(data[i].TYPE === "schedule" && data[i].VIEW === "false"){
-	// 					SetNotificationBell("add");
-	// 					var LogsId = data[i].ID;
-	// 					var invitecontent = SetScheduleNotification("Task Completed", data[i].TIME, LogsId );
-	// 					document.getElementById("notification_content").innerHTML += invitecontent;
-	// 				}
-	// 			}
-	// 			times.sort(function(a, b){return b-a});
-	// 			if(times.length === 1){
-	// 				document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(times[0])+'</p>';
-	// 			}else{
-	// 				document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(times[1])+'</p>';
-	// 			}
-	// 		}
-	// });
-	console.log("GetDevicesName");
-	// var sub = "GetDevicesName"; var postdata = {submit: sub};
-	// postdata = {
-	// 		company: company,
-	// 		name: UserName,
-	// 		submit: sub
-	// }
-	// $.post("/golang",
-	// postdata,
-	// function(data,status){
-    var groupid = sessionStorage["groupid"]
-    if(groupid !=undefined){
-      var devicegetdata = {};
-          devicegetdata.pageSize = 10000;
-          devicegetdata.no = 1;
-          devicegetdata.orderType = "did";
-          devicegetdata.like = "";
-          devicegetdata._ = new Date().getTime();
-          apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
-        var device = data.groups[0].devices;
-        console.dir(device);
-
-          var AllDevices = [];
-        var id,name;
-        for(var j=0; j< device.length;j++){
-          AllDevices.push([device[j]["agentid"],device[j]["name"]]);
+                var AllDevices = [];
+                var id,name;
+                for(var j=0; j< device.length;j++){
+                AllDevices.push([device[j]["agentid"],device[j]["name"]]);
+                }
+                
+                GetDevicesId(AllDevices);
+            })
+        }else{
+            window.location.href = "index.html";
         }
-        if(location.pathname.slice(location.pathname.lastIndexOf("/")) === "/details.html"){
-          GetDevicesId(AllDevices);
-        }
-      })
+        
+    
     }
 	// });
 
@@ -298,6 +200,16 @@ function DateToUnix(date){
 function GetNowUnix(){
 	var d = new Date();
 	return Math.round((d.getTime() / 1000));
+}
+// get new time (2018/4/10)
+function GetNowTimes(){
+	var d = new Date();
+	var time = "";
+	var Day = d.getUTCDate();if(Day<10) Day = "0"+Day;var Month = (d.getUTCMonth()+1);if(Month<10) Month = "0"+Month;
+	var Hours = d.getHours();if(Hours<10) Hours = "0"+Hours;var Min = d.getUTCMinutes();if(Min<10) Min = "0"+Min;
+	var Sec = d.getUTCSeconds();if(Sec<10) Sec = "0"+Sec;
+	time = d.getUTCFullYear()+"/"+Month+"/"+Day+" "+Hours+":"+Min+":"+Sec;
+	return time;
 }
 
 
@@ -376,97 +288,6 @@ function SetNoneNotification(){
 	return content;
 }
 
-function SetScheduleNotification(title, unix, id){
-	var logid = "'"+id+"'";
-	var content = '<li class="notification_content">'+
-		'<div class="notification_content-icon">'+
-			'<i class="fa fa-rss-square fa-2x" aria-hidden="true"></i>'+
-		'</div>'+
-		'<div class="notification_content-title">'+
-			'<h4>'+title+'</h4>'+
-			'<a href="javascript: void(0)" onclick="GetLogDetailById('+logid+')" style="margin:0px;color:#a94442;">View Details <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>'+
-			'<p>'+UnixToTime(unix)+'</p>'+
-		'</div>'+
-		'<div class="notification_content-button">'+
-			'<button class="btn btn-primary" style="width:100%;" onclick="SetLogsView('+logid+')"><i class="fa fa-check" style="padding-right:5px;" aria-hidden="true"></i>ok</button>'+
-
-		'</div>'+
-	'</li>';
-	return content;
-}
-
-function GetLogDetailById(id){
-	var postdata = {
-			logid: id,
-			submit: "GetLogInfoById"
-	}
-	$.post("/golang",
-	postdata,
-		function(data,status){
-			if(data !== undefined){
-
-				var logs = data.split("***");
-				var times = [];
-				for(var i=0;i<logs.length-1;i++){
-					var LogsInfo = logs[i].split("%/%");
-					var LogsName= "", LogsTarget= "", LogsTitle= "", LogsCommand= "", LogsContent= "",LogsFrom= "", LogsTime = "", LogsId = "", LogsType = "", LogsView = "";
-					for(var j=0;j<LogsInfo.length;j++){
-						var LogsDetails = LogsInfo[j].split(":");
-						if(LogsDetails[0] === "name") {LogsName = LogsDetails[1];}
-						else if(LogsDetails[0] === "target") {LogsTarget = LogsDetails[1];}
-						else if(LogsDetails[0] === "title") {LogsTitle = LogsDetails[1];}
-						else if(LogsDetails[0] === "command") {LogsCommand = LogsDetails[1];}
-						else if(LogsDetails[0] === "content") {LogsContent = LogsDetails[1];}
-						else if(LogsDetails[0] === "from") {LogsFrom = LogsDetails[1];}
-						else if(LogsDetails[0] === "time") {LogsTime = LogsDetails[1];}
-						else if(LogsDetails[0] === "type") {LogsType = LogsDetails[1];}
-						else if(LogsDetails[0] === "logid") {LogsId = LogsDetails[1];}
-						else if(LogsDetails[0] === "view") {LogsView = LogsDetails[1];}
-					}
-
-					document.getElementById("AlertMsgEvent").innerHTML = '<i class="fa fa-tags" aria-hidden="true" style="color:#428bca;padding-right:5px;"></i>Devices target:<br><input type="text" id="devicetag" />';
-					document.getElementById("AlertMsgEvent").style.display = "";
-					$('#devicetag').tagsinput({
-						tagClass: function(item) {
-							return 'label label-primary';
-						},
-						itemValue: 'value',
-						itemText: 'text',
-					});
-					var target = LogsTarget.split("/");
-
-					for(var j=0;j<target.length-1;j++){
-						var name = GetAllDevicesName(target[j]);
-						$('#devicetag').tagsinput('add', { "value": target[j] , "text": name});
-					}
-
-					var Title = 'Schedule detail';
-					var MsgBody= '<i class="fa fa-tags" aria-hidden="true" style="color:#428bca;padding-right:5px;"></i>Command selected:<br><input type="text" id="commandtag" />';;
-					SetAlertMsgInnerHTML(Title, MsgBody);
-					$('#commandtag').tagsinput({
-						tagClass: function(item) {
-							return 'label label-primary';
-						},
-						itemValue: 'value',
-						itemText: 'text',
-					});
-					var t = LogsTitle.split("/");
-					var cont = LogsContent.split("/");
-					for(var j=0;j<t.length-1;j++){
-						if(cont[j] !== ""){
-							$('#commandtag').tagsinput('add', { "value": t[j] , "text": t[j]+" : "+cont[j]});
-						}else{
-							$('#commandtag').tagsinput('add', { "value": t[j] , "text": t[j]});
-						}
-
-					}
-					$('.bootstrap-tagsinput').find('.tag').removeClass('tag');
-
-				}
-
-			}
-		});
-}
 
 function GetAllDevicesName(id){
 	for(var i=0;i<Object.keys(AllDevices).length;i++){
@@ -496,18 +317,6 @@ function SetLogsView(id){
 			$( "button[onclick*='"+id+"']").parent( ".notification_content-button" ).parent( ".notification_content" ).remove();
 			SetNotificationBell("subtract");
 		});
-}
-
-
-function SetAlertMsgInnerHTML(myModalLabel, AlertMsgBody){
-	document.getElementById("AlertMsgTools").style.display = "none";
-	document.getElementById("ShowInfoBtn").style.display = "none";
-	document.getElementById("timepicker").style.display = "none";
-	document.getElementById("myModalLabel").innerHTML = "";
-	document.getElementById("AlertMsgBody").innerHTML = "";
-	document.getElementById("myModalLabel").innerHTML = myModalLabel;
-	document.getElementById("AlertMsgBody").innerHTML = AlertMsgBody;
-	$('#myModal').modal('toggle');
 }
 
 function SetNavbar(){
@@ -683,53 +492,19 @@ function SliderShow(){
 }
 
 function SetSubscribe(device, value){
-	var company = localStorage.getItem("Company");
-	var UserName = getCookie("UserName");
+
 	if(value === "accept"){
 
-		var subscribe = device + "/";
-		var postdata = {
-				name: UserName,
-				company: company,
-				subscribe: subscribe,
-				submit: "SetSubscribeDevices"
-		}
-		$.post("/golang",
-		postdata,
-			function(data,status){
-				if(data === "success"){
-					var d = "'"+device+"'";
-					var s = ':contains('+d+')';
-					$( ".notification_content" ).remove( s );
-					SetNotificationBell("subtract");
-					if(location.pathname === "/AllDevice.html"){
-						GetAllDevices();
-					}
-
-
-				}
-			});
+        var d = "'"+device+"'";
+        var s = ':contains('+d+')';
+        $( ".notification_content" ).remove( s );
+        SetNotificationBell("subtract");
+        if(location.pathname === "/AllDevice.html"){
+            GetAllDevices();
+        }
 	}else if(value === "refuse"){
 		SetNotificationBell("subtract");
-		var d = "'"+device+"'";
-		var s = ':contains('+d+')';
-		$( ".notification_content" ).remove( s );
 	}
-
-	var postdata1 = {
-			name: UserName,
-			company: company,
-			deviceid: device,
-			stat: value,
-			submit: "Uninviter"
-	}
-	$.post("/golang",
-	postdata1,
-		function(data,status){
-			if(data === "success"){
-
-			}
-		});
 
 }
 

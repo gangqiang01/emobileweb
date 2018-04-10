@@ -83,6 +83,7 @@ $(function(){
     $("#adddevice").on("click", function(){
         // var adddata = {devices:[{did: did.deviceid, groupIds:[]}]};
         var adddata = {};
+        groupid = sessionStorage["groupid"]
         adddata.devices = [];
         if(!selectedrowids){
             return;
@@ -94,10 +95,12 @@ $(function(){
             adddata.devices[i].groupIds[0] = groupid+"";
         }    
         apiput("rmm/v1/devices", adddata).then(function(data){
-        // console.log("deletedevice",data);
             if (data.result){
-                swal( "", "Add device successfully!", "success");
-                window.location.href = "AllDevice.html";
+                swal( "", "Add device successfully!", "success").then(function(val){
+                    if(val){
+                        window.location.href = "AllDevice.html";
+                    }
+                });
             }
         })
     })

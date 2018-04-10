@@ -14,8 +14,9 @@ function apipost(myurl,object){
             },
             error:function(err){
                 if(err.status == 401){
-                    swal("","Login expired","error")
-                    window.location.href = "Login.html"
+                    swal("","Login expired","error").then(function(){
+                          window.location.href = "Login.html"
+                    }) 
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
                 }
@@ -40,8 +41,9 @@ function apiput(myurl,object){
             },
             error:function(err){
                 if(err.status == 401){
-                    swal("","Login expired","error")
-                    window.location.href = "Login.html"
+                    swal("","Login expired","error").then(function(){
+                        window.location.href = "Login.html"
+                    }) 
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
                 }
@@ -66,8 +68,9 @@ function apifile(myurl,data){
             },
             error:function(err){
                 if(err.status == 401){
-                    swal("","Login expired","error")
-                    window.location.href = "Login.html"
+                    swal("","Login expired","error").then(function(){
+                        window.location.href = "Login.html"
+                    }) 
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
                 }
@@ -102,8 +105,9 @@ function apiget(myurl,object){
             },
             error:function(err){
                 if(err.status == 401){
-                    swal("","Login expired","error")
-                    window.location.href = "Login.html"
+                    swal("","Login expired","error").then(function(){
+                        window.location.href = "Login.html"
+                    }) 
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
                 }
