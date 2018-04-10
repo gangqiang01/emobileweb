@@ -36,12 +36,12 @@ $(function(){
         $('#UnassignedDevicesTables tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
             console.log(table.row( this ).index() )
             var rowid = table.row( this ).index();
-            $(this).toggleClass('selected');
+            // $(this).toggleClass('selected');
             // console.log($(this).hasClass("selected"))
             if($(this).hasClass("selected")){
-                selectedrowids.push(rowid); 
-            }else{
                 selectedrowids.remove(rowid);
+            }else{
+                selectedrowids.push(rowid); 
             }
         });
 

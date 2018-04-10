@@ -87,7 +87,19 @@ function drawData() {
             var fa = '';
 
             var id = "'"+data[1]+"'";
-            fa = '<a href="details.html?d%'+data[1]+'" <i class="fa fa-eye" align="center"></i></a>';
+            fa = '<a class="btn btn-info" onclick="DeviceControl()">Control</a>';
+
+        return fa;
+        }
+    },{
+        "targets": 7,
+        "className": "dt-center",
+        "data": null,
+        "render": function ( data, type, full, meta ) {
+            var fa = '';
+
+            var id = "'"+data[1]+"'";
+            fa = '<a class="btn btn-info" onclick="alert(‘ok’)">Get/Set</a>';
 
         return fa;
         }
@@ -102,20 +114,16 @@ function drawData() {
         selector: 'td:first-child'
     }, 
     "order": [[ 5, "desc" ]],
-    rowReorder: {
-        selector: 'td:nth-child(0)'
-    },
     responsive: true
     } );
 
     DeviceTable = $('#dataTables-example').DataTable();
     $('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
-            $(this).toggleClass('selected');
             var rowid = DeviceTable.row( this ).index();
             if($(this).hasClass("selected")){
-                selectedrowids.push(rowid); 
-            }else{
                 selectedrowids.remove(rowid);
+            }else{
+                selectedrowids.push(rowid); 
             }
             console.log(selectedrowids)
     });
@@ -127,71 +135,11 @@ function drawData() {
         "order": [[ 0, "desc" ]]
     } );
     GetAllDevices();
-    GetLogInfo(3);
 }
 
 
 
 
-function GetLogInfo(days){
-	document.getElementById("log-spinner").style.display = "block";
-	var tmp = true;
-	document.getElementById("daysRecord").value = days;
-	if(days === 3){
-		document.getElementById("daysRecord").innerHTML = 'Three days ago<span class="caret"></span>';
-	}else if(days === 7){
-		document.getElementById("daysRecord").innerHTML = 'One week ago<span class="caret"></span>';
-	}else if(days === 30){
-		document.getElementById("daysRecord").innerHTML = 'One month ago<span class="caret"></span>';
-	}else if(days === 182){
-		document.getElementById("daysRecord").innerHTML = 'Half a year ago<span class="caret"></span>';
-	}else{tmp = false; document.getElementById("daysRecord").innerHTML = 'Three days ago<span class="caret"></span>';
-	document.getElementById("daysRecord").value = 3;}
-
-	if(tmp){
-		var postdata = {
-			company: localStorage.getItem("Company"),
-			name: getCookie("UserName"),
-			days: days,
-			submit: "GetLogInfo"
-		}
-
-
-		$.post("/golang",
-		postdata,
-		function(data,status){
-			if(data !== undefined){
-				var logtable = $('#LogTable').DataTable();
-				logtable.clear();
-				for(var i=0;i<Object.keys(data).length;i++){
-					var LogsName, LogsTarget,LogsCommand, LogsContent,LogsFrom, LogsTime = "";
-					LogsName = data[i].NAME;LogsTarget = data[i].TARGET;
-					LogsCommand = data[i].COMMAND;LogsContent = data[i].CONTENT;
-					LogsFrom = data[i].FROM;LogsTime = data[i].TIME;
-					var t = LogsTarget.split("/");var target="";
-					for(var j=0;j<t.length-1;j++){
-						target += t[j]+"<br>";
-						if(LogsFrom === "user"){
-							var rowNode = logtable.row.add( [
-								UnixToTime(LogsTime),
-								LogsName,
-								target,
-								LogsCommand,
-								LogsContent,
-							] ).draw( false ).node();
-                        }
-                    }
-				}
-
-
-			}
-			document.getElementById("log-spinner").style.display = "none";
-		})
-	}
-	$($.fn.dataTable.tables(true)).DataTable()
-      .columns.adjust()
-      .responsive.recalc();
-}
 
 function AllSelect(){
 	$("#dataTables-example tbody tr").addClass("selected");
@@ -278,6 +226,7 @@ function GetAllDevices() {
                   agentversion,
                   devicemodel,
                   stat,
+                  "",
                   "",
                 ] ).draw( false ).node();
                 $( rowNode ).addClass('demo4TableRow');
