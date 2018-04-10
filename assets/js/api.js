@@ -11,6 +11,14 @@ function apipost(myurl,object){
             timeout:10000,
             success:function(data){
                 resolve(data)
+            },
+            error:function(err){
+                if(err.status == 401){
+                    swal("","Login expired","error")
+                    window.location.href = "Login.html"
+                }else if(err.status == 403){
+                    swal("",JSON.parse(err.responseText).Description,"error")
+                }
             }
        });
    })
@@ -29,6 +37,14 @@ function apiput(myurl,object){
             timeout:10000,
             success:function(data){
                 resolve(data)
+            },
+            error:function(err){
+                if(err.status == 401){
+                    swal("","Login expired","error")
+                    window.location.href = "Login.html"
+                }else if(err.status == 403){
+                    swal("",JSON.parse(err.responseText).Description,"error")
+                }
             }
        });
    })
@@ -49,7 +65,12 @@ function apifile(myurl,data){
                 resolve(data)
             },
             error:function(err){
-                alert("网络连接失败,稍后重试",err);
+                if(err.status == 401){
+                    swal("","Login expired","error")
+                    window.location.href = "Login.html"
+                }else if(err.status == 403){
+                    swal("",JSON.parse(err.responseText).Description,"error")
+                }
             }
         });
    })
@@ -81,9 +102,10 @@ function apiget(myurl,object){
             },
             error:function(err){
                 if(err.status == 401){
-                  window.location.href = "Login.html"
-                }else{
-                  alert("网络错误")
+                    swal("","Login expired","error")
+                    window.location.href = "Login.html"
+                }else if(err.status == 403){
+                    swal("",JSON.parse(err.responseText).Description,"error")
                 }
             }
         });

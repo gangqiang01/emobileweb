@@ -4,8 +4,11 @@ var datatimes;
 
 //for GetAllDevices
 var GetUpdateDevice = ""; var m_Update = false;var m_devices = [];
+//
+var selectedrowids=[];
 
 $(function() {
+   
 	LoginStatus("UserDuedateCheck","AllDevice.html");
 	SetHTML("barset_management");
 	$('.panel-commands').css( 'cursor', 'pointer' );
@@ -74,297 +77,306 @@ $(function() {
 			document.getElementById("alphabetcategory").innerHTML += '<div id="panel-'+AllAlphabet[i]+'"class="panel panel-default" style="display:none;"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#alphabetcategory" href="#'+AlphBig+'"><span class="badge pull-right"><i class="fa fa-plus"></i></span>'+
 																AllAlphabet[i]+'</a></h4></div><div class="panel-collapse collapse" id="'+AlphBig+'" ><div class="panel-body"><ul id="'+Alpha+'"></ul></div></div></div>';
 		}
-
-
 });
+    var company = localStorage.getItem("Company");	var type="";
+    if(company === "Guest"){
+        type = "assets/json/lite.txt";
+    }else{
+        type = "assets/json/pro.txt";
+    }
+    function setup() {
+        loadJSON(type, drawData);
+    }
+    var myObj = "";
+    var DeviceTable = "";
+    function drawData(data) {
+        
+        myObj = data;
+        console.log(myObj);
+        //---- device table ----//
+        $('#dataTables-example').dataTable( {
+            "columnDefs": [ {
 
-var company = localStorage.getItem("Company");	var type="";
-if(company === "Guest"){
-	type = "assets/json/lite.txt";
-}else{
-	type = "assets/json/pro.txt";
-}
-function setup() {
-	loadJSON(type, drawData);
-}
-var myObj = "";
-var DeviceTable = "";
-function drawData(data) {
-	
-	myObj = data;
-	console.log(myObj);
-	//---- device table ----//
-	$('#dataTables-example').dataTable( {
-		"columnDefs": [ {
+            "targets": 5,
+            "className": "dt-center",
+            "data": null,
+            "render": function ( data, type, full, meta ) {
+                if(data[5]){
+                    var fa ='<i class="fa fa-child" style="color:green">online</i>';
+                }else{
+                    var fa ='<i class="fa fa-minus-circle" style="color:red">offline</i>';
+                }
 
-		"targets": 5,
-		"className": "dt-center",
-		"data": null,
-		"render": function ( data, type, full, meta ) {
-			if(data[5]){
-				var fa ='<i class="fa fa-child" style="color:green">online</i>';
-			}else{
-				var fa ='<i class="fa fa-minus-circle" style="color:red">offline</i>';
-			}
+            return fa;
+            }
+        },{
+            "targets": 6,
+            "className": "dt-center",
+            "data": null,
+            "render": function ( data, type, full, meta ) {
+                var fa = '';
 
-		  return fa;
-		}
-	  },{
-		"targets": 6,
-		"className": "dt-center",
-		"data": null,
-		"render": function ( data, type, full, meta ) {
-			var fa = '';
+                var id = "'"+data[1]+"'";
+                fa = '<a href="details.html?d%'+data[1]+'" <i class="fa fa-eye" align="center"></i></a>';
 
-			var id = "'"+data[1]+"'";
-			fa = '<a href="details.html?d%'+data[1]+'" <i class="fa fa-eye" align="center"></i></a>';
+            return fa;
+            }
+        },
+        {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   0
+        } ],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        }, 
+        "order": [[ 5, "desc" ]],
+        rowReorder: {
+            selector: 'td:nth-child(0)'
+        },
+        responsive: true
+        } );
 
-		  return fa;
-		}
-	  },{
-		orderable: false,
-		className: 'select-checkbox',
-		targets:   0
-	} ],
-	select: {
-		style:    'os',
-		selector: 'td:first-child'
-	}, 
-	"order": [[ 5, "desc" ]],
-	rowReorder: {
-		selector: 'td:nth-child(0)'
-	},
-	responsive: true
-	} );
+        DeviceTable = $('#dataTables-example').DataTable();
+        $('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
 
-	DeviceTable = $('#dataTables-example').DataTable();
-	$('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
+            //  var Data = DeviceTable.rows( this ).data().toArray();
+            //  console.dir(Data);
+            //  var commentgetdata = {};
+            //  commentgetdata._ = new Date().getTime();
+            //  if(Data[0][5] || $(this).hasClass("selected")){
+                // apiget('rmm/v1/data/device/'+1+'/capability', commentgetdata).then(function(data){
+                // 	console.log("comment",data);
+                //  })
+                $(this).toggleClass('selected');
+                var rowid = DeviceTable.row( this ).index();
+                if($(this).hasClass("selected")){
+                    selectedrowids.push(rowid); 
+                }else{
+                    selectedrowids.remove(rowid);
+                }
+                console.log(selectedrowids)
+            //  }
+            
+            //  var rowData = (Data[0]);
+            // if(rowData[5] === "offline"){
+                // var Title = "Warning!"
+                // var MsgBody = "Your device is offline.";
+                // SetAlertMsgInnerHTML(Title, MsgBody);
+                // document.getElementById("AlertMsgEvent").style.display = "none";
+                // document.getElementById("AlertMsgBtn").style.display = "none";
+            // }else{
+                // $(this).toggleClass('selected');
+            //}
+        });
 
-		//  var Data = DeviceTable.rows( this ).data().toArray();
-		//  console.dir(Data);
-		//  var commentgetdata = {};
-		//  commentgetdata._ = new Date().getTime();
-        //  if(Data[0][5] || $(this).hasClass("selected")){
-			// apiget('rmm/v1/data/device/'+1+'/capability', commentgetdata).then(function(data){
-			// 	console.log("comment",data);
-			//  })
-			 $(this).toggleClass('selected');
-		//  }
-		 
-		//  var rowData = (Data[0]);
-		 // if(rowData[5] === "offline"){
-			// var Title = "Warning!"
-			// var MsgBody = "Your device is offline.";
-			// SetAlertMsgInnerHTML(Title, MsgBody);
-			// document.getElementById("AlertMsgEvent").style.display = "none";
-			// document.getElementById("AlertMsgBtn").style.display = "none";
-		 // }else{
-			// $(this).toggleClass('selected');
-		 //}
-	});
+        // $('#dataTables-example tbody').on( 'contextmenu', 'tr', function (e, dt, type, indexes) {
+        //     $(this).addClass('selected');
 
-	$('#dataTables-example tbody').on( 'contextmenu', 'tr', function (e, dt, type, indexes) {
-		$(this).addClass('selected');
+        // } );
+        //---- device table ----//
 
-	} );
-	//---- device table ----//
+        //---- log table ----//
+        $('#LogTable').DataTable( {
+            "scrollY":        "200px",
+            "scrollCollapse": true,
+            "paging":         false,
+            "order": [[ 0, "desc" ]]
+        } );
 
-	//---- log table ----//
-	 $('#LogTable').DataTable( {
-		"scrollY":        "200px",
-		"scrollCollapse": true,
-		"paging":         false,
-		"order": [[ 0, "desc" ]]
-	} );
+        //---- log table ----//
+        var subCare = "";
+        var numCare = [2,3,7,8,9,10,11,19,20,22,23,33,34,35,36,44,45,48,49,50,51,53];
+        //var fafaicon = ["fa-tablet","fa-tasks","fa-thermometer-three-quarters"];
+        for(var i=0; i< numCare.length; i++){
+            var command = GetCommand(numCare[i], "CommTitle");
+            if(command !== "false"){
+                subCare += '<li><a href="javascript: void(0)" onclick="SendCommand('+numCare[i]+')">'+command+'</a></li>';
+            }
+            //var commandTitle = "'"+numCare[i]+"'";
 
-	//---- log table ----//
-	var subCare = "";
-	var numCare = [2,3,7,8,9,10,11,19,20,22,23,33,34,35,36,44,45,48,49,50,51,53];
-	//var fafaicon = ["fa-tablet","fa-tasks","fa-thermometer-three-quarters"];
-	for(var i=0; i< numCare.length; i++){
-		var command = GetCommand(numCare[i], "CommTitle");
-		if(command !== "false"){
-			subCare += '<li><a href="javascript: void(0)" onclick="SendCommand('+numCare[i]+')">'+command+'</a></li>';
-		}
-		//var commandTitle = "'"+numCare[i]+"'";
+        }
+        document.getElementById("subCare").innerHTML = subCare;
 
-	}
-	document.getElementById("subCare").innerHTML = subCare;
+        var subManage = "";
+        var numManage = [1,4,12,13,14,18,24,25,26,29,31,32,37,38,39,40,41,42,52,54,55,56,57,59,60,61,62,63,64];
+        for(var i=0; i< numManage.length; i++){
+            var command = GetCommand(numManage[i], "CommTitle");
+            if(command !== "false"){
+                subManage += '<li><a href="javascript: void(0)" onclick="SendCommand('+numManage[i]+')">'+command+'</a></li>';
+            }
+            //var commandTitle = "'"+numManage[i]+"'";
+        }
+        document.getElementById("subManage").innerHTML = subManage;
 
-	var subManage = "";
-	var numManage = [1,4,12,13,14,18,24,25,26,29,31,32,37,38,39,40,41,42,52,54,55,56,57,59,60,61,62,63,64];
-	for(var i=0; i< numManage.length; i++){
-		var command = GetCommand(numManage[i], "CommTitle");
-		if(command !== "false"){
-			subManage += '<li><a href="javascript: void(0)" onclick="SendCommand('+numManage[i]+')">'+command+'</a></li>';
-		}
-		//var commandTitle = "'"+numManage[i]+"'";
-	}
-	document.getElementById("subManage").innerHTML = subManage;
+        var subSecure = "";
+        var numSecure = [5,6,15,16,17,21,27,28,43,46,47,58];
+        for(var i=0; i< numSecure.length; i++){
+            var command = GetCommand(numSecure[i], "CommTitle");
+            if(command !== "false"){
+                subSecure += '<li><a href="javascript: void(0)" onclick="SendCommand('+numSecure[i]+')">'+command+'</a></li>';
+            }
+            //var commandTitle = "'"+numSecure[i]+"'";
 
-	var subSecure = "";
-	var numSecure = [5,6,15,16,17,21,27,28,43,46,47,58];
-	for(var i=0; i< numSecure.length; i++){
-		var command = GetCommand(numSecure[i], "CommTitle");
-		if(command !== "false"){
-			subSecure += '<li><a href="javascript: void(0)" onclick="SendCommand('+numSecure[i]+')">'+command+'</a></li>';
-		}
-		//var commandTitle = "'"+numSecure[i]+"'";
+        }
+        document.getElementById("subSecure").innerHTML = subSecure;
 
-	}
-	document.getElementById("subSecure").innerHTML = subSecure;
+        var subExtend = "";
+        var numExtend = [];
+        for(var i=0; i< numExtend.length; i++){
+            var command = GetCommand(numExtend[i], "CommTitle");
+            if(command !== "false"){
+                subExtend += '<li><a href="javascript: void(0)" onclick="SendCommand('+numExtend[i]+')">'+command+'</a></li>';
+            }
+            //var commandTitle = "'"+numExtend[i]+"'";
+            n
+        }
+        document.getElementById("subExtend").innerHTML = subExtend;
 
-	var subExtend = "";
-	var numExtend = [];
-	for(var i=0; i< numExtend.length; i++){
-		var command = GetCommand(numExtend[i], "CommTitle");
-		if(command !== "false"){
-			subExtend += '<li><a href="javascript: void(0)" onclick="SendCommand('+numExtend[i]+')">'+command+'</a></li>';
-		}
-		//var commandTitle = "'"+numExtend[i]+"'";
-        n
-	}
-	document.getElementById("subExtend").innerHTML = subExtend;
+        //--------------
+        var AllAlphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        var Alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+        var AlphBig = 'Alphabet-'+AllAlphabet[i];
+        var Alpha = 'Alphabet-'+Alphabet[i];
 
-	//--------------
-	var AllAlphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-	var Alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
-	var AlphBig = 'Alphabet-'+AllAlphabet[i];
-	var Alpha = 'Alphabet-'+Alphabet[i];
+        var objlength = Object.keys(myObj).length;
+        for(var i=1; i< objlength+1; i++){
+            var command = GetCommand(i, "CommTitle");
+            if(command !== "false"){
+                var ss = command.split("");
+                switch (ss[0]) {
+                    case "a":
+                    case "A":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-a").innerHTML += sub;
+                        document.getElementById("panel-A").style.display = "";
+                        break;
+                    case "c":
+                    case "C":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-c").innerHTML += sub;
+                        document.getElementById("panel-C").style.display = "";
+                        break;
+                    case "d":
+                    case "D":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-d").innerHTML += sub;
+                        document.getElementById("panel-D").style.display = "";
+                        break;
+                    case "e":
+                    case "E":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-e").innerHTML += sub;
+                        document.getElementById("panel-E").style.display = "";
+                        break;
+                    case "f":
+                    case "F":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-f").innerHTML += sub;
+                        document.getElementById("panel-F").style.display = "";
+                        break;
+                    case "g":
+                    case "G":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-g").innerHTML += sub;
+                        document.getElementById("panel-G").style.display = "";
+                        break;
+                    case "h":
+                    case "H":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-h").innerHTML += sub;
+                        document.getElementById("panel-H").style.display = "";
+                        break;
+                    case "l":
+                    case "L":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-l").innerHTML += sub;
+                        document.getElementById("panel-L").style.display = "";
+                        break;
+                    case "m":
+                    case "M":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-m").innerHTML += sub;
+                        document.getElementById("panel-M").style.display = "";
+                        break;
+                    case "r":
+                    case "R":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-r").innerHTML += sub;
+                        document.getElementById("panel-R").style.display = "";
+                        break;
+                    case "s":
+                    case "S":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-s").innerHTML += sub;
+                        document.getElementById("panel-S").style.display = "";
+                        break;
+                    case "t":
+                    case "T":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-t").innerHTML += sub;
+                        document.getElementById("panel-T").style.display = "";
+                        break;
+                    case "u":
+                    case "U":
+                        var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
+                        document.getElementById("Alphabet-u").innerHTML += sub;
+                        document.getElementById("panel-U").style.display = "";
+                        break;
 
-	var objlength = Object.keys(myObj).length;
-	for(var i=1; i< objlength+1; i++){
-		var command = GetCommand(i, "CommTitle");
-		if(command !== "false"){
-			var ss = command.split("");
-			switch (ss[0]) {
-				case "a":
-				case "A":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-a").innerHTML += sub;
-					document.getElementById("panel-A").style.display = "";
-					break;
-				case "c":
-				case "C":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-c").innerHTML += sub;
-					document.getElementById("panel-C").style.display = "";
-					break;
-				case "d":
-				case "D":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-d").innerHTML += sub;
-					document.getElementById("panel-D").style.display = "";
-					break;
-				case "e":
-				case "E":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-e").innerHTML += sub;
-					document.getElementById("panel-E").style.display = "";
-					break;
-				case "f":
-				case "F":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-f").innerHTML += sub;
-					document.getElementById("panel-F").style.display = "";
-					break;
-				case "g":
-				case "G":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-g").innerHTML += sub;
-					document.getElementById("panel-G").style.display = "";
-					break;
-				case "h":
-				case "H":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-h").innerHTML += sub;
-					document.getElementById("panel-H").style.display = "";
-					break;
-				case "l":
-				case "L":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-l").innerHTML += sub;
-					document.getElementById("panel-L").style.display = "";
-					break;
-				case "m":
-				case "M":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-m").innerHTML += sub;
-					document.getElementById("panel-M").style.display = "";
-					break;
-				case "r":
-				case "R":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-r").innerHTML += sub;
-					document.getElementById("panel-R").style.display = "";
-					break;
-				case "s":
-				case "S":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-s").innerHTML += sub;
-					document.getElementById("panel-S").style.display = "";
-					break;
-				case "t":
-				case "T":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-t").innerHTML += sub;
-					document.getElementById("panel-T").style.display = "";
-					break;
-				case "u":
-				case "U":
-					var sub = '<li><a href="javascript: void(0)" onclick="SendCommand('+i+')">'+command+'</a></li>';
-					document.getElementById("Alphabet-u").innerHTML += sub;
-					document.getElementById("panel-U").style.display = "";
-					break;
+                }
+            }
 
-			}
-		}
+        }
 
-	}
-
-	//--------------
-	//ex. 10/13/1/4/...
-	var postdata = {
-		name: getCookie('UserName'),
-		company: localStorage.getItem("Company"),
-		submit: "GetCommandTimes"
-	}
-
-
-	$.post("/golang",
-	postdata,
-	function(data,status){
-		var scores = [];
-		console.log(data);
-		datatimes = data;
-		document.getElementById("frequencyused").innerHTML = "";
-		var t = datatimes.split("/");
-		console.log(t.length);
-		for(var i=0; i<t.length-1; i++){
-			var a = t[i].split(":");
-			scores.push({item:a[0],times:parseInt(a[1])});
-
-		}
-		scores.sort(function (a, b) {
-			return a.times < b.times ? 1 : -1;
-			});
-		if(t.length-1 >= 10){
-			for(var i=0; i< 10;i++){
-				var fa = '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a href="javascript: void(0)" onclick="SendCommand('+scores[i].item+')">'+GetCommand(scores[i].item, "CommTitle")+'<label class="pull-right">'+scores[i].times+'</label></a></h4></div></div>';
-				document.getElementById("frequencyused").innerHTML += fa;
-			}
-		}else{
-			for(var i=0; i< t.length-1;i++){
-				var fa = '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a href="javascript: void(0)" onclick="SendCommand('+scores[i].item+')">'+GetCommand(scores[i].item, "CommTitle")+'<label class="pull-right">'+scores[i].times+'</label></a></h4></div></div>';
-				document.getElementById("frequencyused").innerHTML += fa;
-			}
-		}
+        //--------------
+        //ex. 10/13/1/4/...
+        var postdata = {
+            name: getCookie('UserName'),
+            company: localStorage.getItem("Company"),
+            submit: "GetCommandTimes"
+        }
 
 
-	});
-	GetAllDevices();
-	GetLogInfo(3);
-}
+        $.post("/golang",
+        postdata,
+        function(data,status){
+            var scores = [];
+            console.log(data);
+            datatimes = data;
+            document.getElementById("frequencyused").innerHTML = "";
+            var t = datatimes.split("/");
+            console.log(t.length);
+            for(var i=0; i<t.length-1; i++){
+                var a = t[i].split(":");
+                scores.push({item:a[0],times:parseInt(a[1])});
+
+            }
+            scores.sort(function (a, b) {
+                return a.times < b.times ? 1 : -1;
+                });
+            if(t.length-1 >= 10){
+                for(var i=0; i< 10;i++){
+                    var fa = '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a href="javascript: void(0)" onclick="SendCommand('+scores[i].item+')">'+GetCommand(scores[i].item, "CommTitle")+'<label class="pull-right">'+scores[i].times+'</label></a></h4></div></div>';
+                    document.getElementById("frequencyused").innerHTML += fa;
+                }
+            }else{
+                for(var i=0; i< t.length-1;i++){
+                    var fa = '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a href="javascript: void(0)" onclick="SendCommand('+scores[i].item+')">'+GetCommand(scores[i].item, "CommTitle")+'<label class="pull-right">'+scores[i].times+'</label></a></h4></div></div>';
+                    document.getElementById("frequencyused").innerHTML += fa;
+                }
+            }
+
+
+        });
+        GetAllDevices();
+        GetLogInfo(3);
+    }
+
+
+
+
 function GetLogInfo(days){
 	document.getElementById("log-spinner").style.display = "block";
 	var tmp = true;
@@ -490,7 +502,7 @@ function SendCommand(sub){
 		container[0].className += " taginputHide" ;
 		var indexes = DeviceTable.rows().eq( 0 ).filter( function (rowIdx) {
 			var data = DeviceTable.cell(rowIdx, 5 ).data();
-			if(data[5]){
+			if(data){
 				var tmp = true;
 				for (var i = 0; i < DeviceTable.rows('.selected').data().length; i++) {
 					if(data[1] === DeviceTable.rows('.selected').data()[i][1]){
@@ -589,10 +601,6 @@ function SendCommand(sub){
 			}
 		});
 	//}
-
-
-
-
 }
 
 function TagRemoveEvent(){
@@ -752,71 +760,6 @@ function SetDeviceName(id, devicevalue){
 
 function AddNewDevice(){
     window.location.href = "Adddevice.html"
-	// var Title = "Add your device";
-	// document.getElementById("AlertMsgEvent").innerHTML = '<input type="text" id="devicetag" />';
-
-	// $('#devicetag').tagsinput({
-	// 	itemValue: 'value',
-	// 	itemText: 'text',
-	// });
-	// document.getElementById("devicetag").disabled = true;
-	// $("#devicetag").parent().find('.bootstrap-tagsinput').addClass('taginputHide');
-	// document.getElementById("AlertMsgEvent").style.display = "";
-	// var MsgBody= 'Enter the identification code which you received on your phone.<br><font color="red"><label id="result"></label></font><br><input type="text" id="txtDeviceName" placeholder="Identification Code" style="margin-right:20px;"><button id="btnAddNewDevice" type="button" class="btn btn-primary" >add</button>';
-	// SetAlertMsgInnerHTML(Title, MsgBody);
-	// var x = 0;
-	// document.getElementById("btnAddNewDevice").onclick = function() {
-	// 	var postdata = {
-	// 		name: getCookie('UserName'),
-	// 		company: localStorage.getItem("Company"),
-	// 		deviceid: document.getElementById("txtDeviceName").value,
-	// 		submit: "GetDeviceId"
-	// 	}
-	// 	$.post("/golang",
-	// 	postdata,
-	// 	function(data,status){
-	// 		document.getElementById("result").innerHTML = "";
-	// 		var items = $('#devicetag').tagsinput('items');
-	// 		//if(items.length === 3) data = "oversub";
-	// 		if(data === "success"){
-	// 			$('#devicetag').tagsinput('add', { "value":  document.getElementById("txtDeviceName").value, "text": document.getElementById("txtDeviceName").value}); x++;
-	// 		}else if(data === "error"){
-	// 			document.getElementById("result").innerHTML = "Oops , your device id is wrong!<br>";
-	// 		}else if(data === "used"){
-	// 			document.getElementById("result").innerHTML = "Oops , your device id is already add in your list!<br>";
-	// 		}else if(data === "oversub"){
-	// 			document.getElementById("result").innerHTML = "Oops , your account subscribes too many devices!<br>";
-	// 		}
-	// 		document.getElementById("txtDeviceName").value = "";
-	// 	});
-
-
-	// }
-
-	// document.getElementById("AlertMsgBtn").style.display = "";
-	// document.getElementById("AlertMsgBtn").onclick = function() {
-
-	// 	var items = $('#devicetag').tagsinput('items');
-	// 	var subscribe = "";
-	// 	for (var i = 0; i < items.length; i++) {
-	// 		subscribe += items[i].value + "/";
-	// 	}
-	// 	var postdata = {
-	// 		name: getCookie('UserName'),
-	// 		company: localStorage.getItem("Company"),
-	// 		subscribe: subscribe,
-	// 		submit: "SetSubscribeDevices"
-	// 	}
-	// 	$.post("/golang",
-	// 	postdata,
-	// 	function(data,status){
-	// 		if (data === "success"){
-	// 			GetAllDevices();
-	// 			window.location.href = "AllDevice.html";
-	// 		}
-
-	// 	});
-	// }
 }
 
 
@@ -853,48 +796,60 @@ function AllCancel(){
 	$("#dataTables-example tbody tr").removeClass("selected");
 }
 
-function MenuShow(){
-		var menu = new BootstrapMenu('.demo4TableRow', {
-	  fetchElementData: function($rowElem) {
-        var rowId = $rowElem.data('rowId');
-        console.log(rowId)
-		return demo4Rows[rowId];
-	  },
-	  /* group actions by their id to make use of separators between
-	   * them in the context menu. Actions not added to any group with
-	   * this option will appear in a default group of their own. */
+// function MenuShow(){
+// 		var menu = new BootstrapMenu('.demo4TableRow', {
+// 	  fetchElementData: function($rowElem) {
+//         var rowId = $rowElem.data('rowId');
+//         console.log(rowId)
+// 		return demo4Rows[rowId];
+// 	  },
+// 	  /* group actions by their id to make use of separators between
+// 	   * them in the context menu. Actions not added to any group with
+// 	   * this option will appear in a default group of their own. */
 
-	  /* you can declare 'actions' as an object instead of an array,
-	   * and its keys will be used as action ids. */
-	  actions: {
-		addRow: {
-		  name: 'Add New devices',
-		  iconClass: 'fa-pencil',
-		  onClick: function(row) {
-            //   console.log(row);
-			AddNewDevice();
-		  }
-		},
-		deleteRow: {
-		  name: 'Delete device',
-		  iconClass: 'fa-trash-o',
-		  onClick: function(row) {
-			deletedevice(row);
-			console.log("'Delete device' clicked on '" + row.deviceid + "'");
-		  }
+// 	  /* you can declare 'actions' as an object instead of an array,
+// 	   * and its keys will be used as action ids. */
+// 	  actions: {
+// 		addRow: {
+// 		  name: 'Add New devices',
+// 		  iconClass: 'fa-pencil',
+// 		  onClick: function(row) {
+//             //   console.log(row);
+// 			AddNewDevice();
+// 		  }
+// 		},
+// 		deleteRow: {
+// 		  name: 'Delete device',
+// 		  iconClass: 'fa-trash-o',
+// 		  onClick: function(row) {
+// 			deletedevice(row);
+// 			console.log("'Delete device' clicked on '" + row.deviceid + "'");
+// 		  }
 
-		}
-	  }
-	});
-}
-function deletedevice(did){
+// 		}
+// 	  }
+// 	});
+// }
+function deletedevice(){
     // var dddata = new FormData();
     // var ddval = [{did: did.deviceid, grounpIds:[]}];
     // dddata.append("devices", ddval);
-    var dddata = {devices:[{did: did.deviceid, groupIds:[]}]};    
+    // var dddata = {devices:[{did: did.deviceid, groupIds:[]}]}; 
+    
+    
+    var dddata = {};
+    dddata.devices = [];
+    if(!selectedrowids){
+        return;
+    }
+    var groupid = sessionStorage["groupid"]
+    for (var i=0 ;i< selectedrowids.length;i++){
+        dddata.devices[i] = {"did": demo4Rows[selectedrowids[i]].deviceid, "groupIds":[]};
+    }
     apiput("rmm/v1/devices", dddata).then(function(data){
         console.log("deletedevice",data);
         if (data.result){
+            swal("","Delete device successfully","success")
             GetAllDevices();
         }
     })

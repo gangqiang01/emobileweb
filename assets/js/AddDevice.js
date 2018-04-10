@@ -39,7 +39,7 @@ $(function(){
             $(this).toggleClass('selected');
             // console.log($(this).hasClass("selected"))
             if($(this).hasClass("selected")){
-                    selectedrowids.push(rowid); 
+                selectedrowids.push(rowid); 
             }else{
                 selectedrowids.remove(rowid);
             }
@@ -79,6 +79,7 @@ $(function(){
             }
         })
     }
+
     $("#adddevice").on("click", function(){
         // var adddata = {devices:[{did: did.deviceid, groupIds:[]}]};
         var adddata = {};
@@ -86,19 +87,18 @@ $(function(){
         if(!selectedrowids){
             return;
         }
-    
-        var groupid = sessionStorage["groupid"]
         for (var i=0 ;i< selectedrowids.length;i++){
             adddata.devices[i] = {};
             adddata.devices[i].did = unassigneddid[selectedrowids[i]].deviceid; 
-            adddata.devices[i].groudIds = []
-            adddata.devices[i].groudIds[0] = groupid+"";
+            adddata.devices[i].groupIds = []
+            adddata.devices[i].groupIds[0] = groupid+"";
         }    
         apiput("rmm/v1/devices", adddata).then(function(data){
-        console.log("deletedevice",data);
-        if (data.result){
-            // window.location.href = "AllDevice.html"
-        }
-    })
+        // console.log("deletedevice",data);
+            if (data.result){
+                swal( "", "Add device successfully!", "success");
+                window.location.href = "AllDevice.html";
+            }
+        })
     })
 })
