@@ -20,8 +20,8 @@ function LoginStatus(page) {
         var url = "rmm/v1/accounts/login"
         apiget(url).then(
             function(data){
-                if(page != undefined){
-                    if(data.result){
+                if(data.result){
+					if(page != undefined){
                         setCookie("page", page, 60);
                     }
                 }
@@ -307,22 +307,6 @@ function GetAllDevicesName(id){
 	return id;
 }
 
-function SetLogsView(id){
-	var company = localStorage.getItem("Company");
-	var name = getCookie("UserName");
-	var postdata = {
-			name: name,
-			company: company,
-			id: id,
-			submit: "SetLogView"
-	}
-	$.post("/golang",
-	postdata,
-		function(data,status){
-			$( "button[onclick*='"+id+"']").parent( ".notification_content-button" ).parent( ".notification_content" ).remove();
-			SetNotificationBell("subtract");
-		});
-}
 
 function SetNavbar(){
 	$('.navbar-fixed-top').append( ' <div class="navbar navbar-inverse set-radius-zero " >'+
@@ -513,4 +497,11 @@ function SetSubscribe(device, value){
 
 }
 
+function DeviceDataController(data){
+	console.log("DeviceDataController",data);
+	var ControllerDevices = data.split(",")
+}
 
+function DeviceVcn(data){
+	console.log("vcn",data);
+}

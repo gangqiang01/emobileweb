@@ -29,10 +29,11 @@ function submitDB() {
 								localStorage.removeItem("Password");
 							}
 							if(checkCookie("page")){
-								window.location.href = "index.html";
-							}else{
-                                var originhtml=getCookie('page')
+								var originhtml = getCookie('page');
 								window.location.href =  originhtml;
+								
+							}else{
+								window.location.href = "index.html";
 							}
 						}
 					}   

@@ -9,54 +9,13 @@ var selectedrowids=[];
 
 $(function() {
    
-	LoginStatus("UserDuedateCheck","AllDevice.html");
+	LoginStatus("AllDevice.html");
 	SetHTML("barset_management");
-	$('.panel-commands').css( 'cursor', 'pointer' );
-		$('.command-tag-red').slideUp();
-		$('.panel-commands').on('click', function(e){
-
-			var $this = $(this).find('.command-clickable');
-			if(!$this.hasClass('panel-collapsed')) {
-				$this.parents('.panel-command-col').slideUp();
-				$this.addClass('panel-collapsed');
-				$this.find('i').removeClass('fa fa-angle-double-right fa-2x').addClass('fa fa-angle-double-left fa-2x');
-				$('.command-tag-red').show( "slow" );
-				$(".panel-devices-col").removeClass("col-md-8");
-				$(".panel-devices-col").addClass("col-md-12");
-			} else {
-				$this.parents('.panel').find('.panel-body').slideDown();
-				$this.removeClass('panel-collapsed');
-				$this.find('i').removeClass('fa fa-angle-double-left fa-2x').addClass('fa fa-angle-double-right fa-2x');
-
-			}
-
-
-		});
-		$('.command-tag-yellow').on('click', function(e){
-			m_Update = true;
-			GetAllDevices();
-		});
-
-		$(".clickable").addClass('panel-collapsed');
-		$(".clickable").parents('.panel').find('.panel-body').slideUp();
-		$(".clickable").find('i').removeClass('fa fa-angle-double-down fa-2x').addClass('fa fa-angle-double-up fa-2x');
-		$('.panel-logs').css( 'cursor', 'pointer' );
-		$('.panel-logs').on('click', function(e){
-			if($('#days').has(e.target).length === 0){
-				var $this = $(this).find('.clickable');
-				if(!$this.hasClass('panel-collapsed')) {
-					$this.parents('.panel').find('.panel-body').slideUp();
-					$this.addClass('panel-collapsed');
-					$this.find('i').removeClass('fa fa-angle-double-down fa-2x').addClass('fa fa-angle-double-up fa-2x');
-				} else {
-					$this.parents('.panel').find('.panel-body').slideDown();
-					$this.removeClass('panel-collapsed');
-					$this.find('i').removeClass('fa fa-angle-double-up fa-2x').addClass('fa fa-angle-double-down fa-2x');
-				}
-			}
-
-        });
-        drawData();
+    $('.command-tag-yellow').on('click', function(e){
+        m_Update = true;
+        GetAllDevices();
+    });
+    drawData();
 });
 
 
@@ -85,9 +44,8 @@ function drawData() {
         "data": null,
         "render": function ( data, type, full, meta ) {
             var fa = '';
-
             var id = "'"+data[1]+"'";
-            fa = '<a class="btn btn-info" onclick="DeviceControl()">Control</a>';
+            fa = `<a class="btn btn-info" onclick="DeviceVcn('${data}')"><i class="fa fa-television" style="padding-right:5px"></i>Control</a>`;
 
         return fa;
         }
@@ -97,11 +55,9 @@ function drawData() {
         "data": null,
         "render": function ( data, type, full, meta ) {
             var fa = '';
-
             var id = "'"+data[1]+"'";
-            fa = '<a class="btn btn-info" onclick="alert(‘ok’)">Get/Set</a>';
-
-        return fa;
+            fa = `<a class="btn btn-info" onclick="DeviceDataController('${data}')"><i class="fa fa-paw" style="padding-right:5px"></i>Get/Set</a>`;
+            return fa;
         }
     },
     {
@@ -110,7 +66,7 @@ function drawData() {
         targets:   0
     } ],
     select: {
-        style:    'os',
+        style:    'multi',
         selector: 'td:first-child'
     }, 
     "order": [[ 5, "desc" ]],
@@ -118,9 +74,9 @@ function drawData() {
     } );
 
     DeviceTable = $('#dataTables-example').DataTable();
-    $('#dataTables-example tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
+    $('#dataTables-example tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
             var rowid = DeviceTable.row( this ).index();
-            if($(this).hasClass("selected")){
+            if($(this).parent().hasClass("selected")){
                 selectedrowids.remove(rowid);
             }else{
                 selectedrowids.push(rowid); 
@@ -136,10 +92,6 @@ function drawData() {
     } );
     GetAllDevices();
 }
-
-
-
-
 
 function AllSelect(){
 	$("#dataTables-example tbody tr").addClass("selected");

@@ -1,9 +1,8 @@
 $(function(){
     var unassigneddid = [];
     var selectedrowids=[];
-    LoginStatus("UserDuedateCheck","AllDevice.html");
+    LoginStatus();
 	SetHTML("barset_management");
-	$('.panel-commands').css( 'cursor', 'pointer' );
     getunassigneddevices();
     function AllSelect(){
         $("#UnassignedDevicesTables tbody tr").addClass("selected");
@@ -23,7 +22,7 @@ $(function(){
             targets:   0
             }],
             select: {
-                style:    'os',
+                style:    'multi',
                 selector: 'td:first-child'
             }, 
             "order": [[ 0, "desc" ]],
@@ -33,16 +32,15 @@ $(function(){
             responsive: true
         });
         var table = $('#UnassignedDevicesTables').DataTable()
-        $('#UnassignedDevicesTables tbody').on( 'click', 'tr', function (e, dt, type, indexes) {
-            console.log(table.row( this ).index() )
+        $('#UnassignedDevicesTables tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
+            
             var rowid = table.row( this ).index();
-            // $(this).toggleClass('selected');
-            // console.log($(this).hasClass("selected"))
-            if($(this).hasClass("selected")){
+            if($(this).parent().hasClass("selected")){
                 selectedrowids.remove(rowid);
             }else{
                 selectedrowids.push(rowid); 
             }
+            console.log(selectedrowids)
         });
 
 
@@ -69,6 +67,7 @@ $(function(){
                     //add row in table
                     var rowNode = table.row.add( [
                       "",
+                      did,
                       devicename,
                       Agentid,
                     ] ).draw( false ).node();
