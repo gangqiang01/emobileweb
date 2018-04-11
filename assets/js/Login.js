@@ -1,6 +1,8 @@
 
 
 //form request(UserLogin, LoginCompany, AddNewUser, VerificationCode, ResetNewPassword)
+RememberMe();
+
 function submitDB() {
 	var form = {};
 	form.username = $("#UserName").val();
@@ -13,6 +15,7 @@ function submitDB() {
 				apiget("rmm/v1/accounts/login").then(
 					function(data){
 						if(data.result){
+                            setCookie("SessionId",data.sessionId);
 							var encryptedUserName = CryptoJS.AES.encrypt(form.username, "AIM Secret Passphrase")
 							var encryptedPassword = CryptoJS.AES.encrypt(form.password, "AIM Secret Passphrase")
 							var checkboxstatus = $("#check");
@@ -25,10 +28,11 @@ function submitDB() {
 								localStorage.removeItem("UserName");
 								localStorage.removeItem("Password");
 							}
-							if(getCookie("page") === ""){
+							if(checkCookie("page")){
 								window.location.href = "index.html";
 							}else{
-								window.location.href =  "index.html";
+                                var originhtml=getCookie('page')
+								window.location.href =  originhtml;
 							}
 						}
 					}   
@@ -38,26 +42,10 @@ function submitDB() {
 		}
 	)
 }
-function getCookie(cname) {
-	var name = cname + "=";
-	var decodedCookie = decodeURIComponent(document.cookie);
-	var ca = decodedCookie.split(';');
-	for(var i = 0; i <ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			var cvalue = c.substring(name.length, c.length);
-			return cvalue;
-		}
-	}
-	return "";
-}
 
 // remember user name
-(function RememberMe(){
-	if(localStorage["UserName"]!==null && localStorage["Password"]!==null && localStorage["UserName"] !=="" && localStorage["Password"] !=="" && localStorage["Password"] !==undefined && localStorage["UserName"] !== undefined){
+function RememberMe(){
+	if(localStorage["UserName"] && localStorage["Password"]){
 		var decryptedUserName = CryptoJS.AES.decrypt(localStorage["UserName"], "AIM Secret Passphrase");
 	var decryptedPassword = CryptoJS.AES.decrypt(localStorage["Password"], "AIM Secret Passphrase")
 	document.getElementById("UserName").value = decryptedUserName.toString(CryptoJS.enc.Utf8);
@@ -68,7 +56,6 @@ function getCookie(cname) {
 		var checkboxstatus = document.getElementById("check");
 		checkboxstatus.checked = true;
 	}
-
-})();
+};
 
 

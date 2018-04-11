@@ -1,4 +1,4 @@
-var i;
+
 Array.prototype.in_array = function (element) { 
 　　for (var i = 0; i < this.length; i++) { 
 		if (this[i] == element) { 
@@ -16,14 +16,18 @@ Array.prototype.remove = function(val) {
 };
 //verify user and save in page
 function LoginStatus(page) {
-		var url = "rmm/v1/accounts/login"
-		apiget(url).then(
-			function(data){
-				if(data.result){
-					setCookie("page", page, 60);
-				}
-			}
-		)
+    if(checkCookie("SessionId")){
+        var url = "rmm/v1/accounts/login"
+        apiget(url).then(
+            function(data){
+                if(page != undefined){
+                    if(data.result){
+                        setCookie("page", page, 60);
+                    }
+                }
+            }
+        )
+    } 
 }
 
 //get user cookie without decrypt
@@ -47,7 +51,7 @@ function getCookie(cname) {
 //if cookie is null then return true
 function checkCookie(cname) {
 	var username = getCookie(cname);
-	if (username == "" || username == null) {
+	if (username) {
 		return true;
 	} else {
 		return false;
@@ -60,8 +64,6 @@ function setCookie(cname, cvalue, exmins) {
 	d.setTime(d.getTime() + (exmins * 60 * 1000));
 	var expires = "expires=" + d.toUTCString();
 	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-	window.clearInterval(i);
-	i = setInterval(function() { alert("Your cookie is about to timeout due to inactivity");window.location.href = "Login.html"; }, exmins* 60 * 1000);
 }
 
 // delete user cookies
@@ -73,6 +75,7 @@ function DeleteCookie() {
 //set HTML (notification bell, profile card)
 var AllDevices = [];
 var ProfileInfo;
+
 function SetHTML(html){
 	SetNavbar();
 	//SetAlertNotification();
@@ -99,30 +102,32 @@ function SetHTML(html){
     $('#'+html).addClass('menu-top-active');
     var data = {};
     data._now =  new Date().getTime();
-    apiget("rmm/v1/accounts/myself",data).then(function(data){
-        console.log("user",data);
-        document.getElementById("card-email").innerHTML+=data["accounts"][0].mail;
-        document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
-
-        document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(data["accounts"][0].login_unix_ts)+'</p>';
-
-
-        if(location.pathname === "/profile.html"){
-            GetAccountInfo();
-        }else if(location.pathname === "/management.html"){
-            SetPermissionContent();
-        }else if(location.pathname === "/contact-us.html"){
-            GetQuestion();
-        }
-    })
-
-  var dvdata = {};
-  dvdata._ = new Date().getTime();
-  apiget("rmm/v1/devices/own/status/number", dvdata).then(
-    function(data){
-      document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
+    if(checkCookie("SessionId")){
+        apiget("rmm/v1/accounts/myself",data).then(function(data){
+            console.log("user",data);
+            document.getElementById("card-email").innerHTML+=data["accounts"][0].mail;
+            document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
+    
+            document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(data["accounts"][0].login_unix_ts)+'</p>';
+    
+    
+            if(location.pathname === "/profile.html"){
+                GetAccountInfo();
+            }else if(location.pathname === "/management.html"){
+                SetPermissionContent();
+            }else if(location.pathname === "/contact-us.html"){
+                GetQuestion();
+            }
+        })
+        var dvdata = {};
+        dvdata._ = new Date().getTime();
+        apiget("rmm/v1/devices/own/status/number", dvdata).then(
+            function(data){
+            document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
+            }
+        )
     }
-  )
+
     if(location.pathname === "/details.html"){
         var groupid = sessionStorage["groupid"]
         if(groupid != undefined){

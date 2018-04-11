@@ -1,6 +1,6 @@
 //onload page
 $(function() {
-	LoginStatus("index.html");
+    LoginStatus("index.html");
 	SetHTML("barset_index");
 	$('.alert').css( 'cursor', 'pointer' );
 	$(".alert").hover(function () {
