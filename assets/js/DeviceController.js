@@ -7,7 +7,6 @@ $(function(){
     var deviceplugins=[];
     getdevicename();
     getdeviceplugin();
-    DrawSensors()
     // getdevicesensors();
 
     function　getdevicename(){
@@ -22,14 +21,16 @@ $(function(){
         apiget(myurl,getpluginform).then(function(data){
             var txtplugins="";
             deviceplugins = data.Plugins;
-            if(!deviceplugins){
-                txtplugins = '<option class="bs-title-option" value="">no plugin</option>'+ txtplugins;
-            }else{
+            if(deviceplugins){
                 deviceplugins.forEach(function(value,index){
                     if(value.analysis){
                         txtplugins = "<option data-subtext="+value.plugin+">"+value.plugin+"</option>"+ txtplugins;
                     }
                 })
+
+                DrawSensors(deviceplugins[0].plugin);
+            }else{
+                txtplugins = '<option class="bs-title-option" value="">no plugin</option>'+ txtplugins;
             }
           
             $("#pluginId").html(txtplugins);
@@ -42,25 +43,59 @@ $(function(){
     function AllCancel(){
         $("#DeviceSensorsTables tbody tr").removeClass("selected");
     }
-    function DrawSensors(){
+    function DrawSensors(deviceplugin){
+        if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
+            table = $('#DeviceSensorsTables').DataTable();
+        }
+        else {
+        //     table = $('#DeviceSensorsTables').DataTable( {
+        //         paging: false
+        //     } );
+        // }
         $('#DeviceSensorsTables').dataTable({
             "columnDefs": 
             [{
-                "targets": 1,
+                "targets": 0,
                 "className": "dt-center",
                 "data": null,
+                "width": '15%',
                 "render": function ( data, type, full, meta ) {
-                        var fa ="<i class='fa fa-hand-lizard-o' ></i><a class='btn btn-info'>"+data[0]+"</a>";
-    
+                    if(data[0] == 'rw'){
+                        var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></i>Read/Update</a>"
+                    }else{
+                        var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px'></i>Read</a>"
+                    };
                 return fa;
                 }
-            }], 
+            },
+            {
+                "targets": 3,
+                "className": "dt-center",
+                "data": null,
+                "width": '15%',
+                "render": function ( data, type, full, meta ) {
+                    if(data[0] == 'rw'){
+                        var fa ="<a>Read/write</a>"
+                    }else{
+                        var fa ="<a>Read</a>"
+                    };
+                return fa;
+                }
+            }
+        ], 
             "order": [[ 0, "desc" ]],
             responsive: true
         });
-        var table = $('#DeviceSensorsTables').DataTable()
+        }
         $('#DeviceSensorsTables tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
-            
+            if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
+                table = $('#DeviceSensorsTables').DataTable();
+            }
+            else {
+                table = $('#DeviceSensorsTables').DataTable( {
+                    paging: false
+                } );
+            }
             var SelectedUnassignedDid = table.row( this ).data()[1];
             if($(this).parent().hasClass("selected")){
                 selectedrowids.remove(SelectedUnassignedDid);
@@ -69,42 +104,53 @@ $(function(){
             }
             console.log(selectedrowids)
         });
-        var plugin = deviceplugins[0].plugin;
-        var DeviceSensorData = getdevicesensors(plugin);
-        if(DeviceSensorData){
-            return;
-        }
-        var tableData = data.devices;
-        var table = $('#DeviceSensorsTables').DataTable();
-        table.clear();
-        if(tableData === ""){
-          table.clear().draw();
-        //	return;
-        }else{
-            for(var i=0;i<Object.keys(tableData).length;i++){
-                var exit, plugin , sensor , privilege, time = "";
-                Agentid = tableData[i].agentId;
-                devicename = tableData[i].name;
-                did = tableData[i].did;
-                time = UnixToTime(tableData[i].create_unit_ts);
-                //add row in table
-                var rowNode = table.row.add( [
-                  exit,
-                  plugin,
-                  sensor,
-                  privilege,
-                ] ).draw( false ).node();
-                $( rowNode ).addClass('demo4TableRow');
-                $( rowNode ).attr('data-row-id',i);
+        // var DeviceSensorData = getdevicesensors(plugin);
+        // if(DeviceSensorData){
+        //     return;
+        // }
+        var getsensorsdata = {};
+        getsensorsdata._ = new Date().getTime();
+        var myurl = "rmm/v1/devices/"+devicedid+"/"+deviceplugin+"/sensors";
+        apiget(myurl, getsensorsdata).then(function(data){
+            var tableData = data.sensorIds;
+            if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
+                table = $('#DeviceSensorsTables').DataTable();
             }
-        }
+            else {
+                table = $('#DeviceSensorsTables').DataTable( {
+                    paging: false
+                } );
+            }
+            table.clear();
+            if(tableData === ""){
+            table.clear().draw();
+            //	return;
+            }else{
+                for(var i=0;i<Object.keys(tableData).length;i++){
+                    var exit, plugin , sensor , privilege, time = "";
+                    exit = tableData[i].asm;
+                    plugin = deviceplugin;
+                    sensor = tableData[i].sensorId;
+                    privilege = tableData[i].asm;
+                    //add row in table
+                    var rowNode = table.row.add( [
+                    exit,
+                    plugin,
+                    sensor,
+                    privilege,
+                    ] ).draw( false ).node();
+                    $( rowNode ).addClass('demo4TableRow');
+                    $( rowNode ).attr('data-row-id',i);
+                }
+            }
+        })
     }
     function getdevicesensors(plugin){
 
         //---- device table ----//
         var getsensorsdata = {};
         getsensorsdata._ = new Date().getTime();
-        var myurl = "rmm/v1/devices/"+devicedid+"/"+plugin+"/sensor";
+        var myurl = "rmm/v1/devices/"+devicedid+"/"+plugin+"/sensors";
         apiget(myurl, getsensorsdata).then(function(data){
             console.log(data);
             return data;
@@ -114,7 +160,7 @@ $(function(){
 
     $("#pluginId").on("change", function(e){
         // var adddata = {devices:[{did: did.deviceid, groupIds:[]}]};
-        console.log(e.value());
+        DrawSensors(e.target.value);
        
     })
 })

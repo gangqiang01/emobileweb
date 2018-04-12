@@ -62,9 +62,9 @@ function drawData() {
                 var fa = '';
                 var id = "'"+data[1]+"'";
                 if(data[5]){
-                    fa = `<a class="btn btn-info" onclick="DeviceDataController('${data}')"><i class="fa fa-paw" style="padding-right:5px"></i>Get/Set</a>`;
+                    fa = `<a class="btn btn-info" onclick="DeviceDataController('${data}')"><i class="fa  fa-hand-lizard-o" style="padding-right:5px"></i>Get/Set</a>`;
                 }else{
-                    fa = `<a class="btn btn-info disabled" onclick="DeviceDataController('${data}')"><i class="fa fa-paw" style="padding-right:5px"></i>Get/Set</a>`;
+                    fa = `<a class="btn btn-info disabled" onclick="DeviceDataController('${data}')"><i class="fa  fa-hand-lizard-o" style="padding-right:5px"></i>Get/Set</a>`;
                     
                 }
                 return fa;  
