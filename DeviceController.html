@@ -32,7 +32,7 @@
     <script src="assets/js/dataTables/dataTables.select.min.js"></script>
 	<script src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.min.js"></script>
-    <script src="assets/js/AddDevice.js"></script>
+    <script src="assets/js/DeviceController.js"></script>
     <!--numpad -->
 
 </head>
@@ -53,21 +53,16 @@
 
 
                     <div class="panel panel-default panel-devices">
-                        <div class="panel-heading">
-                            <i class="fa fa-tv" style="padding-right:3px"></i>
-                            All Unassigned Devices
-                            <div class="btn-group pull-right">
-                                <button class="btn btn-default " onclick="AllSelect()">Select All</button>
-                                <button class="btn btn-default " onclick="AllCancel()">Deselect All </button>
-                            </div>
+                        <div class="panel-heading" id="ControlDevices">
+                            All Sensors 
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive  cell-border" cellspacing="0" width="100%" id="UnassignedDevicesTables">
+                                <table class="display responsive  cell-border" cellspacing="0" width="100%" id="DeviceSensorsTables">
                                     <thead>
                                         <tr>
 
-                                            <th style="width:5px"></th>
+                                            <th></th>
                                             <th></th>
                                             <th>Name</th>
                                             <th>Agent ID</th>
@@ -77,9 +72,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div class="panel-footer clearfix">
-                            <button class="btn btn-info pull-right" id="adddevice">finish</button>
                         </div>
                     </div>
                 </div>

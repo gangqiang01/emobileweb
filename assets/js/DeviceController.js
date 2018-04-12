@@ -1,19 +1,23 @@
 $(function(){
     var selectedrowids=[];
     LoginStatus();
-	SetHTML("barset_management");
-    getunassigneddevices();
+    SetHTML("barset_management");
+    getdeviceplugin();
+    getdevicesensors();
+    function getdeviceplugin(){
+
+    }
     function AllSelect(){
-        $("#UnassignedDevicesTables tbody tr").addClass("selected");
+        $("#DeviceSensorsTables tbody tr").addClass("selected");
     }
     
     function AllCancel(){
-        $("#UnassignedDevicesTables tbody tr").removeClass("selected");
+        $("#DeviceSensorsTables tbody tr").removeClass("selected");
     }
-    function getunassigneddevices(){
+    function getdevicesensors(){
 
         //---- device table ----//
-        $('#UnassignedDevicesTables').dataTable({
+        $('#DeviceSensorsTables').dataTable({
             "columnDefs": 
             [{
             orderable: false,
@@ -30,8 +34,8 @@ $(function(){
             },
             responsive: true
         });
-        var table = $('#UnassignedDevicesTables').DataTable()
-        $('#UnassignedDevicesTables tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
+        var table = $('#DeviceSensorsTables').DataTable()
+        $('#DeviceSensorsTables tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
             
             var SelectedUnassignedDid = table.row( this ).data()[1];
             if($(this).parent().hasClass("selected")){
@@ -51,7 +55,7 @@ $(function(){
         devgetdata._ = new Date().getTime();
         apiget("rmm/v1/devices/unassigned", devgetdata).then(function(data){
             var tableData = data.devices;
-            var table = $('#UnassignedDevicesTables').DataTable();
+            var table = $('#DeviceSensorsTables').DataTable();
             table.column( 1 ).visible( false )
             table.clear();
             if(tableData === ""){

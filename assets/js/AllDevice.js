@@ -1,5 +1,4 @@
 //onload page
-var demo4Rows = [];
 var datatimes;
 
 //for GetAllDevices
@@ -24,62 +23,73 @@ function drawData() {
     var DeviceTable ;
     //---- device table ----//
     $('#dataTables-example').dataTable( {
-        "columnDefs": [ {
+        "columnDefs": [
+        {
 
-        "targets": 5,
-        "className": "dt-center",
-        "data": null,
-        "render": function ( data, type, full, meta ) {
-            if(data[5]){
-                var fa ='<i class="fa fa-child" style="color:green">online</i>';
-            }else{
-                var fa ='<i class="fa fa-minus-circle" style="color:red">offline</i>';
-            }
+            "targets": 5,
+            "className": "dt-center",
+            "data": null,
+            "render": function ( data, type, full, meta ) {
+                if(data[5]){
+                    var fa ='<i class="fa fa-child" style="color:green">online</i>';
+                }else{
+                    var fa ='<i class="fa fa-minus-circle" style="color:red">offline</i>';
+                }
 
-        return fa;
-        }
-    },{
-        "targets": 6,
-        "className": "dt-center",
-        "data": null,
-        "render": function ( data, type, full, meta ) {
-            var fa = '';
-            var id = "'"+data[1]+"'";
-            fa = `<a class="btn btn-info" onclick="DeviceVcn('${data}')"><i class="fa fa-television" style="padding-right:5px"></i>Control</a>`;
-
-        return fa;
-        }
-    },{
-        "targets": 7,
-        "className": "dt-center",
-        "data": null,
-        "render": function ( data, type, full, meta ) {
-            var fa = '';
-            var id = "'"+data[1]+"'";
-            fa = `<a class="btn btn-info" onclick="DeviceDataController('${data}')"><i class="fa fa-paw" style="padding-right:5px"></i>Get/Set</a>`;
             return fa;
-        }
-    },
-    {
-        orderable: false,
-        className: 'select-checkbox',
-        targets:   0
-    } ],
-    select: {
-        style:    'multi',
-        selector: 'td:first-child'
-    }, 
-    "order": [[ 5, "desc" ]],
-    responsive: true
+            }
+        },
+        {
+            "targets": 6,
+            "className": "dt-center",
+            "data": null,
+            "render": function ( data, type, full, meta ) {
+                var fa = '';
+                var id = "'"+data[1]+"'";
+                if(data[5]){
+                    fa = `<a class="btn btn-info" onclick="DeviceVnc('${data}')"><i class="fa fa-television" style="padding-right:5px"></i>Control</a>`;
+                }else{
+                    fa = `<a class="btn btn-info disabled" onclick="DeviceVnc('${data}')"><i class="fa fa-television" style="padding-right:5px"></i>Control</a>`;
+                }
+            return fa;
+            }
+        },
+        {
+            "targets": 7,
+            "className": "dt-center",
+            "data": null,
+            "render": function ( data, type, full, meta ) {
+                var fa = '';
+                var id = "'"+data[1]+"'";
+                if(data[5]){
+                    fa = `<a class="btn btn-info" onclick="DeviceDataController('${data}')"><i class="fa fa-paw" style="padding-right:5px"></i>Get/Set</a>`;
+                }else{
+                    fa = `<a class="btn btn-info disabled" onclick="DeviceDataController('${data}')"><i class="fa fa-paw" style="padding-right:5px"></i>Get/Set</a>`;
+                    
+                }
+                return fa;  
+            }
+        },
+        {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   0
+        }],
+        select: {
+            style:    'multi',
+            selector: 'td:first-child'
+        }, 
+        "order": [[ 5, "desc" ]],
+        responsive: true
     } );
 
     DeviceTable = $('#dataTables-example').DataTable();
     $('#dataTables-example tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
-            var rowid = DeviceTable.row( this ).index();
+            var SelectedDid = DeviceTable.row( this ).data()[1];
             if($(this).parent().hasClass("selected")){
-                selectedrowids.remove(rowid);
+                selectedrowids.remove(SelectedDid);
             }else{
-                selectedrowids.push(rowid); 
+                selectedrowids.push(SelectedDid); 
             }
             console.log(selectedrowids)
     });
@@ -106,9 +116,8 @@ function deletedevice(){
     if(!selectedrowids){
         return;
     }
-    var groupid = sessionStorage["groupid"]
     for (var i=0 ;i< selectedrowids.length;i++){
-        dddata.devices[i] = {"did": demo4Rows[selectedrowids[i]].deviceid, "groupIds":[]};
+        dddata.devices[i] = {"did": selectedrowids[i], "groupIds":[]};
     }
     apiput("rmm/v1/devices", dddata).then(function(data){
         console.log("deletedevice",data);
@@ -150,6 +159,7 @@ function GetAllDevices() {
 			var tableData = data.groups[0].devices;
 			// sessionStorage["devicedata"] = tableData;
             var table = $('#dataTables-example').DataTable();
+            table.column(1).visible( false );
             table.clear();
             if(tableData === ""){
               table.clear().draw();
@@ -161,30 +171,24 @@ function GetAllDevices() {
                 agentid = tableData[i].agentid;
                 devicename = tableData[i].name;
                 agentversion = tableData[i].version;
-                devicemodel = tableData[i].ostype;
                 stat = tableData[i].connected;
                 did = tableData[i].did;
                 console.log("stat", stat);
-
-                time = UnixToTime(tableData[i].create_unit_ts);
-
                 GetUpdateDevice += agentid +"/";
                 m_devices.push([agentid,false]);
                 //add row in table
                 var rowNode = table.row.add( [
                   "",
-                  agentid,
+                  did,
                   devicename,
+                  agentid,
                   agentversion,
-                  devicemodel,
                   stat,
                   "",
                   "",
                 ] ).draw( false ).node();
                 $( rowNode ).addClass('demo4TableRow');
                 $( rowNode ).attr('data-row-id',i);
-                demo4Rows.push({ deviceid: did });
-                var tmp;
               }
             }
             $($.fn.dataTable.tables(true)).DataTable()
