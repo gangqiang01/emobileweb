@@ -27,6 +27,7 @@
 
     <!-- BOOTSTRAP SCRIPTS  -->
     <script src="assets/js/bootstrap.js"></script>
+    <script src="assets/js/bootstrap-select.js"></script>
     <script src="assets/js/sweetalert.min.js"></script>
 	<script src="assets/js/dataTables/jquery.dataTables.js"></script>
     <script src="assets/js/dataTables/dataTables.select.min.js"></script>
@@ -41,42 +42,45 @@
     <div class="navbar-fixed-top"></div>
      <!-- MENU SECTION END-->
     <div class="content-wrapper" >
-         <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-                <p class="header-line"> <i class="fa fa-desktop fa-x" style="padding:5px"></i>Add Device</p>
+                <p class="header-line" id="ControlDevices"></p>
             </div>
         </div>
-            <div class="row">
-                <div class="panel-devices-col">
-                    <!-- Advanced Tables -->
-
-
-                    <div class="panel panel-default panel-devices">
-                        <div class="panel-heading" id="ControlDevices">
-                            All Sensors 
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="display responsive  cell-border" cellspacing="0" width="100%" id="DeviceSensorsTables">
-                                    <thead>
-                                        <tr>
-
-                                            <th></th>
-                                            <th></th>
-                                            <th>Name</th>
-                                            <th>Agent ID</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <div class="text-center">
+                <i class="fa fa-tablet fa-5x"></i><br>
+                <label>Plugins:</label>
+                <select id="pluginId" style="padding:0.7rem 5rem;border-radius:5px;margin:1rem">                 
+                </select>   
+            </div>
+        </div>
+        <div class="col-md-9 col-sm-9 col-xs-12">
+            <div class="panel-devices-col">
+                <!-- Advanced Tables -->
+                <div class="panel panel-default panel-devices">
+                    <div class="panel-heading" >
+                        All Sensors 
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="display responsive  cell-border" cellspacing="0" width="100%" id="DeviceSensorsTables">
+                                <thead>
+                                    <tr>
+                                        <th>Get/Set Data</th>
+                                        <th>Plugin</th>
+                                        <th>Sensor</th>
+                                        <th>Privilege</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-         </div>
+        </div>
     </div>
 </body>
 </html>

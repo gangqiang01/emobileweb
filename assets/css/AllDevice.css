@@ -88,28 +88,8 @@
   top: 10px;
 }
 
-.command-tag-red::after {
-  background: #fff;
-  border-bottom: 13px solid transparent;
-  border-left: 10px solid crimson;
-  border-top: 13px solid transparent;
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-.command-tag-red:hover {
-  background-color: crimson;
-  color: white;
-}
-
-.command-tag-red:hover::after {
-   border-left-color: crimson; 
-}
-
 .command-tag-blue {
-  background: CornflowerBlue;
+  background: #0081C6;
   border-radius: 3px 0 0 3px;
   color: white;
   display: inline-block;
@@ -137,7 +117,7 @@
 .command-tag-blue::after {
   background: #fff;
   border-bottom: 13px solid transparent;
-  border-left: 10px solid CornflowerBlue;
+  border-left: 10px solid #0081C6;
   border-top: 13px solid transparent;
   content: '';
   position: absolute;
@@ -146,12 +126,12 @@
 }
 
 .command-tag-blue:hover {
-  background-color: CornflowerBlue;
+  background-color: #0081C6;
   color: white;
 }
 
 .command-tag-blue:hover::after {
-   border-left-color: CornflowerBlue; 
+   border-left-color: #0081C6; 
 }
 
 .command-tag-yellow {

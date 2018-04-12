@@ -496,19 +496,7 @@ function SetSubscribe(device, value){
 }
 
 
-// single device control
-function DeviceDataController(data){
-    console.log("DeviceDataController",data);
-    var ControlDevice = {};
-    var ControlDevicesArray = data.split(",")
-    ControlDevice.Did = ControlDevicesArray[1];
-    ControlDevice.IgentId = ControlDevicesArray[2];
-    ControlDevice.name = ControlDevicesArray[3];
-    sessionStorage["ControlDevice",JSON.stringify(ControlDevice)];
-    window.location.href = "DeviceController.html"
-}
 
-//single device vcn
-function DeviceVnc(data){
-	console.log("vnc",data);
-}
+
+
+

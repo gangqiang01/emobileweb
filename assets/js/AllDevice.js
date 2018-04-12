@@ -200,3 +200,20 @@ function GetAllDevices() {
     )
   })
 }
+
+// single device control
+function DeviceDataController(data){
+    console.log("DeviceDataController",data);
+    var ControlDevice = {};
+    var ControlDevicesArray = data.split(",")
+    ControlDevice.Did = ControlDevicesArray[1];
+    ControlDevice.IgentId = ControlDevicesArray[3];
+    ControlDevice.name = ControlDevicesArray[2];
+    sessionStorage["ControlDevice"]=JSON.stringify(ControlDevice);
+    window.location.href = "DeviceController.html"
+}
+
+//single device vcn
+function DeviceVnc(data){
+	console.log("vnc",data);
+}

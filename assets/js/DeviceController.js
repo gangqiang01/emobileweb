@@ -2,10 +2,38 @@ $(function(){
     var selectedrowids=[];
     LoginStatus();
     SetHTML("barset_management");
+    var ControlDevices = JSON.parse(sessionStorage["ControlDevice"]);
+    var devicedid = ControlDevices.Did;
+    var deviceplugins=[];
+    getdevicename();
     getdeviceplugin();
-    getdevicesensors();
-    function getdeviceplugin(){
+    DrawSensors()
+    // getdevicesensors();
 
+    function　getdevicename(){
+        
+        $("#ControlDevices").html("<i class='fa fa-desktop fa-x' style='padding:5px'></i>"+ControlDevices.name); 
+    }
+ 
+    function getdeviceplugin(){
+        var getpluginform = {};
+        getpluginform._ = Date.parse(new Date());
+        var myurl = "rmm/v1/devices/"+devicedid+"/plugins"
+        apiget(myurl,getpluginform).then(function(data){
+            var txtplugins="";
+            deviceplugins = data.Plugins;
+            if(!deviceplugins){
+                txtplugins = '<option class="bs-title-option" value="">no plugin</option>'+ txtplugins;
+            }else{
+                deviceplugins.forEach(function(value,index){
+                    if(value.analysis){
+                        txtplugins = "<option data-subtext="+value.plugin+">"+value.plugin+"</option>"+ txtplugins;
+                    }
+                })
+            }
+          
+            $("#pluginId").html(txtplugins);
+        })
     }
     function AllSelect(){
         $("#DeviceSensorsTables tbody tr").addClass("selected");
@@ -14,24 +42,20 @@ $(function(){
     function AllCancel(){
         $("#DeviceSensorsTables tbody tr").removeClass("selected");
     }
-    function getdevicesensors(){
-
-        //---- device table ----//
+    function DrawSensors(){
         $('#DeviceSensorsTables').dataTable({
             "columnDefs": 
             [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0
-            }],
-            select: {
-                style:    'multi',
-                selector: 'td:first-child'
-            }, 
+                "targets": 1,
+                "className": "dt-center",
+                "data": null,
+                "render": function ( data, type, full, meta ) {
+                        var fa ="<i class='fa fa-hand-lizard-o' ></i><a class='btn btn-info'>"+data[0]+"</a>";
+    
+                return fa;
+                }
+            }], 
             "order": [[ 0, "desc" ]],
-            rowReorder: {
-                selector: 'td:nth-child(0)'
-            },
             responsive: true
         });
         var table = $('#DeviceSensorsTables').DataTable()
@@ -45,69 +69,52 @@ $(function(){
             }
             console.log(selectedrowids)
         });
-
-
-        var devgetdata = {};
-        devgetdata.pageSize = 10000;
-        devgetdata.no = 1;
-        devgetdata.orderType = "did";
-        devgetdata.like = "";
-        devgetdata._ = new Date().getTime();
-        apiget("rmm/v1/devices/unassigned", devgetdata).then(function(data){
-            var tableData = data.devices;
-            var table = $('#DeviceSensorsTables').DataTable();
-            table.column( 1 ).visible( false )
-            table.clear();
-            if(tableData === ""){
-              table.clear().draw();
-            //	return;
-            }else{
-                for(var i=0;i<Object.keys(tableData).length;i++){
-                    var devicename, Agentid , did , time = "";
-                    Agentid = tableData[i].agentId;
-                    devicename = tableData[i].name;
-                    did = tableData[i].did;
-                    time = UnixToTime(tableData[i].create_unit_ts);
-                    //add row in table
-                    var rowNode = table.row.add( [
-                      "",
-                      did,
-                      devicename,
-                      Agentid,
-                    ] ).draw( false ).node();
-                    $( rowNode ).addClass('demo4TableRow');
-                    $( rowNode ).attr('data-row-id',i);
-                }
+        var plugin = deviceplugins[0].plugin;
+        var DeviceSensorData = getdevicesensors(plugin);
+        if(DeviceSensorData){
+            return;
+        }
+        var tableData = data.devices;
+        var table = $('#DeviceSensorsTables').DataTable();
+        table.clear();
+        if(tableData === ""){
+          table.clear().draw();
+        //	return;
+        }else{
+            for(var i=0;i<Object.keys(tableData).length;i++){
+                var exit, plugin , sensor , privilege, time = "";
+                Agentid = tableData[i].agentId;
+                devicename = tableData[i].name;
+                did = tableData[i].did;
+                time = UnixToTime(tableData[i].create_unit_ts);
+                //add row in table
+                var rowNode = table.row.add( [
+                  exit,
+                  plugin,
+                  sensor,
+                  privilege,
+                ] ).draw( false ).node();
+                $( rowNode ).addClass('demo4TableRow');
+                $( rowNode ).attr('data-row-id',i);
             }
+        }
+    }
+    function getdevicesensors(plugin){
+
+        //---- device table ----//
+        var getsensorsdata = {};
+        getsensorsdata._ = new Date().getTime();
+        var myurl = "rmm/v1/devices/"+devicedid+"/"+plugin+"/sensor";
+        apiget(myurl, getsensorsdata).then(function(data){
+            console.log(data);
+            return data;
+            
         })
     }
 
-    $("#adddevice").on("click", function(){
+    $("#pluginId").on("change", function(e){
         // var adddata = {devices:[{did: did.deviceid, groupIds:[]}]};
-        var adddata = {};
-        groupid = sessionStorage["groupid"]
-        adddata.devices = [];
-        if(!selectedrowids){
-            return;
-        }
-        for (var i=0 ;i< selectedrowids.length;i++){
-            adddata.devices[i] = {};
-            adddata.devices[i].did = selectedrowids[i]; 
-            adddata.devices[i].groupIds = []
-            adddata.devices[i].groupIds[0] = groupid+"";
-        }
-        if(selectedrowids){
-            apiput("rmm/v1/devices", adddata).then(function(data){
-                if (data.result){
-                    swal( "", "Add device successfully!", "success").then(function(val){
-                        if(val){
-                            window.location.href = "AllDevice.html";
-                        }
-                    });
-                }
-            })
-        }else{
-            swal( "", "please select the device you want to add!", "info")
-        }
+        console.log(e.value());
+       
     })
 })

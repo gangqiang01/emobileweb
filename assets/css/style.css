@@ -33,6 +33,8 @@ body {
 }
 .header-line {
     font-weight:900;
+    font-size:2rem;
+    color:#0081C6;
     padding-bottom:25px;
     border-bottom:1px solid #eeeeee;
 }
