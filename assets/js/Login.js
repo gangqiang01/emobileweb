@@ -15,7 +15,7 @@ function submitDB() {
 				apiget("rmm/v1/accounts/login").then(
 					function(data){
 						if(data.result){
-                            setCookie("SessionId",data.sessionId);
+                            setCookie("SessionId",data.sessionId,60);
 							var encryptedUserName = CryptoJS.AES.encrypt(form.username, "AIM Secret Passphrase")
 							var encryptedPassword = CryptoJS.AES.encrypt(form.password, "AIM Secret Passphrase")
 							var checkboxstatus = $("#check");

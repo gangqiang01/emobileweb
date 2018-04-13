@@ -81,14 +81,6 @@ function SetHTML(html){
 	//SetAlertNotification();
 	SetNotificationBell(0);
 	var UserName = getCookie('UserName');
-	if(localStorage.getItem("Company") === "Guest"){
-		document.getElementById("dropdown-management").style.display = "none";
-	}
-	if (localStorage.getItem("col") === "in"){
-		$("#collapse").addClass("in");
-	}else{
-		$("#collapse").removeClass("in");
-	}
 	$("#btnCollapse").on("click", function(){
 
 		if (localStorage.getItem("col") === "in"){

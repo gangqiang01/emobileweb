@@ -4,6 +4,7 @@ $(function(){
     SetHTML("barset_management");
     var ControlDevices = JSON.parse(sessionStorage["ControlDevice"]);
     var devicedid = ControlDevices.Did;
+    var AgentId =ControlDevices.AgentId;
     var deviceplugins=[];
     getdevicename();
     getdeviceplugin();
@@ -96,13 +97,17 @@ $(function(){
                     paging: false
                 } );
             }
-            var SelectedUnassignedDid = table.row( this ).data()[1];
-            if($(this).parent().hasClass("selected")){
-                selectedrowids.remove(SelectedUnassignedDid);
-            }else{
-                selectedrowids.push(SelectedUnassignedDid); 
-            }
-            console.log(selectedrowids)
+            var  PluginId= table.row( this ).data()[1];
+            var sensorId = table.row(this).data()[2];
+            var GetSensorsData = {};
+            GetSensorsData.agentId = AgentId;
+            GetSensorsData.plugin = PluginId;
+            GetSensorsData.sensorId = sensorId;
+            GetSensorsData._ = Date.parse(new Date());
+            var myurl = "rmm/v1/devicectrl/"+devicedid+"/data";
+            apiget(myurl, GetSensorsData).then(function(data){
+                console.log(data);
+            })
         });
         // var DeviceSensorData = getdevicesensors(plugin);
         // if(DeviceSensorData){

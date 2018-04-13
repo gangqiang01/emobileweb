@@ -62,7 +62,7 @@ function apifile(myurl,data){
             processData: false,
             crossDomain: true,
             xhrFields: { withCredentials: true },
-            timeout:5000,
+            timeout:10000,
             success:function(data){
                 resolve(data)
             },
@@ -95,8 +95,9 @@ function apiget(myurl,object){
         $.ajax({
             type:"get",
             url: geturl,
-            timeout:5000,
+            timeout:25000,
             crossDomain: true,
+            contentType:'application/json',
             xhrFields: {
                 withCredentials: true
             },
