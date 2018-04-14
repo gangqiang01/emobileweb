@@ -10,7 +10,7 @@ var selectedrowids=[];
 $(function() {
    
 	LoginStatus("UserDuedateCheck","AllDevice.html");
-	SetHTML("barset_management");
+	SetHTML("barset_alldevice");
 	$('.panel-commands').css( 'cursor', 'pointer' );
 		$('.command-tag-red').slideUp();
 		$('.panel-commands').on('click', function(e){

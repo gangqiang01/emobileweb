@@ -9,7 +9,7 @@ var selectedrowids=[];
 $(function() {
    
 	LoginStatus("AllDevice.html");
-	SetHTML("barset_management");
+	SetHTML("barset_alldevice");
     $('.command-tag-yellow').on('click', function(e){
         m_Update = true;
         GetAllDevices();

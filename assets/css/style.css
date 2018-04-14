@@ -54,19 +54,40 @@ body {
 #menu-top a {
     color:#000;
     text-decoration:none;
-    font-weight:500;
-    padding: 25px 15px 25px 15px;
-    text-transform:uppercase;
+    font-weight:900;
+    padding: 5px 10px;
+    margin: 20px 10px;
+    
+}
+
+#menu-top a:after {
+    opacity: 0;
+    content: "";
+    width: 60px;
+    height: 3px;
+    background-color: #007dbc;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-top: -1px;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    transition: opacity .2s ease-in;
+}
+#menu-top>li{
+    padding-top: 10px; 
+    float: left; 
+    padding-right: 10px; 
+    cursor: pointer;
 
 }
-.menu-section {
-    background-color: #fff;
-    border-bottom:1px solid #eeeeee;
-	box-shadow: 10px 3px 10px #eeeeee;
-    width:100%
-}
 .menu-top-active {
-    background-color:#eeeeee;
+    color:#337ab7 !important;
+
+}
+.menu-top-active:after {
+    opacity: 1 !important;
+
 }
 .navbar-inverse {
 background-color: #FFF;

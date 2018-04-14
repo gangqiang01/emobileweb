@@ -91,6 +91,7 @@ function SetHTML(html){
 	});
 	$('.notification-body').css( 'cursor', 'pointer' );
 	//document.getElementById(html).className = "menu-top-active";
+	console.log("html",html)
     $('#'+html).addClass('menu-top-active');
     var data = {};
     data._now =  new Date().getTime();
@@ -307,13 +308,23 @@ function SetNavbar(){
 						'<img src="assets/img/AIMobile-Logo-3.png" />'+
 					'</a>'+
 
-					'<ul class="nav navbar-nav navbar-right">'+
-						'<button id="btnCollapse" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;">'+
-						'<span class="icon-bar"></span>'+
-						'<span class="icon-bar"></span>'+
-						'<span class="icon-bar"></span>'+
-					'</button>'+
+					'<ul id="menu-top" class="nav navbar-nav navbar-right">'+
+					'<li>'+
+						'<a id="barset_alldevice" href="AllDevice.html">Device Control</a>'+
+					'</li>'+
+					'<li>'+
+						'<a id="barset_analysis" href="analysis.html">Analysis</a></li>'+
+					'</li>'+
+					'<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
+					'<li><a id="barset_contact" href="contact-us.html">Contact Us</a></li>'+
 
+					// '</ul>'+
+						// '<button id="btnCollapse" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;">'+
+						// '<span class="icon-bar"></span>'+
+						// '<span class="icon-bar"></span>'+
+						// '<span class="icon-bar"></span>'+
+					// '</button>'+
+					// '<ul class="nav navbar-nav navbar-right">'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
 							'<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
 
@@ -347,53 +358,12 @@ function SetNavbar(){
 							'</div>'+
 							'<ul class="dropdown-menu scrollable-menu" id="notification_content">'+
 							'</ul>'+
-
 						'</li>'+
 					'</ul>'+
-
-
-
-				'</div>'+
-
-
-
-			'</div>'+
-		'</div>'+
-
-		'<section class="menu-section">'+
-			'<div class="container">'+
-				'<div class="row ">'+
-					'<div class="col-md-12">'+
-						'<div id="collapse" class="navbar-collapse collapse in">'+
-							'<ul id="menu-top" class="nav navbar-nav navbar-right">'+
-								'<li><a id="barset_index" href="index.html">MainPage</a></li>'+
-
-								'<li>'+
-									'<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="barset_management">Management<i class="fa fa-angle-down"></i></a>'+
-									'<ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">'+
-										'<li id="dropdown-management" role="presentation"><a role="menuitem" tabindex="-1" href="management.html">Account Managemnet</a></li>'+
-										'<li id="dropdown-alldevice" role="presentation"><a role="menuitem" tabindex="-1" href="AllDevice.html">Device Managemnet</a></li>'+
-										'<li id="dropdown-alldevice" role="presentation"><a role="menuitem" tabindex="-1" href="details.html">Device Details</a></li>'+
-									'</ul>'+
-
-								'</li>'+
-								'<li>'+
-
-									'<a id="barset_analysis" href="analysis.html">Analysis</a></li>'+
-
-								'</li>'+
-								'<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
-								'<li><a id="barset_instructions" href="index.html">Instructions</a></li>'+
-								'<li><a id="barset_contact" href="contact-us.html">Contact Us</a></li>'+
-
-							'</ul>'+
-						'</div>'+
-
-					'</div>'+
-
 				'</div>'+
 			'</div>'+
-		'</section>');
+		'</div>'
+);
 		$('#user-circle').click(function(e) {
 			$(this).parent().toggleClass('open');
 		});

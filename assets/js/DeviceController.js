@@ -5,7 +5,7 @@ $(function(){
     var ControlDevices = JSON.parse(sessionStorage["ControlDevice"]);
     var devicedid = ControlDevices.Did;
     var AgentId =ControlDevices.AgentId;
-    var deviceplugins=[];
+    var devicecontrolplugins=[];
     getdevicename();
     getdeviceplugin();
     // getdevicesensors();
@@ -21,15 +21,16 @@ $(function(){
         var myurl = "rmm/v1/devices/"+devicedid+"/plugins"
         apiget(myurl,getpluginform).then(function(data){
             var txtplugins="";
-            deviceplugins = data.Plugins;
-            if(deviceplugins){
-                deviceplugins.forEach(function(value,index){
+            var deviceallplugins = data.Plugins;
+            if(deviceallplugins){
+                deviceallplugins.forEach(function(value,index){
                     if(value.analysis){
-                        txtplugins = "<option data-subtext="+value.plugin+">"+value.plugin+"</option>"+ txtplugins;
+                        txtplugins = txtplugins+"<option data-subtext="+value.plugin+">"+value.plugin+"</option>" ;
+                        devicecontrolplugins.push(value.plugin);
                     }
                 })
 
-                DrawSensors(deviceplugins[0].plugin);
+                DrawSensors(devicecontrolplugins[0]);
             }else{
                 txtplugins = '<option class="bs-title-option" value="">no plugin</option>'+ txtplugins;
             }
@@ -49,44 +50,40 @@ $(function(){
             table = $('#DeviceSensorsTables').DataTable();
         }
         else {
-        //     table = $('#DeviceSensorsTables').DataTable( {
-        //         paging: false
-        //     } );
-        // }
-        $('#DeviceSensorsTables').dataTable({
-            "columnDefs": 
-            [{
-                "targets": 0,
-                "className": "dt-center",
-                "data": null,
-                "width": '15%',
-                "render": function ( data, type, full, meta ) {
-                    if(data[0] == 'rw'){
-                        var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></i>Read/Update</a>"
-                    }else{
-                        var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px'></i>Read</a>"
-                    };
-                return fa;
+            $('#DeviceSensorsTables').dataTable({
+                "columnDefs": 
+                [{
+                    "targets": 0,
+                    "className": "dt-center",
+                    "data": null,
+                    "width": '15%',
+                    "render": function ( data, type, full, meta ) {
+                        if(data[0] == 'rw'){
+                            var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></i>Read/Update</a>"
+                        }else{
+                            var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px'></i>Read</a>"
+                        };
+                    return fa;
+                    }
+                },
+                {
+                    "targets": 3,
+                    "className": "dt-center",
+                    "data": null,
+                    "width": '15%',
+                    "render": function ( data, type, full, meta ) {
+                        if(data[0] == 'rw'){
+                            var fa ="<a>Read/write</a>"
+                        }else{
+                            var fa ="<a>Read</a>"
+                        };
+                    return fa;
+                    }
                 }
-            },
-            {
-                "targets": 3,
-                "className": "dt-center",
-                "data": null,
-                "width": '15%',
-                "render": function ( data, type, full, meta ) {
-                    if(data[0] == 'rw'){
-                        var fa ="<a>Read/write</a>"
-                    }else{
-                        var fa ="<a>Read</a>"
-                    };
-                return fa;
-                }
-            }
-        ], 
-            "order": [[ 0, "desc" ]],
-            responsive: true
-        });
+            ], 
+                "order": [[ 0, "desc" ]],
+                responsive: true
+            });
         }
         $('#DeviceSensorsTables tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
             if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
