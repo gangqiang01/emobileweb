@@ -138,6 +138,7 @@ function GetAllDevices() {
   devgetdata.orderType = "aid";
   devgetdata.like = "";
   devgetdata._ = new Date().getTime();
+  $(".loading").show();
   apiget("rmm/v1/accounts", devgetdata).then(function(data){
 	var accountsid = data.accounts[0].aid;
 	sessionStorage["accoundsid"] = accountsid;
@@ -155,6 +156,7 @@ function GetAllDevices() {
         devicegetdata.like = "";
         devicegetdata._ = new Date().getTime();
         apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
+            $(".loading").hide();
             console.log(data);
 			var tableData = data.groups[0].devices;
 			// sessionStorage["devicedata"] = tableData;

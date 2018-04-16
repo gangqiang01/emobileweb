@@ -49,7 +49,9 @@ $(function(){
         devgetdata.orderType = "did";
         devgetdata.like = "";
         devgetdata._ = new Date().getTime();
+        $(".loading").show();
         apiget("rmm/v1/devices/unassigned", devgetdata).then(function(data){
+            $(".loading").hide();
             var tableData = data.devices;
             var table = $('#UnassignedDevicesTables').DataTable();
             table.column( 1 ).visible( false )

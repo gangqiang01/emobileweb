@@ -6598,3 +6598,7 @@ button.close {
     max-height: 200px;
     overflow-x: hidden;
 }
+.bootstrap-switch-secondary{
+    background-color:#f0ad4e !important;
+    color:#fff !important;
+}

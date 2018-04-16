@@ -59,9 +59,9 @@ $(function(){
                     "width": '15%',
                     "render": function ( data, type, full, meta ) {
                         if(data[0] == 'rw'){
-                            var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></i>Read/Update</a>"
+                            var fa ="<a class='btn btn-info'  data-toggle='modal' data-target='#myModal'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></i>Read/Update</a>"
                         }else{
-                            var fa ="<a class='btn btn-info'><i class='fa fa-hand-lizard-o' style='padding-right:5px'></i>Read</a>"
+                            var fa ="<a class='btn btn-info'  data-toggle='modal' data-target='#myModal'><i class='fa fa-hand-lizard-o' style='padding-right:5px'></i>Read</a>"
                         };
                     return fa;
                     }
@@ -96,14 +96,37 @@ $(function(){
             }
             var  PluginId= table.row( this ).data()[1];
             var sensorId = table.row(this).data()[2];
+            var sensorpower = table.row(this).data()[0];
             var GetSensorsData = {};
             GetSensorsData.agentId = AgentId;
             GetSensorsData.plugin = PluginId;
             GetSensorsData.sensorId = sensorId;
             GetSensorsData._ = Date.parse(new Date());
             var myurl = "rmm/v1/devicectrl/"+devicedid+"/data";
-            apiget(myurl, GetSensorsData).then(function(data){
-                console.log(data);
+            $(".loading").show();
+            apiget(myurl, GetSensorsData).then(function(obj){
+                $(".loading").hide();
+                $("#sensor_dialog_title").html(PluginId);
+                $("#dialog_plugin").html(PluginId);
+                $("#dialog_sensorid").html(sensorId);
+                if(sensorpower == 'rw'){
+                    var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v
+                    var sensorboolean = obj.sensorIds[0].bv;
+                    if(sensorboolean == "true"||sensorboolean == "false"){
+                        var sensorupdate = " <input id='sensorvalue' type='checkbox'>";
+                        $("#dialog_sensorvalue").html(sensorupdate);
+                        $("#sensorvalue").bootstrapSwitch('state',sensorvalue);
+
+                    }else{
+                        var sensorupdate = "<input type='text' id='sensorvalue' value="+sensorvalue+">";
+                        $("#dialog_sensorvalue").html(sensorupdate);
+                    }
+                  
+                }else{
+                    var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v;
+                    $("#dialog_sensorvalue").html(sensorvalue);
+                    $("#sensor_dialog_save").hide();
+                }
             })
         });
         // var DeviceSensorData = getdevicesensors(plugin);
@@ -113,7 +136,9 @@ $(function(){
         var getsensorsdata = {};
         getsensorsdata._ = new Date().getTime();
         var myurl = "rmm/v1/devices/"+devicedid+"/"+deviceplugin+"/sensors";
+        $(".loading").show();
         apiget(myurl, getsensorsdata).then(function(data){
+            $(".loading").hide();
             var tableData = data.sensorIds;
             if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
                 table = $('#DeviceSensorsTables').DataTable();
@@ -159,10 +184,21 @@ $(function(){
             
         })
     }
-
+//change sensor by change plugin 
     $("#pluginId").on("change", function(e){
         // var adddata = {devices:[{did: did.deviceid, groupIds:[]}]};
         DrawSensors(e.target.value);
        
     })
+    $('#sensor_dialog_update').on("click",function(){
+        var setsensordata = {};
+        setsensordata.agentId = AgentId;
+        setsensordata.plugin = $("#dialog_plugin".text());
+        var sensorId = $("#dialog_sensorid").text();
+        var sensorvalue = $("#sensorvalue").val();
+        setsensordata.sensorIds = [];
+        setsensordata.sensorIds[0]={"n":sensorData, "bv":sensorvalue};
+        
+    })
+
 })

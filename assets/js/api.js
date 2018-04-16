@@ -100,11 +100,18 @@ function apiget(myurl,object){
             contentType:'application/json',
             xhrFields: {
                 withCredentials: true
-            },
+            }, 
             success:function(data){
-                resolve(data)
+                if(data.result||data.result == undefined){
+                    resolve(data)
+                }else{
+                    swal("","network timeout","error").then(function(){
+                        $(".loading").hide();
+                    }) 
+                }               
             },
             error:function(err){
+                $(".loading").hide();
                 if(err.status == 401){
                     if(location.pathname === "index.html"){
                         window.location.href = "Login.html" 
