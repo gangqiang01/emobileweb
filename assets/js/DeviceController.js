@@ -53,12 +53,12 @@ $(function(){
             $('#DeviceSensorsTables').dataTable({
                 "columnDefs": 
                 [{
-                    "targets": 0,
+                    "targets": 1,
                     "className": "dt-center",
                     "data": null,
                     "width": '15%',
                     "render": function ( data, type, full, meta ) {
-                        if(data[0] == 'rw'){
+                        if(data[1] == 'rw'){
                             var fa ="<a class='btn btn-info'  data-toggle='modal' data-target='#myModal'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></i>Read/Update</a>"
                         }else{
                             var fa ="<a class='btn btn-info'  data-toggle='modal' data-target='#myModal'><i class='fa fa-hand-lizard-o' style='padding-right:5px'></i>Read</a>"
@@ -67,12 +67,12 @@ $(function(){
                     }
                 },
                 {
-                    "targets": 3,
+                    "targets": 4,
                     "className": "dt-center",
                     "data": null,
                     "width": '15%',
                     "render": function ( data, type, full, meta ) {
-                        if(data[0] == 'rw'){
+                        if(data[1] == 'rw'){
                             var fa ="<a>Read/write</a>"
                         }else{
                             var fa ="<a>Read</a>"
@@ -92,11 +92,12 @@ $(function(){
             else {
                 table = $('#DeviceSensorsTables').DataTable( {
                     paging: false
-                } );
+                });
             }
-            var  PluginId= table.row( this ).data()[1];
-            var sensorId = table.row(this).data()[2];
-            var sensorpower = table.row(this).data()[0];
+            var sensortype = table.row(this).data()[0];
+            var  PluginId = table.row( this ).data()[2];
+            var sensorId = table.row(this).data()[3];
+            var sensorpower = table.row(this).data()[1];
             var GetSensorsData = {};
             GetSensorsData.agentId = AgentId;
             GetSensorsData.plugin = PluginId;
@@ -112,7 +113,7 @@ $(function(){
                 if(sensorpower == 'rw'){
                     var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v || obj.sensorIds[0].bv
                     var sensorboolean = obj.sensorIds[0].bv;
-                    if(sensorboolean == "true"||sensorboolean == "false"){
+                    if(sensortype == "bv"){
                         var sensorupdate = " <input id='sensorvalue' type='checkbox'>";
                         $("#dialog_sensorvalue").html(sensorupdate);
                         // if(sensorboolean == "true"){
@@ -125,7 +126,7 @@ $(function(){
                         }
                         
 
-                    }else{
+                    }else if(sensortype == "v"){
                         var sensorupdate = "<input type='text' id='sensorvalue' value="+sensorvalue+">";
                         $("#dialog_sensorvalue").html(sensorupdate);
                     }
@@ -156,19 +157,22 @@ $(function(){
                     paging: false
                 } );
             }
+            table.column(0).visible( false );
             table.clear();
             if(tableData === ""){
-            table.clear().draw();
+                table.clear().draw();
             //	return;
             }else{
                 for(var i=0;i<Object.keys(tableData).length;i++){
-                    var exit, plugin , sensor , privilege, time = "";
+                    var exit, plugin , sensor , privilege, type, time = "";
+                    type = tableData[i].type;
                     exit = tableData[i].asm;
                     plugin = deviceplugin;
                     sensor = tableData[i].sensorId;
                     privilege = tableData[i].asm;
                     //add row in table
                     var rowNode = table.row.add( [
+                    type,
                     exit,
                     plugin,
                     sensor,

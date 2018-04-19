@@ -21,6 +21,17 @@ function apipost(myurl,object){
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
                 }
+            },
+            complete: function (XMLHttpRequest,status) {
+                if(status == 'timeout') {
+                    XMLHttpRequest.abort();  
+                      // 超时后中断请求
+                    swal("","network timeout","error").then(
+                        function(){
+                            location.reload();
+                        }
+                    );
+                }
             }
        });
    })
@@ -47,6 +58,17 @@ function apiput(myurl,object){
                         })
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
+                }
+            },
+            complete: function (XMLHttpRequest,status) {
+                if(status == 'timeout') {
+                    XMLHttpRequest.abort();  
+                      // 超时后中断请求
+                    swal("","network timeout","error").then(
+                        function(){
+                            location.reload();
+                        }
+                    );
                 }
             }
        });
@@ -75,6 +97,17 @@ function apifile(myurl,data){
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
                 }
+            },
+            complete: function (XMLHttpRequest,status) {
+                if(status == 'timeout') {
+                    XMLHttpRequest.abort();  
+                      // 超时后中断请求
+                    swal("","network timeout","error").then(
+                        function(){
+                            location.reload();
+                        }
+                    );
+                }
             }
         });
    })
@@ -96,7 +129,7 @@ function apiget(myurl,object){
         $.ajax({
             type:"get",
             url: geturl,
-            timeout:25000,
+            timeout:15000,
             crossDomain: true,
             contentType:'application/json',
             xhrFields: {
@@ -123,6 +156,17 @@ function apiget(myurl,object){
                     } 
                 }else if(err.status == 403){
                     swal("",JSON.parse(err.responseText).Description,"error")
+                }
+            },
+            complete: function (XMLHttpRequest,status) {
+                if(status == 'timeout') {
+                    XMLHttpRequest.abort();  
+                      // 超时后中断请求
+                    swal("","network timeout","error").then(
+                        function(){
+                            location.reload();
+                        }
+                    );
                 }
             }
         });
