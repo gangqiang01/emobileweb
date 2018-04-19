@@ -1,4 +1,4 @@
-
+var timer;
 Array.prototype.in_array = function (element) { 
 　　for (var i = 0; i < this.length; i++) { 
 		if (this[i] == element) { 
@@ -23,11 +23,18 @@ function LoginStatus(page) {
                 if(data.result){
 					if(page != undefined){
                         setCookie("page", page, 60);
+                        var timer = window.setInterval(function(){CheckOnlineDevice()},7000);
                     }
                 }
             }
         )
-    } 
+    }else{
+        if(location.pathname.indexOf("index.html") >-1 || location.pathname.indexOf("html") == -1){
+            loginout();
+        }else{
+            window.location.href = "Login.html"
+        }
+    }
 }
 
 //get user cookie without decrypt
@@ -67,9 +74,13 @@ function setCookie(cname, cvalue, exmins) {
 }
 
 // delete user cookies
-function DeleteCookie() {
-	setCookie('UserName', '000', 0);
-	setCookie('Password', '000', 0);
+function　loginout(){
+    setCookie('SessionId','000', 0);
+    setCookie('connectcount','000', 0);
+    sessionStorage.removeItem("accoundsid");
+    sessionStorage.removeItem("groupid");
+    clearInterval(timer);
+    return true;
 }
 
 //set HTML (notification bell, profile card)
@@ -102,26 +113,18 @@ function SetHTML(html){
             document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
     
             document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(data["accounts"][0].login_unix_ts)+'</p>';
-    
-    
-            if(location.pathname === "/profile.html"){
-                GetAccountInfo();
-            }else if(location.pathname === "/management.html"){
-                SetPermissionContent();
-            }else if(location.pathname === "/contact-us.html"){
-                GetQuestion();
-            }
         })
         var dvdata = {};
         dvdata._ = new Date().getTime();
         apiget("rmm/v1/devices/own/status/number", dvdata).then(
             function(data){
-            document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
+                setCookie("connectcount",data.connected,60);
+                document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
             }
         )
     }
 
-    if(location.pathname === "/details.html"){
+    if(location.pathname.indexOf("details.html") >-1){
         var groupid = sessionStorage["groupid"]
         if(groupid != undefined){
             var devicegetdata = {};
@@ -137,7 +140,7 @@ function SetHTML(html){
                 var AllDevices = [];
                 var id,name;
                 for(var j=0; j< device.length;j++){
-                AllDevices.push([device[j]["agentid"],device[j]["name"]]);
+                    AllDevices.push([device[j]["agentid"],device[j]["name"]]);
                 }
                 
                 GetDevicesId(AllDevices);
@@ -148,6 +151,31 @@ function SetHTML(html){
     }
 	// });
 
+}
+//check online device 
+function CheckOnlineDevice(){
+    var dvdata = {};
+    dvdata._ = new Date().getTime();
+    apiget("rmm/v1/devices/own/status/number", dvdata).then(
+        function(data){
+            var prevent_connectcount = data.connected;
+            var old_connectcount = getCookie("connectcount");
+            if(prevent_connectcount > old_connectcount){
+                setCookie("connectcount",prevent_connectcount,60);
+                if(location.pathname.indexOf("AllDevice.html") >-1){
+                    setTimeout(function(){
+                        GetAllDevices();
+                    },15000);
+                }else{
+                    SetNotificationBell("add")
+                }
+            }else if(prevent_connectcount < old_connectcount){
+                setCookie("connectcount",prevent_connectcount,60);
+                GetAllDevices()
+            }
+            document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
+        }
+    )
 }
 
 //date to time (e.g. date:[Fri Nov 24 2017 10:18:17 GMT+0800 (台北標準時間)] to time(2017/9/24 10:18:17))
@@ -211,61 +239,40 @@ function GetNowTimes(){
 
 //set notification bell
 function SetNotificationBell(value){
-	if(value === "add"){
-		var el = document.querySelector('.notification');
-		var count = Number(el.getAttribute('data-count')) || 0;
-		el.setAttribute('data-count', count + 1);
-		el.classList.remove('notify');
-		el.offsetWidth = el.offsetWidth;
-		el.classList.add('notify');
-		if(count === 0){
-			el.classList.add('show-count');
-			$( ".notification_content" ).remove( ":contains('No New Notifications!')" );
-		}
-
-	}else if(value === "subtract"){
-		var el = document.querySelector('.notification');
-		var count = Number(el.getAttribute('data-count')) || 0;
-		el.setAttribute('data-count', count - 1);
-		el.classList.remove('notify');
-		el.offsetWidth = el.offsetWidth;
-		el.classList.add('notify');
-		if(count-1 === 0){
-			el.classList.remove('show-count');
-			var invitecontent = SetNoneNotification();
-			document.getElementById("notification_content").innerHTML += invitecontent;
-		}
-	}else{
-		var el = document.querySelector('.notification');
-		var count = value;
-		el.setAttribute('data-count', count);
-		el.classList.remove('notify');
-		el.offsetWidth = el.offsetWidth;
-		el.classList.add('notify');
-		if(count !== 0){
-			el.classList.add('show-count');
-		}else if(count === 0){
-			el.classList.remove('show-count');
-			var invitecontent = SetNoneNotification();
-			document.getElementById("notification_content").innerHTML += invitecontent;
-		}
-	}
-
+    if(value === "add"){
+        var el = document.querySelector('.notification');
+        // var count = Number(el.getAttribute('data-count')) || 1;
+        el.setAttribute('data-count', "");
+        el.classList.remove('notify');
+        el.offsetWidth = el.offsetWidth;
+        el.classList.add('notify');
+        el.classList.add('show-count');
+        $( ".notification_content" ).remove( ":contains('No New Notifications!')" );
+        var invitecontent = SetSubscribeNotification();
+        document.getElementById("notification_content").innerHTML = invitecontent;
+    }else{
+            var el = document.querySelector('.notification');
+            el.classList.remove('notify');
+            el.offsetWidth = el.offsetWidth;
+            el.classList.add('notify');
+            el.classList.remove('show-count');
+            var invitecontent = SetNoneNotification();
+            document.getElementById("notification_content").innerHTML = invitecontent;
+    }
 }
-
 //write notification bell content
-function SetSubscribeNotification(inviter, unix, device, accept, refuse){
+function SetSubscribeNotification(){
+ 
 	var content = '<li class="notification_content">'+
 		'<div class="notification_content-icon">'+
 			'<i class="fa fa-rss-square fa-2x" aria-hidden="true"></i>'+
 		'</div>'+
-		'<div class="notification_content-title">'+
-			'<h4>'+inviter+'</h4>'+
-			'<p>'+UnixToTime(unix)+'</p>'+
+		'<div>'+
+			'<p style="text-align:center">New Device Online</p>'+
 		'</div>'+
 		'<div class="notification_content-button">'+
-			'<button class="btn btn-success" style="width:50%;" onclick="SetSubscribe('+device+','+accept+')"><i class="fa fa-check" style="padding-right:5px;" aria-hidden="true"></i>accept</button>'+
-			'<button class="btn btn-danger" style="width:50%;"  onclick="SetSubscribe('+device+','+refuse+')"><i class="fa fa-times" style="padding-right:5px;" aria-hidden="true"></i>refuse</button>'+
+			`<button class="btn btn-success" style="width:50%;" onclick="SetSubscribe('check')"><i class="fa fa-check" style="padding-right:5px;" aria-hidden="true"></i>check</button>`+
+			`<button class="btn btn-danger" style="width:50%;margin-left:5px" onclick="SetSubscribe('refuse')><i class="fa fa-times" style="padding-right:5px;" aria-hidden="true"></i>refuse</button>`+
 		'</div>'+
 	'</li>';
 	return content;
@@ -285,71 +292,52 @@ function SetNoneNotification(){
 }
 
 
-function GetAllDevicesName(id){
-	for(var i=0;i<Object.keys(AllDevices).length;i++){
-		if(AllDevices[i][0] === id)
-			if(AllDevices[i][1] === "-"){
-				return AllDevices[i][0];
-			}else{
-				return AllDevices[i][1];
-			}
-
-	}
-	return id;
-}
-
-
 function SetNavbar(){
 	$('.navbar-fixed-top').append( ' <div class="navbar navbar-inverse set-radius-zero " >'+
 			'<div class="container">'+
 				'<div class="navbar-header">'+
 					'<a class="navbar-brand" href="index.html">'+
 
-						'<img src="assets/img/AIMobile-Logo-3.png" />'+
+                        // '<img src="assets/img/logo.png" style="width:80px;margin-left:10px" />'+
+                        // '<span style="display:inline-block;position:relative;top:5px;left:10px;color:#337ab7;font-size:23px">Android Control</span>'+
 					'</a>'+
 
-					'<ul id="menu-top" class="nav navbar-nav navbar-right">'+
-					'<li>'+
-						'<a id="barset_alldevice" href="AllDevice.html">Device Control</a>'+
-					'</li>'+
-					'<li>'+
-						'<a id="barset_analysis" href="analysis.html">Analysis</a></li>'+
-					'</li>'+
-					'<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
-					'<li><a id="barset_contact" href="contact-us.html">Contact Us</a></li>'+
-
-					// '</ul>'+
-						// '<button id="btnCollapse" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;">'+
-						// '<span class="icon-bar"></span>'+
-						// '<span class="icon-bar"></span>'+
-						// '<span class="icon-bar"></span>'+
-					// '</button>'+
-					// '<ul class="nav navbar-nav navbar-right">'+
+                    '<ul id="menu-top" class="nav navbar-nav navbar-right">'+
+                        '<li>'+
+                            '<a id="barset_index" href="index.html">Main</a>'+
+                        '</li>'+
+                        '<li>'+
+                            '<a id="barset_alldevice" href="AllDevice.html">Device Control</a>'+
+                        '</li>'+
+                        '<li>'+
+                            '<a id="barset_analysis" href="analysis.html">Analysis</a></li>'+
+                        '</li>'+
+                        '<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
-							'<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
+                        '<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
 
-							'<div class="card dropdown-menu" id="card">'+
-								'<div class="card-pic">'+
-								'<img src="./assets/img/face_black.png" style="width:120px;">'+
-								'</div>'+
-								'<div class="card-info">'+
-									'<div class="card-name" id="card-name">'+
-										'<h1></h1>'+
-									'</div>'+
-									'<div class="card-title">'+
-										'<a href="#" id="card-email"><i class="fa fa-envelope"></i></a> '+
-										'<p id="card-deives">device bound : </p>'+
-                  '</div>'+
-                  '<div id="card-login">'+
+                        '<div class="card dropdown-menu" id="card">'+
+                            '<div class="card-pic">'+
+                            '<img src="./assets/img/face_black.png" style="width:120px;">'+
+                            '</div>'+
+                            '<div class="card-info">'+
+                                '<div class="card-name" id="card-name">'+
+                                    '<h1></h1>'+
+                                '</div>'+
+                                '<div class="card-title">'+
+                                    '<a href="#" id="card-email"><i class="fa fa-envelope"></i></a> '+
+                                    '<p id="card-deives">device bound : </p>'+
+                                '</div>'+
+                                '<div id="card-login">'+
 									'<p>Last Accessed :</p>'+
 
-								  '</div>'+
-								'</div>'+
-								'<div class="card-bottom">'+
-									'<a href="profile.html" class="btn btn-primary card-bottom-left">PROFILE</a>'+
-									'<a href="Login.html" class="btn btn-danger card-bottom-right" onclick="DeleteCookie();">LOG ME OUT</a>'+
 								'</div>'+
 							'</div>'+
+                            '<div class="card-bottom">'+
+                                // '<a href="profile.html" class="btn btn-primary card-bottom-left">PROFILE</a>'+
+                                '<a href="Login.html" class="btn btn-danger card-bottom-right" onclick="loginout();">LOG ME OUT</a>'+
+                            '</div>'+
+						'</div>'+
 						'</li>'+
 						'<li class="notification-body" style="padding-top:25px;float:right;padding-right:10px;" >'+
 
@@ -363,7 +351,7 @@ function SetNavbar(){
 				'</div>'+
 			'</div>'+
 		'</div>'
-);
+    );
 		$('#user-circle').click(function(e) {
 			$(this).parent().toggleClass('open');
 		});
@@ -385,74 +373,15 @@ function SetNavbar(){
 		});
 }
 
-function SetAlertNotification(){
-	$('#myModal').append(
-			'<div class="modal-dialog">'+
-				'<div class="modal-content">'+
-					'<div class="modal-header">'+
-						'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
-						'<h4 class="modal-title" id="myModalLabel"></h4>'+
-					'</div>'+
-					'<div id="AlertMsgEvent" class="modal-event" style = "display:none">'+
-					'</div>'+
-					'<div id="AlertMsgTools" class="modal-tools" style = "display:none">'+
-						'<div id="EnterPassword" class="form-group" style="display:none;">'+
-							'<input type="password" class="form-control" id="password" placeholder="Please enter the password :">'+
-						'</div>'+
-						'<div id="timepicker" style="display:none;" ng-app="mwl.calendar.docs">'+
-							'<div ng-controller="TimepickerDemoCtrl">'+
-								'<p class="input-group">'+
-								  '<input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="popup.opened" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />'+
-								  '<span class="input-group-btn">'+
-									'<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>'+
-								  '</span>'+
-								'</p>'+
-								'<uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>		'+
-							'</div>'+
-						'</div>'+
 
-					'</div>'+
-					'<div id="AlertMsgBody" class="modal-body">'+
 
-					'</div>'+
-					'<div class="modal-footer" id="AlertMsgFooter">'+
-						'<button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>'+
-						'<button id="AlertMsgBtn"type="button" style = "display:none" class="btn btn-primary" data-dismiss="modal" >ok</button>'+
-						'<button id="ShowInfoBtn"type="button" class="btn btn-primary" style = "display:none">ok</button>'+
-					'</div>'+
-				'</div>'+
-			'</div>'+
-		'</div>');
+function SetSubscribe( value){
 
-		$('#password').numpad({
-			displayTpl: '<input class="form-control" type="password" />',
-			hidePlusMinusButton: true,
-			hideDecimalButton: true
-		});
-}
-
-function SliderShow(){
-	// Without JQuery
-	var slider = new Slider('#ex1', {
-		formatter: function(value) {
-			return 'Current value: ' + value;
-		}
-	});
-}
-
-function SetSubscribe(device, value){
-
-	if(value === "accept"){
-
-        var d = "'"+device+"'";
-        var s = ':contains('+d+')';
-        $( ".notification_content" ).remove( s );
-        SetNotificationBell("subtract");
-        if(location.pathname === "/AllDevice.html"){
-            GetAllDevices();
-        }
+	if(value === "check"){
+        SetNotificationBell(0);
+        window.location.href = "AllDevice.html";
 	}else if(value === "refuse"){
-		SetNotificationBell("subtract");
+		SetNotificationBell(0);
 	}
 
 }

@@ -1,18 +1,38 @@
-		
+var mqttdata = {};
+mqttdata.protocol = "MQTT";
+apiget("rmm/v1/iothub/credential",mqttdata).then(function(data){
+    var hostusername = data.mqtt.username.split(":");
+    var hostname = hostusername[0];
+    var username = hostusername[1];
+    var password = data.mqtt.password;
+    var ssl = data.mqtt.ssl;
+    var port = Number(data.mqtt.port);
 
 
-client = new Paho.MQTT.Client("47.95.248.121", Number(30013), "");
+    // client = new Paho.MQTT.Client({
+    //     "host":hostname,
+        
+    // }hostname, Number(port), "","10","30","",username, password,ssl,"");
+    client = new Paho.MQTT.Client(hostname, port, "");
+    var option = { 
+        userName: data.mqtt.username,
+        password: password,
+        useSSL: ssl,  
+        onSuccess: onConnect,
+    }
 
-// set callback handlers
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
 
-// connect the client
-client.connect({onSuccess:onConnect});
+    // connect the client
+    client.connect(option);
+})
 var DeviceID = [];
 
 // called when the client connects
 function onConnect() {
+    console.log("connect")
 	// Once a connection has been made, make a subscription and send a message.
 	client.subscribe(localStorage.getItem("Company")+";"+getCookie("UserName")+"jsAddress");
 

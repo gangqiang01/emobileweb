@@ -6452,7 +6452,7 @@ button.close {
     display: inline-block;
     position: relative;
     padding: 0.6em;
-    background-color: #D63E3E;
+    background-color: #337ab7;
     border-radius: 50%;
     font-size: 1.3em;
 }
@@ -6475,13 +6475,13 @@ button.close {
     font-size: 0.7em;
     font-weight: 700;
     position: absolute;
-    top: -15px;
-    right: -15px;
-    padding: 5px 8px;
+    top: -5px;
+    right: -2px;
+    padding: 5px;
     line-height: 100%;
     border: 2px #fff solid;
-    border-radius: 60px;
-    background-color: #3A435E;
+    border-radius: 50%;
+    background-color: #D63E3E;
     opacity: 0;
     content: attr(data-count);
     opacity: 0;

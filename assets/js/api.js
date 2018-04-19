@@ -5,7 +5,8 @@ function apipost(myurl,object){
        $.ajax({
             type:"post",
             url: posturl,
-            data: object,
+            data: JSON.stringify(object),
+            contentType:'application/json;charset=utf-8', 
             crossDomain: true,
             xhrFields: { withCredentials: true },
             timeout:10000,
@@ -113,7 +114,7 @@ function apiget(myurl,object){
             error:function(err){
                 $(".loading").hide();
                 if(err.status == 401){
-                    if(location.pathname === "index.html"){
+                    if(location.pathname.indexOf("index.html") >-1){
                         window.location.href = "Login.html" 
                     }else{
                         swal("","Login expired","error").then(function(){

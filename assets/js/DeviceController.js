@@ -1,6 +1,6 @@
 $(function(){
     var selectedrowids=[];
-    LoginStatus();
+    LoginStatus("AllDevice.html");
     SetHTML("barset_management");
     var ControlDevices = JSON.parse(sessionStorage["ControlDevice"]);
     var devicedid = ControlDevices.Did;
@@ -110,12 +110,20 @@ $(function(){
                 $("#dialog_plugin").html(PluginId);
                 $("#dialog_sensorid").html(sensorId);
                 if(sensorpower == 'rw'){
-                    var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v
+                    var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v || obj.sensorIds[0].bv
                     var sensorboolean = obj.sensorIds[0].bv;
                     if(sensorboolean == "true"||sensorboolean == "false"){
                         var sensorupdate = " <input id='sensorvalue' type='checkbox'>";
                         $("#dialog_sensorvalue").html(sensorupdate);
-                        $("#sensorvalue").bootstrapSwitch('state',sensorvalue);
+                        // if(sensorboolean == "true"){
+                        //     $("#sensorvalue").attr("checked","checked");
+                        // }
+                        if(sensorboolean == "true"){
+                            $("#sensorvalue").bootstrapSwitch('state',true); 
+                        }else if(sensorboolean == "false"){
+                            $("#sensorvalue").bootstrapSwitch('state',false);
+                        }
+                        
 
                     }else{
                         var sensorupdate = "<input type='text' id='sensorvalue' value="+sensorvalue+">";
@@ -123,7 +131,7 @@ $(function(){
                     }
                   
                 }else{
-                    var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v;
+                    var sensorvalue = obj.sensorIds[0].vl || obj.sensorIds[0].v || obj.sensorIds[0].bv;
                     $("#dialog_sensorvalue").html(sensorvalue);
                     $("#sensor_dialog_save").hide();
                 }
@@ -193,11 +201,19 @@ $(function(){
     $('#sensor_dialog_update').on("click",function(){
         var setsensordata = {};
         setsensordata.agentId = AgentId;
-        setsensordata.plugin = $("#dialog_plugin".text());
+        setsensordata.plugin = $("#dialog_plugin").text();
         var sensorId = $("#dialog_sensorid").text();
-        var sensorvalue = $("#sensorvalue").val();
+        var sensorvalue =   $("#sensorvalue").bootstrapSwitch("state");
         setsensordata.sensorIds = [];
-        setsensordata.sensorIds[0]={"n":sensorData, "bv":sensorvalue};
+        setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
+        apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+
+            if(data.items[0].statusCode == "200"){
+                swal("","success","success").then(function(){
+                    $('#myModal').modal('hide');
+                })
+            }
+        })
         
     })
 

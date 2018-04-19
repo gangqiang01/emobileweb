@@ -16,10 +16,10 @@
     <link rel="stylesheet" href="assets/font-awesome-4.7.0/css/font-awesome.min.css">
     <!-- CUSTOM STYLE  -->
     <link href="assets/css/style.css" rel="stylesheet" />
+
     <script src="assets/js/jquery-1.11.1.js"></script>
-	<script language=JavaScript src="assets/mqtt/mqttws31.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
 	<script src="assets/js/userpermissions.js" type='text/javascript'></script>
-    <script src="assets/js/mqtt_client.js"></script>
     <script src="assets/js/bluebird.min.js"></script>
     <script src="assets/js/api.js"></script>
     <script src="assets/js/index.js"></script>
@@ -30,42 +30,15 @@
     <div class="content-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 col-sm-4 col-xs-6">
-                    <div class="alert alert-info back-widget-set text-center">
-                        <i class="fa fa-tablet fa-5x"></i>
-                        <h3>Device</h3>
-                        <a class="alert-a" href="AllDevice.html" style="color:#31708f;">View Details
-                        <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-6">
-                    <div class="alert alert-danger back-widget-set text-center">
-                        <i class="fa fa-briefcase fa-5x"></i>
-                        <h3>Schedule</h3>
-                        <a class="alert-a" href="schedule.html" style="color:#a94442;">View Details
-                        <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-6">
-                    <div class="alert alert-warning back-widget-set text-center" value="analysis">
-                        <i class="fa fa-bar-chart fa-5x"></i>
-                        <h3>Analysis</h3>
-                        <a class="alert-a" href="analysis.html" style="color:#8a6d3b;">View Details
-                        <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-            </div>
-			<style>.bw{border-width:3px;}</style>
-            <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12 col-centered">
-                        <div id="carousel-example" class="carousel slide" data-ride="carousel" >
+                    <div id="carousel-example" class="carousel slide" data-ride="carousel" >
 
                         <div class="carousel-inner">
                             <div class="item active">
 
                                 <img src="assets/img/care.png" alt="" />
 
-                            </div>
+                            </div> 
                             <div class="item">
                                 <img src="assets/img/manage.png" alt="" />
 
@@ -78,7 +51,7 @@
                                 <img src="assets/img/extend.png" alt="" />
 
                             </div>
-                        </div>
+                         </div>
 
                         <a class="left carousel-control" href="#carousel-example" data-slide="prev">
                             <span class="glyphicon glyphicon-chevron-left"></span>
@@ -86,6 +59,40 @@
                         <a class="right carousel-control" href="#carousel-example" data-slide="next">
                             <span class="glyphicon glyphicon-chevron-right"></span>
                         </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="page-header">
+                        <h1 style="text-align:center;"> Android Device Remote Custom Tool</h1>
+                </div>
+                <div style="margin-top:20px;position:relative;height:150px">
+                    <p style="width:350px;position:absolute;left:50%;transform:translateX(-50%);text-align:center">为您提供远程控制android设备的平台，让您的设备可以随时听从您的指令</p>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-6 device_category">
+                    <div class="alert alert-info back-widget-set text-center device_category">
+                        <img src="assets/img/device.png"></img>
+                        <h3>Device Control</h3>
+                        <a class="alert-a" href="AllDevice.html" style="color:#31708f;">View Details
+                        <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-6 ">
+                    <div class="alert alert-danger back-widget-set text-center device_category">
+                        <img src="assets/img/control.png"></img>
+                        <h3>Schedule</h3>
+                        <a class="alert-a" href="schedule.html" style="color:#a94442;">View Details
+                        <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-6 device_category">
+                    <div class="alert alert-warning back-widget-set text-center device_category" value="analysis">
+                        <img src="assets/img/flow.png"></img>
+                        <h3>Analysis</h3>
+                        <a class="alert-a" href="analysis.html" style="color:#8a6d3b;">View Details
+                        <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -98,18 +105,8 @@
                 <div class="col-md-12">
                    &copy; 2017 <a href="http://www.aimobile.com.tw/" target="_blank"  >Aimobile </a>|<a href="http://www.binarytheme.com/" target="_blank"  > Designed by : binarytheme.com</a>
                 </div>
-
             </div>
         </div>
     </section>
-      <!-- FOOTER SECTION END-->
-    <!-- JAVASCRIPT FILES PLACED AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
-    <!-- CORE JQUERY  -->
-
-    <!-- BOOTSTRAP SCRIPTS  -->
-    <script src="assets/js/bootstrap.js"></script>
-      <!-- CUSTOM SCRIPTS  -->
-    <!--<script src="assets/js/custom.js"></script>-->
-
 </body>
 </html>

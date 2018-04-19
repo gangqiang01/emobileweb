@@ -12,17 +12,34 @@
 
 </head>
 <body>
-        <input id="switch-state" type="checkbox" checked="checked" data-off-color='info'>
-        <button id="button">ddd</button>
-    
+        <input id="switch-state" type="checkbox"  data-off-color='info'>
+        <button  >ddd</button>
+    <input type="checkbox" id="cccc" value="bbbbb">
+    <div class="container-bell">
+        <div class="notification" ></div>
+    </div>
+    <ul class="dropdown-menu scrollable-menu" id="notification_content">
+    </ul>
             
         <script>
-            $("[name='my-checkbox']").bootstrapSwitch();
             $('#switch-state').bootstrapSwitch()
-            console.log($("#switch-animate"))
+            $('#switch-state').bootstrapSwitch("state",true)
+            // console.log($("#switch-animate"))
             $("#button").on("click",function(){
-                console.log($('#switch-state').bootstrapSwitch("state",true))
+           
             })
+            console.log($("#cccc"));
+            console.log(document.getElementById("cccc").checked)
+            var a = 1;
+            setInterval(function(){
+                var a=10
+                if(a==10){
+                    setTimeout(function(){
+                        console.log("aaa")
+                    },10000)
+                }
+                console.log("bbb")
+            },5000)
             // function aaa(){
             //     window.alert($('#switch-animation').bootstrapSwitch("state"))
             // }

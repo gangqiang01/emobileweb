@@ -91,7 +91,7 @@ function drawData() {
             }else{
                 selectedrowids.push(SelectedDid); 
             }
-            console.log(selectedrowids)
+            // console.log(selectedrowids)
     });
 
     $('#LogTable').DataTable( {
@@ -205,7 +205,6 @@ function GetAllDevices() {
 
 // single device control
 function DeviceDataController(data){
-    console.log("DeviceDataController",data);
     var ControlDevice = {};
     var ControlDevicesArray = data.split(",")
     ControlDevice.Did = ControlDevicesArray[1];

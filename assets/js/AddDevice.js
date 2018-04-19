@@ -1,6 +1,6 @@
 $(function(){
     var selectedrowids=[];
-    LoginStatus();
+    LoginStatus("Adddevice.html");
 	SetHTML("barset_management");
     getunassigneddevices();
     function AllSelect(){
