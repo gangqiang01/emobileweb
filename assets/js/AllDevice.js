@@ -132,75 +132,75 @@ function deletedevice(){
 }
 
 function GetAllDevices() {
-  var devgetdata = {};
-  devgetdata.pageSize = 10000;
-  devgetdata.no = 1;
-  devgetdata.orderType = "aid";
-  devgetdata.like = "";
-  devgetdata._ = new Date().getTime();
-  $(".loading").show();
-  apiget("rmm/v1/accounts", devgetdata).then(function(data){
-	var accountsid = data.accounts[0].aid;
-	sessionStorage["accoundsid"] = accountsid;
-    console.log(accountsid);
-    groupgetdata = {};
-    groupgetdata._ = new Date().getTime();
-    apiget("rmm/v1/accounts/"+accountsid+"/groups", groupgetdata).then(
-      function(data){
-		var groupid = data.accounts[0].groups[0].gid;
-		sessionStorage["groupid"] = groupid;
-        var devicegetdata = {};
-        devicegetdata.pageSize = 10000;
-        devicegetdata.no = 1;
-        devicegetdata.orderType = "did";
-        devicegetdata.like = "";
-        devicegetdata._ = new Date().getTime();
-        apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
-            $(".loading").hide();
-            console.log(data);
-			var tableData = data.groups[0].devices;
-			// sessionStorage["devicedata"] = tableData;
-            var table = $('#dataTables-example').DataTable();
-            table.column(1).visible( false );
-            table.clear();
-            if(tableData === ""){
-              table.clear().draw();
-            //	return;
-            }else{
-              GetUpdateDevice = "";
-              for(var i=0;i<Object.keys(tableData).length;i++){
-                var agentid, devicename, agentversion,devicemodel,stat, did,time = "";
-                agentid = tableData[i].agentid;
-                devicename = tableData[i].name;
-                agentversion = tableData[i].version;
-                stat = tableData[i].connected;
-                did = tableData[i].did;
-                console.log("stat", stat);
-                GetUpdateDevice += agentid +"/";
-                m_devices.push([agentid,false]);
-                //add row in table
-                var rowNode = table.row.add( [
-                  "",
-                  did,
-                  devicename,
-                  agentid,
-                  agentversion,
-                  stat,
-                  "",
-                  "",
-                ] ).draw( false ).node();
-                $( rowNode ).addClass('demo4TableRow');
-                $( rowNode ).attr('data-row-id',i);
-              }
-            }
-            $($.fn.dataTable.tables(true)).DataTable()
-             .columns.adjust()
-             .responsive.recalc();
-        })
+    var devgetdata = {};
+    devgetdata.pageSize = 10000;
+    devgetdata.no = 1;
+    devgetdata.orderType = "aid";
+    devgetdata.like = "";
+    devgetdata._ = new Date().getTime();
+    $(".loading").show();
+    apiget("rmm/v1/accounts", devgetdata).then(function(data){
+        var accountsid = data.accounts[0].aid;
+        setCookie("aid",accountsid,60);
+        console.log(accountsid);
+        groupgetdata = {};
+        groupgetdata._ = new Date().getTime();
+        apiget("rmm/v1/accounts/"+accountsid+"/groups", groupgetdata).then(
+        function(data){
+            var groupid = data.accounts[0].groups[0].gid;
+            sessionStorage["groupid"] = groupid;
+            var devicegetdata = {};
+            devicegetdata.pageSize = 10000;
+            devicegetdata.no = 1;
+            devicegetdata.orderType = "did";
+            devicegetdata.like = "";
+            devicegetdata._ = new Date().getTime();
+            apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
+                $(".loading").hide();
+                console.log(data);
+                var tableData = data.groups[0].devices;
+                // sessionStorage["devicedata"] = tableData;
+                var table = $('#dataTables-example').DataTable();
+                table.column(1).visible( false );
+                table.clear();
+                if(tableData === ""){
+                table.clear().draw();
+                //	return;
+                }else{
+                GetUpdateDevice = "";
+                for(var i=0;i<Object.keys(tableData).length;i++){
+                    var agentid, devicename, agentversion,devicemodel,stat, did,time = "";
+                    agentid = tableData[i].agentid;
+                    devicename = tableData[i].name;
+                    agentversion = tableData[i].version;
+                    stat = tableData[i].connected;
+                    did = tableData[i].did;
+                    console.log("stat", stat);
+                    GetUpdateDevice += agentid +"/";
+                    m_devices.push([agentid,false]);
+                    //add row in table
+                    var rowNode = table.row.add( [
+                    "",
+                    did,
+                    devicename,
+                    agentid,
+                    agentversion,
+                    stat,
+                    "",
+                    "",
+                    ] ).draw( false ).node();
+                    $( rowNode ).addClass('demo4TableRow');
+                    $( rowNode ).attr('data-row-id',i);
+                }
+                }
+                $($.fn.dataTable.tables(true)).DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+            })
 
-      }
-    )
-  })
+        }
+        )
+    })
 }
 
 // single device control

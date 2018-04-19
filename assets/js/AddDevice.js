@@ -1,7 +1,7 @@
 $(function(){
     var selectedrowids=[];
-    LoginStatus("Adddevice.html");
-	SetHTML("barset_management");
+    LoginStatus("AllDevice.html");
+	SetHTML("barset_alldevice");
     getunassigneddevices();
     function AllSelect(){
         $("#UnassignedDevicesTables tbody tr").addClass("selected");

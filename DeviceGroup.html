@@ -13,7 +13,7 @@
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link href="assets/css/AllDevice.css" rel="stylesheet" />
+    <!-- <link href="assets/css/AllDevice.css" rel="stylesheet" /> -->
     <link href="assets/css/style.css" rel="stylesheet" />
 	<link href="assets/css/main.css" rel="stylesheet">
 	<link rel="stylesheet" href="assets/css/app.css">
@@ -34,7 +34,7 @@
     <script src="assets/js/dataTables/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
 	<script src="https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.min.js"></script>
-    <script src="assets/js/AllDevice.js"></script>
+    <script src="assets/js/DeviceGroup.js"></script>
     <!--numpad -->
   
 </head>
@@ -46,7 +46,7 @@
          <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-				<p class="header-line"> <i class="fa fa-desktop fa-x" style="padding:5px"></i>Device Control</p>
+				<p class="header-line"> <i class="fa fa-object-group fa-x" style="padding:5px"></i>Device Group</p>
             </div>
         </div>
             <div class="row">
@@ -56,36 +56,28 @@
 
                     <div class="panel panel-default panel-devices">
                         <div class="panel-heading">
-                            All Devices
-							<div class="btn-group pull-right">
-								<button class="btn btn-default " onclick="AllSelect()">Select All</button>
-								<button class="btn btn-default " onclick="AllCancel()">Deselect All </button>
-							</div>
+                            All Devices Group
 							<div class="btn-group pull-right" style="margin-right:5px;font-size:large">
-								<a href="Adddevice.html" id="AddDevice" class="btn">
+								<a href="AddGroup.html" id="AddDevice" class="btn">
 									<i class="fa fa-plus-square-o "></i>
-									Add device
+									Add group
                                 </a>
-                                <a href="javascript: void(0)" onclick="deletedevice()" id="Deletedevice" class="btn">
+                                <a href="javascript: void(0)" onclick="DeleteGroup()" id="delete-group" class="btn">
 									<i class="fa fa-trash-o "></i>
-									Delete device
+									Delete group
 								</a>
 							</div>
 
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive" cellspacing="0" width="100%" id="dataTables-example">
+                                <table class="display responsive" cellspacing="0" width="100%" id="DataTables">
                                     <thead>
                                         <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th>Device Name</th>
-                                            <th>Agent ID</th>
-                                            <th>Agent Version</th>
-											<th>Status</th>
-                                            <th>VNC Control</th>
-                                            <th>Get/Set Data</th>    
+                                            <th>Gid</th>
+                                            <th>Group Name</th>
+                                            <th>Description</th>
+                                            <th>Create Time</th>    
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -98,11 +90,6 @@
                     </div>
                     <!--End Advanced Tables -->
                 </div>
-
-				<ul class="command-tags" style="right:0;position:fixed;bottom:15%;">
-					<li><a href="Adddevice.html" class="command-tag command-tag-blue">Add devices</a></li>
-					<li><a href="#" class="command-tag command-tag-yellow">Update devices</a></li>
-				</ul>
             </div>
                 <!-- /. ROW  -->
         </div>

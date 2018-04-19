@@ -77,7 +77,7 @@ function setCookie(cname, cvalue, exmins) {
 function　loginout(){
     setCookie('SessionId','000', 0);
     setCookie('connectcount','000', 0);
-    sessionStorage.removeItem("accoundsid");
+    setCookie('aid','000',0)
     sessionStorage.removeItem("groupid");
     clearInterval(timer);
     return true;
@@ -122,32 +122,6 @@ function SetHTML(html){
                 document.getElementById("card-deives").innerHTML = "device connected :" +data.connected;
             }
         )
-    }
-
-    if(location.pathname.indexOf("details.html") >-1){
-        var groupid = sessionStorage["groupid"]
-        if(groupid != undefined){
-            var devicegetdata = {};
-            devicegetdata.pageSize = 10000;
-            devicegetdata.no = 1;
-            devicegetdata.orderType = "did";
-            devicegetdata.like = "";
-            devicegetdata._ = new Date().getTime();
-            apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
-                var device = data.groups[0].devices;
-                console.dir(device);
-
-                var AllDevices = [];
-                var id,name;
-                for(var j=0; j< device.length;j++){
-                    AllDevices.push([device[j]["agentid"],device[j]["name"]]);
-                }
-                
-                GetDevicesId(AllDevices);
-            })
-        }else{
-            window.location.href = "index.html";
-        }
     }
 	// });
 
@@ -310,7 +284,7 @@ function SetNavbar(){
                             '<a id="barset_alldevice" href="AllDevice.html">Device Control</a>'+
                         '</li>'+
                         '<li>'+
-                            '<a id="barset_analysis" href="analysis.html">Analysis</a></li>'+
+                            '<a id="barset_analysis" href="DeviceGroup.html">Device Group</a>'+
                         '</li>'+
                         '<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+

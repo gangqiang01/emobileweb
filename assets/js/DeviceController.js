@@ -1,7 +1,7 @@
 $(function(){
     var selectedrowids=[];
     LoginStatus("AllDevice.html");
-    SetHTML("barset_management");
+    SetHTML("barset_alldevice");
     var ControlDevices = JSON.parse(sessionStorage["ControlDevice"]);
     var devicedid = ControlDevices.Did;
     var AgentId =ControlDevices.AgentId;
