@@ -284,7 +284,7 @@ function SetNavbar(){
                             '<a id="barset_alldevice" href="AllDevice.html">Device Control</a>'+
                         '</li>'+
                         '<li>'+
-                            '<a id="barset_analysis" href="DeviceGroup.html">Device Group</a>'+
+                            '<a id="barset_devicegroup" href="DeviceGroup.html">Device Group</a>'+
                         '</li>'+
                         '<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+

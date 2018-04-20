@@ -1,7 +1,7 @@
 $(function(){
     var selectedrowids=[];
     LoginStatus("DeviceGroup.html");
-    SetHTML("barset_DeviceGroup");
+    SetHTML("barset_devicegroup");
     GetDeviceGroup();
 })
 
