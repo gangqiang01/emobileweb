@@ -75,6 +75,42 @@ function apiput(myurl,object){
    })
 }
 
+function apidelete(myurl){
+    var posturl = baseurl+"/"+myurl
+    return new Promise(function(resolve, reject){
+       $.ajax({
+            type:"delete",
+            url: posturl,
+            crossDomain: true,
+            xhrFields: { withCredentials: true },
+            timeout:10000,
+            success:function(data){
+                resolve(data)
+            },
+            error:function(err){
+                if(err.status == 401){
+                    swal("","Login expired","error").then(function(){
+                          window.location.href = "Login.html"
+                    }) 
+                }else if(err.status == 403){
+                    swal("",JSON.parse(err.responseText).Description,"error")
+                }
+            },
+            complete: function (XMLHttpRequest,status) {
+                if(status == 'timeout') {
+                    XMLHttpRequest.abort();  
+                      // 超时后中断请求
+                    swal("","network timeout","error").then(
+                        function(){
+                            location.reload();
+                        }
+                    );
+                }
+            }
+       });
+   })
+}
+
 function apifile(myurl,data){
     return new Promise(function(resolve, reject){
         $.ajax({
@@ -149,6 +185,8 @@ function apiget(myurl,object){
                 if(err.status == 401){
                     if(location.pathname.indexOf("index.html") >-1){
                         window.location.href = "Login.html" 
+                    }else if(location.pathname.indexOf("Login.html") >-1){
+                        swal("","illegal user","error")
                     }else{
                         swal("","Login expired","error").then(function(){
                             window.location.href = "Login.html"

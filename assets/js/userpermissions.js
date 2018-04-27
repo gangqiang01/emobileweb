@@ -23,6 +23,7 @@ function LoginStatus(page) {
                 if(data.result){
 					if(page != undefined){
                         setCookie("page", page, 60);
+                        setCookie("aid", data.aid, 60);
                         var timer = window.setInterval(function(){CheckOnlineDevice()},7000);
                     }
                 }
@@ -111,7 +112,7 @@ function SetHTML(html){
             console.log("user",data);
             document.getElementById("card-email").innerHTML+=data["accounts"][0].mail;
             document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
-    
+            localStorage["accountname"] = data["accounts"][0].name
             document.getElementById("card-login").innerHTML = '<p>Last Accessed : '+UnixToTime(data["accounts"][0].login_unix_ts)+'</p>';
         })
         var dvdata = {};

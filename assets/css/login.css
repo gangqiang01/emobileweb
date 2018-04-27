@@ -64,7 +64,7 @@ form:after {
 	content: "";
 	height: 1px;
 	position: absolute;
-	top: 10px;
+	top: 45px;
 	width: 27%;
 }
 #content h1:after {
