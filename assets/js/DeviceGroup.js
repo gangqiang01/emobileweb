@@ -55,6 +55,7 @@ $(function(){
                     if(data.result == true){
                         swal( "", "Add group successfully!", "success").then(function(val){
                             GetDeviceGroup();
+                            $('#myModal').modal('hide');
                         });
                     }
                 })
@@ -63,32 +64,29 @@ $(function(){
 
     }
     function GetDeviceGroup(){
- 
-        $('#DataTables').dataTable({
-            "columnDefs": 
-            [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets:   0
-            }],
-            select: {
-                style:    'multi',
-                selector: 'td:first-child'
-            }, 
-            "order": [[ 1, "desc" ]],
-            rowReorder: {
-                selector: 'td:nth-child(0)'
-            },
-            responsive: true
-        });
-
+        var table;
         if ( $.fn.dataTable.isDataTable('#DataTables') ) {
-            var table = $('#DataTables').DataTable();
+            table = $('#DataTables').DataTable();
         }else {
-            table = $('#DataTables').DataTable( {
-                paging: false
-            } );
+            $('#DataTables').dataTable({
+                "columnDefs": 
+                [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+                }],
+                select: {
+                    style:    'multi',
+                    selector: 'td:first-child'
+                }, 
+                "order": [[ 1, "desc" ]],
+                rowReorder: {
+                    selector: 'td:nth-child(0)'
+                },
+                responsive: true
+            });
         }
+        
         $('#DataTables tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
             
             var SelectedUnassignedDid = table.row( this ).data()[1];
@@ -112,14 +110,14 @@ $(function(){
                 $(".loading").hide();
                 var DeviceGroups = data.accounts[0].groups;
                 if ( $.fn.dataTable.isDataTable('#DataTables') ) {
-                    var table = $('#DataTables').DataTable();
+                    table = $('#DataTables').DataTable();
                 }else {
                     table = $('#DataTables').DataTable( {
                         paging: false
                     } );
                 }
                 table.clear();
-                if(tableData === ""){
+                if(DeviceGroups === ""){
                     table.clear().draw();
                 //	return;
                 }else{

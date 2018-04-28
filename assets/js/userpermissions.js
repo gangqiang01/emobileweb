@@ -79,7 +79,7 @@ function　loginout(){
     setCookie('SessionId','000', 0);
     setCookie('connectcount','000', 0);
     setCookie('aid','000',0)
-    sessionStorage.removeItem("groupid");
+    sessionStorage.removeItem("groupids");
     clearInterval(timer);
     return true;
 }

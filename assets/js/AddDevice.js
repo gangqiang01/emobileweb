@@ -3,6 +3,7 @@ $(function(){
     LoginStatus("AllDevice.html");
 	SetHTML("barset_alldevice");
     getunassigneddevices();
+    GetDeviceGroup()
     function AllSelect(){
         $("#UnassignedDevicesTables tbody tr").addClass("selected");
     }
@@ -80,10 +81,10 @@ $(function(){
         })
     }
 
-    $("#adddevice").on("click", function(){
+    $("#DialogAdd").on("click", function(){
         // var adddata = {devices:[{did: did.deviceid, groupIds:[]}]};
         var adddata = {};
-        groupid = sessionStorage["groupid"]
+        groupid = $("#devicegroups").val();
         adddata.devices = [];
         if(!selectedrowids){
             return;
@@ -108,4 +109,32 @@ $(function(){
             swal( "", "please select the device you want to add!", "info")
         }
     })
+
+    function GetDeviceGroup(){
+        var devgetdata = {};
+        devgetdata.pageSize = 10000;
+        devgetdata.no = 1;
+        devgetdata.orderType = "aid";
+        devgetdata.like = "";
+        devgetdata._ = new Date().getTime();
+        $(".loading").show();
+        apiget("rmm/v1/accounts", devgetdata).then(function(data){
+            var accountsid = data.accounts[0].aid;
+            setCookie("aid",accountsid,60);
+            console.log(accountsid);
+            groupgetdata = {};
+            groupgetdata._ = new Date().getTime();
+            apiget("rmm/v1/accounts/"+accountsid+"/groups", groupgetdata).then(
+                function(data){
+                    var devicegroupmsg='';
+                    var groupids=[]
+                    data.accounts[0].groups.forEach(function(val){
+                        devicegroupmsg += '<option value="'+val.gid+'">'+val.name+"</option>"
+                        groupids.push(val.gid);
+                    });
+                    $("#devicegroups").html(devicegroupmsg);
+                }
+            )
+        })
+    }
 })

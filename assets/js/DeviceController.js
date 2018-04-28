@@ -46,10 +46,10 @@ $(function(){
         $("#DeviceSensorsTables tbody tr").removeClass("selected");
     }
     function DrawSensors(deviceplugin){
+        var table;
         if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
             table = $('#DeviceSensorsTables').DataTable();
-        }
-        else {
+        }else {
             $('#DeviceSensorsTables').dataTable({
                 "columnDefs": 
                 [{
