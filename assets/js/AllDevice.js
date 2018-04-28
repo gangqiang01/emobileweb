@@ -3,37 +3,44 @@
 //for GetAllDevices
 
 //
-var selectedrowids=[];
-
+var DatchControlData = [];
 $(function() {
+    var selectedrowids=[];
 	LoginStatus("AllDevice.html");
 	SetHTML("barset_alldevice");
     $('.command-tag-yellow').on('click', function(e){
         GetAllDevices();
     });
     drawData();
-    $("#devicegroup").on("change",function(){
+    $("#devicegroup").on("change", function(){
         var groupid = $(this).val();
         GetAllDevices()
     })
-   
-    $("#Deletedevice").on("click",function(){
+    $("#BatchControl").on("click", function(){
+        if (DatchControlData.length ==0){
+            swal("","Please select the online device you want to control","info")
+        }else{
+            window.location.href="DeviceController.html?type=datch";
+        }
+    })
+    $("#Deletedevice").on("click", function(){
         var dddata = {};
         dddata.devices = [];
-        if(!selectedrowids){
-            return;
-        }
-        for (var i=0 ;i< selectedrowids.length;i++){
-            dddata.devices[i] = {"did": selectedrowids[i], "groupIds":[]};
-        }
-        apiput("rmm/v1/devices", dddata).then(function(data){
-            console.log("deletedevice",data);
-            if (data.result){
-                swal("","Delete device successfully","success").then(function(){
-                    GetAllDevices();
-                })
+        if(selectedrowids.length == 0){
+            swal( "", "Please select the device you want to delete", "info")
+        }else{
+            for (var i=0 ;i< selectedrowids.length;i++){
+                dddata.devices[i] = {"did": selectedrowids[i], "groupIds":[]};
             }
-        })
+            apiput("rmm/v1/devices", dddata).then(function(data){
+                console.log("deletedevice",data);
+                if (data.result){
+                    swal("","Delete device successfully","success").then(function(){
+                        GetAllDevices();
+                    })
+                }
+            })
+        }
     })
 
     function drawData() {
@@ -103,12 +110,22 @@ $(function() {
         DeviceTable = $('#dataTables-example').DataTable();
         $('#dataTables-example tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
                 var SelectedDid = DeviceTable.row( this ).data()[1];
+                var SelectedStatus = DeviceTable.row(this).data()[5];
+                var devicename = DeviceTable.row(this).data()[2]
+                var SelectedAgentId = DeviceTable.row(this).data()[3];
+                var SelectedObject = {did:SelectedDid, agentid:SelectedAgentId, name:devicename};
                 if($(this).parent().hasClass("selected")){
                     selectedrowids.remove(SelectedDid);
+                    if(DatchControlData.in_array(SelectedObject)){
+                        DatchControlData.removeObjWithArr(SelectedObject)
+                    }
                 }else{
                     selectedrowids.push(SelectedDid); 
+                    if(SelectedStatus){
+                        DatchControlData.push(SelectedObject)
+                    }
                 }
-                // console.log(selectedrowids)
+                console.log(DatchControlData)
         });
     
         $('#LogTable').DataTable( {
@@ -138,10 +155,13 @@ $(function() {
                 function(data){
                     var devicegroupmsg='';
                     var groupids=[]
-                    data.accounts[0].groups.forEach(function(val){
-                        devicegroupmsg += '<option value="'+val.gid+'">'+val.name+"</option>"
-                        groupids.push(val.gid);
-                    });
+                    if(data.accounts[0].groups.length != 0){
+                        data.accounts[0].groups.forEach(function(val){
+                            devicegroupmsg += '<option value="'+val.gid+'">'+val.name+"</option>"
+                        });
+                    }else{
+                        devicegroupmsg += '<option >Device group is null</option>'
+                    }
                     $("#devicegroup").html(devicegroupmsg);
                     GetAllDevices();
                 }

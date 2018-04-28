@@ -1,13 +1,59 @@
 var timer;
+function isObjectValueEqual(a, b) {
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+    if (aProps.length != bProps.length) {
+        return false;
+    }
+ 
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+    return true;
+}
 Array.prototype.in_array = function (element) { 
 　　for (var i = 0; i < this.length; i++) { 
-		if (this[i] == element) { 
-			return true; 
-		} 
+        if(typeof(element)== "object"){
+            if(isObjectValueEqual(this[i], element)){
+                return true
+            }
+        }else if(typeof(element) == "number" || typeof(element) ==  "string"){
+            if (this[i] == element) { 
+                return true; 
+            } 
+        }
 	} 
 	return false; 
 	 
 }
+
+Array.prototype.removeObjWithArr = function (_obj) {
+    var length = this.length;
+    for(var i = 0; i < length; i++)
+    {
+        if(isObjectValueEqual(this[i], _obj))
+        {
+            if(i == 0)
+            {
+                this.shift(); //删除并返回数组的第一个元素
+                return;
+            }
+            else if(i == length-1)
+            {
+                this.pop();  //删除并返回数组的最后一个元素
+                return;
+            }
+            else
+            {
+                this.splice(i,1); //删除下标为i的元素
+                return;
+            }
+        }
+    }
+};
 Array.prototype.remove = function(val) {
 	var index = this.indexOf(val);
 	if (index > -1) {

@@ -128,10 +128,13 @@ $(function(){
                 function(data){
                     var devicegroupmsg='';
                     var groupids=[]
-                    data.accounts[0].groups.forEach(function(val){
-                        devicegroupmsg += '<option value="'+val.gid+'">'+val.name+"</option>"
-                        groupids.push(val.gid);
-                    });
+                    if(data.accounts[0].groups.length != 0){
+                        data.accounts[0].groups.forEach(function(val){
+                            devicegroupmsg += '<option value="'+val.gid+'">'+val.name+"</option>"
+                        });
+                    }else{
+                        devicegroupmsg += '<option >Device group is null</option>'
+                    }
                     $("#devicegroups").html(devicegroupmsg);
                 }
             )

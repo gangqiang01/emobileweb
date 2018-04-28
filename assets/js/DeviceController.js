@@ -11,10 +11,42 @@ $(function(){
     // getdevicesensors();
 
     function　getdevicename(){
+        var pagetype = getUrlVars()
         
-        $("#ControlDevices").html("<i class='fa fa-desktop fa-x' style='padding:5px'></i>"+ControlDevices.name); 
+        if(pagetype.type == "datch"){
+            $("#ControlDevices").html("<input type='text' id='DevicesControl'>")
+            $('#DevicesControl').tagsinput({
+                itemValue: 'value',
+                itemText: 'text',
+                source: function(query) {
+                    return $.getJSON('cities.json');
+                }
+            });
+            if(DatchControlData.length > 0){
+                DatchControlData.forEach(function(DeviceObject){
+                    $('#DevicesControl').tagsinput('add', { "value": DeviceObject.did , "text": DeviceObject.name});
+                })
+            }
+
+        }else{
+            $("#ControlDevices").html("<i class='fa fa-desktop fa-x' style='padding:5px'></i>"+ControlDevices.name); 
+        }
     }
  
+    function getUrlVars(){
+        var vars = {}, hash;
+        if(window.location.href.indexOf('?')>-1){
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+       
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars[hash[0]] = $.trim(hash[1]);
+            }
+        }
+        return vars;
+    } 
+
     function getdeviceplugin(){
         var getpluginform = {};
         getpluginform._ = Date.parse(new Date());
@@ -59,7 +91,7 @@ $(function(){
                     "width": '15%',
                     "render": function ( data, type, full, meta ) {
                         if(data[1] == 'rw'){
-                            var fa ="<a class='btn btn-info'  data-toggle='modal' data-target='#myModal'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></i>Read/Update</a>"
+                            var fa ="<a class='btn btn-info'  data-toggle='modal' data-target='#myModal'><i class='fa fa-hand-lizard-o' style='padding-right:5px' ></input>Read/Update</a>"
                         }else{
                             var fa ="<a class='btn btn-info'  data-toggle='modal' data-target='#myModal'><i class='fa fa-hand-lizard-o' style='padding-right:5px'></i>Read</a>"
                         };

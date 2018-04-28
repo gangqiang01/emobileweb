@@ -186,7 +186,7 @@ function apiget(myurl,object){
                     if(location.pathname.indexOf("index.html") >-1){
                         window.location.href = "Login.html" 
                     }else if(location.pathname.indexOf("Login.html") >-1){
-                        swal("","illegal user","error")
+                        swal("","Username and Password is error","error")
                     }else{
                         swal("","Login expired","error").then(function(){
                             window.location.href = "Login.html"

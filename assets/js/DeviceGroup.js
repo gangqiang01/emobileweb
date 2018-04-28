@@ -7,15 +7,21 @@ $(function(){
     dialogmodel();
 
     $("#delete-group").on("click",function(){
-        selectedrowids.forEach(function(gid){
-            var myurl = "rmm/v1/devicegroups/"+gid;
-            apidelete(myurl).then(function(data){
-                swal( "", "Delete group successfully!", "success").then(function(val){
-                    GetDeviceGroup();
-                });
+        if(selectedrowids.length == 0){
+            swal( "", "Please select the device you want to delete", "info")
+        }else{
+            selectedrowids.forEach(function(gid){
+                var myurl = "rmm/v1/devicegroups/"+gid;
+                apidelete(myurl).then(function(data){
+                    swal( "", "Delete group successfully!", "success").then(function(val){
+                        GetDeviceGroup();
+                    });
+                })
             })
-        })
+        }
+     
     })
+    
 
     function dialogmodel(){
         $("#AccountName").val(localStorage['accountname']);
@@ -61,7 +67,6 @@ $(function(){
                 })
             }
         })
-
     }
     function GetDeviceGroup(){
         var table;
