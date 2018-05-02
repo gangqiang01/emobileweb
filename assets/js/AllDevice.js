@@ -3,8 +3,10 @@
 //for GetAllDevices
 
 //
-var DatchControlData = [];
+;
 $(function() {
+    var DatchControlObject = {};
+    var DatchControlData = []
     var selectedrowids=[];
 	LoginStatus("AllDevice.html");
 	SetHTML("barset_alldevice");
@@ -125,7 +127,9 @@ $(function() {
                         DatchControlData.push(SelectedObject)
                     }
                 }
-                console.log(DatchControlData)
+                DatchControlObject.DatchDevices = DatchControlData;
+                DatchControlObject = JSON.stringify(DatchControlObject)
+                sessionStorage["DatchControlObject"] =  DatchControlObject; 
         });
     
         $('#LogTable').DataTable( {

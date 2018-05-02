@@ -1,10 +1,15 @@
 $(function(){
-    var selectedrowids=[];
+    var DatchControlData = [];
+    var isdatach=false;
     LoginStatus("AllDevice.html");
     SetHTML("barset_alldevice");
-    var ControlDevices = JSON.parse(sessionStorage["ControlDevice"]);
-    var devicedid = ControlDevices.Did;
-    var AgentId =ControlDevices.AgentId;
+    var ControlDevicesObject= sessionStorage["ControlDevice"];
+    if(ControlDevicesObject != undefined){
+        var ControlDevicesObject = JSON.parse(ControlDevicesObject);
+        var devicedid = ControlDevicesObject.Did;
+        var AgentId =ControlDevicesObject.AgentId;
+    }
+
     var devicecontrolplugins=[];
     getdevicename();
     getdeviceplugin();
@@ -12,8 +17,15 @@ $(function(){
 
     function　getdevicename(){
         var pagetype = getUrlVars()
-        
+        var  DatchControl =　sessionStorage["DatchControlObject"]
+        if(DatchControl != undefined){
+            DatchControl　=　JSON.parse(DatchControl);
+        }
+
+        DatchControlData = DatchControl.DatchDevices;
+        console.log(DatchControlData);
         if(pagetype.type == "datch"){
+            isdatach = true;
             $("#ControlDevices").html("<input type='text' id='DevicesControl'>")
             $('#DevicesControl').tagsinput({
                 itemValue: 'value',
@@ -29,7 +41,8 @@ $(function(){
             }
 
         }else{
-            $("#ControlDevices").html("<i class='fa fa-desktop fa-x' style='padding:5px'></i>"+ControlDevices.name); 
+            isdatach = false;
+            $("#ControlDevices").html("<i class='fa fa-desktop fa-x' style='padding:5px'></i>"+ControlDevicesObject.name); 
         }
     }
  
@@ -50,6 +63,9 @@ $(function(){
     function getdeviceplugin(){
         var getpluginform = {};
         getpluginform._ = Date.parse(new Date());
+        if(isdatach){
+            devicedid = DatchControlData[0].did;
+        }
         var myurl = "rmm/v1/devices/"+devicedid+"/plugins"
         apiget(myurl,getpluginform).then(function(data){
             var txtplugins="";
@@ -131,7 +147,13 @@ $(function(){
             var sensorId = table.row(this).data()[3];
             var sensorpower = table.row(this).data()[1];
             var GetSensorsData = {};
-            GetSensorsData.agentId = AgentId;
+            if(!isdatach){
+                GetSensorsData.agentId = AgentId;
+            }else{
+                devicedid = DatchControlData[0].did;
+                GetSensorsData.agentId = DatchControlData[0].agentid;
+            }
+
             GetSensorsData.plugin = PluginId;
             GetSensorsData.sensorId = sensorId;
             GetSensorsData._ = Date.parse(new Date());
@@ -175,6 +197,12 @@ $(function(){
         //     return;
         // }
         var getsensorsdata = {};
+        if(!isdatach){
+            getsensorsdata.agentId = AgentId;
+        }else{
+            devicedid = DatchControlData[0].did;
+            getsensorsdata.agentId = DatchControlData[0].agentid;
+        }
         getsensorsdata._ = new Date().getTime();
         var myurl = "rmm/v1/devices/"+devicedid+"/"+deviceplugin+"/sensors";
         $(".loading").show();
@@ -236,21 +264,39 @@ $(function(){
     })
     $('#sensor_dialog_update').on("click",function(){
         var setsensordata = {};
-        setsensordata.agentId = AgentId;
-        setsensordata.plugin = $("#dialog_plugin").text();
-        var sensorId = $("#dialog_sensorid").text();
-        var sensorvalue =   $("#sensorvalue").bootstrapSwitch("state");
-        setsensordata.sensorIds = [];
-        setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
-        apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
-
-            if(data.items[0].statusCode == "200"){
-                swal("","success","success").then(function(){
-                    $('#myModal').modal('hide');
-                })
-            }
-        })
+        if(!isdatach){
+            setsensordata.agentId = AgentId;
+            setsensordata.plugin = $("#dialog_plugin").text();
+            var sensorId = $("#dialog_sensorid").text();
+            var sensorvalue =   $("#sensorvalue").bootstrapSwitch("state");
+            setsensordata.sensorIds = [];
+            setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
+            apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+                if(data.items[0].statusCode == "200"){
+                    swal("","success","success").then(function(){
+                        $('#myModal').modal('hide');
+                    })
+                }
+            })
+        }else{
+            DatchControlData.forEach(function(object){
+                setsensordata.agentId = object.agentid;
+                setsensordata.plugin = $("#dialog_plugin").text();
+                var sensorId = $("#dialog_sensorid").text();
+                var sensorvalue =   $("#sensorvalue").bootstrapSwitch("state");
+                setsensordata.sensorIds = [];
+                setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
+                apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
         
+                    if(data.items[0].statusCode == "200"){
+                        swal("","success","success").then(function(){
+                            $('#myModal').modal('hide');
+                        })
+                    }
+                })
+            })
+
+        }   
     })
 
 })
