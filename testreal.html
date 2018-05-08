@@ -21,7 +21,15 @@
                 <option value="e">Cairo</option>
               </select>
               <input type="text" id="tag">
+              <input type="range" name="points" min="1" max="10" />
+              <p id= "ddd">aaa</p>
+              <p>sdfsfsdf</p>
         <script>
+            $("#ddd").on('click', function(){
+                alert("a")
+            })
+            $("p").addClass("push")
+            console.log($("#ddd"))
         console.log($('#selected').val());
         $('#tag').tagsinput({
             itemValue: 'value',
@@ -44,6 +52,7 @@
                 console.log(a);
             }
         })
+
         </script>  
 
 </body>

@@ -1,4 +1,4 @@
-var baseurl = "https://portal-rmm-wise-paas-dev-rmm.wise-paas.com.cn"
+var baseurl = "https://portal-rmm.wise-paas.com"
 function apipost(myurl,object){
     var posturl = baseurl+"/"+myurl
     return new Promise(function(resolve, reject){

@@ -20,23 +20,23 @@ $(function(){
         var  DatchControl =　sessionStorage["DatchControlObject"]
         if(DatchControl != undefined){
             DatchControl　=　JSON.parse(DatchControl);
+            DatchControlData = DatchControl.DatchDevices;
+            console.log(DatchControlData);
         }
-
-        DatchControlData = DatchControl.DatchDevices;
-        console.log(DatchControlData);
         if(pagetype.type == "datch"){
             isdatach = true;
-            $("#ControlDevices").html("<input type='text' id='DevicesControl'>")
+            $("#ControlDevices").html("<i class='fa fa-tags' aria-hidden='true' style='margin:0 5px'> Devices:</i><input  type='text' id='DevicesControl'/>")
             $('#DevicesControl').tagsinput({
                 itemValue: 'value',
                 itemText: 'text',
                 source: function(query) {
                     return $.getJSON('cities.json');
-                }
+                },
+                allowDuplicates: true
             });
             if(DatchControlData.length > 0){
                 DatchControlData.forEach(function(DeviceObject){
-                    $('#DevicesControl').tagsinput('add', { "value": DeviceObject.did , "text": DeviceObject.name});
+                    $('#DevicesControl').tagsinput('add', { "value": DeviceObject.agentid , "text": DeviceObject.name});
                 })
             }
 
@@ -167,21 +167,21 @@ $(function(){
                 if(sensorpower == 'rw'){
                     var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v || obj.sensorIds[0].bv
                     var sensorboolean = obj.sensorIds[0].bv;
-                    if(sensortype == "bv"){
-                        var sensorupdate = " <input id='sensorvalue' type='checkbox'>";
+                    if(sensorvalue == 'true' || sensorvalue == 'false'){
+                        var sensorupdate = " <input  type='checkbox' data-toggle='toggle' id='sensorvalue' >";
                         $("#dialog_sensorvalue").html(sensorupdate);
                         // if(sensorboolean == "true"){
                         //     $("#sensorvalue").attr("checked","checked");
                         // }
                         if(sensorboolean == "true"){
-                            $("#sensorvalue").bootstrapSwitch('state',true); 
+                            $("#sensorvalue").bootstrapToggle('on'); 
                         }else if(sensorboolean == "false"){
-                            $("#sensorvalue").bootstrapSwitch('state',false);
+                            $("#sensorvalue").bootstrapToggle('off');
                         }
                         
 
-                    }else if(sensortype == "v"){
-                        var sensorupdate = "<input type='text' id='sensorvalue' value="+sensorvalue+">";
+                    }else {
+                        var sensorupdate = "<input type='text' id='sensorvalue' class='text-center' value="+sensorvalue+">";
                         $("#dialog_sensorvalue").html(sensorupdate);
                     }
                   
@@ -262,15 +262,22 @@ $(function(){
         DrawSensors(e.target.value);
        
     })
+    
     $('#sensor_dialog_update').on("click",function(){
         var setsensordata = {};
         if(!isdatach){
             setsensordata.agentId = AgentId;
-            setsensordata.plugin = $("#dialog_plugin").text();
-            var sensorId = $("#dialog_sensorid").text();
-            var sensorvalue =   $("#sensorvalue").bootstrapSwitch("state");
-            setsensordata.sensorIds = [];
-            setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
+            setsensordata.plugin = $("#dialog_plugin").text().trim();
+            var sensorId = $("#dialog_sensorid").text().trim();
+            if($('#sensorvalue').attr("type") == "checkbox"){
+                var sensorvalue =   $("#sensorvalue").prop('checked');
+                setsensordata.sensorIds = [];
+                setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
+            }else if($('#sensorvalue').attr("type") == "text"){
+                var sensorvalue = $("#sensorvalue").val();
+                setsensordata.sensorIds = [];
+                setsensordata.sensorIds[0]={"n":sensorId, "v":sensorvalue};
+            };
             apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
                 if(data.items[0].statusCode == "200"){
                     swal("","success","success").then(function(){
@@ -279,13 +286,22 @@ $(function(){
                 }
             })
         }else{
-            DatchControlData.forEach(function(object){
-                setsensordata.agentId = object.agentid;
+            var devicetags = $('#DevicesControl').tagsinput('items');
+            
+            devicetags.forEach(function(tag){
+                setsensordata.agentId = tag.value;
                 setsensordata.plugin = $("#dialog_plugin").text();
                 var sensorId = $("#dialog_sensorid").text();
-                var sensorvalue =   $("#sensorvalue").bootstrapSwitch("state");
-                setsensordata.sensorIds = [];
-                setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
+                if($('#sensorvalue').attr("type") == "checkbox"){
+                    var sensorvalue =   $("#sensorvalue").prop('checked')
+                    setsensordata.sensorIds = [];
+                    setsensordata.sensorIds[0]={"n":sensorId, "bv":sensorvalue};
+                }else if($('#sensorvalue').attr("type") == "text"){
+                    var sensorvalue = $("#sensorvalue").val();
+                    setsensordata.sensorIds = [];
+                    setsensordata.sensorIds[0]={"n":sensorId, "v":sensorvalue};
+                };
+               
                 apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
         
                     if(data.items[0].statusCode == "200"){

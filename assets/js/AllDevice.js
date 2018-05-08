@@ -3,9 +3,7 @@
 //for GetAllDevices
 
 //
-;
 $(function() {
-    var DatchControlObject = {};
     var DatchControlData = []
     var selectedrowids=[];
 	LoginStatus("AllDevice.html");
@@ -31,20 +29,30 @@ $(function() {
         if(selectedrowids.length == 0){
             swal( "", "Please select the device you want to delete", "info")
         }else{
-            for (var i=0 ;i< selectedrowids.length;i++){
-                dddata.devices[i] = {"did": selectedrowids[i], "groupIds":[]};
-            }
-            apiput("rmm/v1/devices", dddata).then(function(data){
-                console.log("deletedevice",data);
-                if (data.result){
-                    swal("","Delete device successfully","success").then(function(){
-                        GetAllDevices();
+            swal({
+                title: "Are you sure?",
+                text: "delete this device",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then(function(willDelete){
+                if (willDelete) {
+                    for (var i=0 ;i< selectedrowids.length;i++){
+                        dddata.devices[i] = {"did": selectedrowids[i], "groupIds":[]};
+                    }
+                    apiput("rmm/v1/devices", dddata).then(function(data){
+                        console.log("deletedevice",data);
+                        if (data.result){
+                            swal("","Delete device successfully","success").then(function(){
+                                GetAllDevices();
+                            })
+                        }
                     })
-                }
+                } 
             })
         }
     })
-
     function drawData() {
         var DeviceTable ;
         //---- device table ----//
@@ -111,6 +119,7 @@ $(function() {
     
         DeviceTable = $('#dataTables-example').DataTable();
         $('#dataTables-example tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
+                var DatchControlObject = {};
                 var SelectedDid = DeviceTable.row( this ).data()[1];
                 var SelectedStatus = DeviceTable.row(this).data()[5];
                 var devicename = DeviceTable.row(this).data()[2]
@@ -128,7 +137,7 @@ $(function() {
                     }
                 }
                 DatchControlObject.DatchDevices = DatchControlData;
-                DatchControlObject = JSON.stringify(DatchControlObject)
+                DatchControlObject = JSON.stringify(DatchControlObject);
                 sessionStorage["DatchControlObject"] =  DatchControlObject; 
         });
     
@@ -228,11 +237,21 @@ $(function() {
 
 
 function AllSelect(){
-	$("#dataTables-example tbody tr").addClass("selected");
+    $("#dataTables-example tbody tr>td:first-child").each(function(){
+        if(!$(this).parent().hasClass("selected")){
+            $(this).click()
+        }
+    });
+    // $("#dataTables-example tbody tr").click();
+	// $("#dataTables-example tbody tr").addClass("selected");
 }
 
 function AllCancel(){
-	$("#dataTables-example tbody tr").removeClass("selected");
+	$("#dataTables-example tbody tr>td:first-child").each(function(){
+        if($(this).parent().hasClass("selected")){
+            $(this).click()
+        }
+    });
 }
 
 // single device control
