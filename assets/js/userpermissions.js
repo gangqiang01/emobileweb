@@ -155,7 +155,6 @@ function SetHTML(html){
     data._now =  new Date().getTime();
     if(checkCookie("SessionId")){
         apiget("rmm/v1/accounts/myself",data).then(function(data){
-            console.log("user",data);
             document.getElementById("card-email").innerHTML+=data["accounts"][0].mail;
             document.getElementById("card-name").innerHTML='<h1>'+data["accounts"][0].name+'</h1>';
             localStorage["accountname"] = data["accounts"][0].name
@@ -319,7 +318,7 @@ function SetNavbar(){
 				'<div class="navbar-header">'+
 					'<a class="navbar-brand" href="index.html">'+
 
-                        // '<img src="assets/img/logo.png" style="width:80px;margin-left:10px" />'+
+                        '<img src="assets/img/aimlink_logo.png" style="width:260px;margin:10px" />'+
                         // '<span style="display:inline-block;position:relative;top:5px;left:10px;color:#337ab7;font-size:23px">Android Control</span>'+
 					'</a>'+
 
@@ -328,12 +327,12 @@ function SetNavbar(){
                             '<a id="barset_index" href="index.html">Main</a>'+
                         '</li>'+
                         '<li>'+
-                            '<a id="barset_alldevice" href="AllDevice.html">Device Control</a>'+
+                            '<a id="barset_alldevice" href="AllDevice.html">Device Management</a>'+
                         '</li>'+
                         '<li>'+
                             '<a id="barset_devicegroup" href="DeviceGroup.html">Device Group</a>'+
                         '</li>'+
-                        '<li><a id="barset_schedule" href="schedule.html">Schedule</a></li>'+
+                        '<li><a id="barset_schedule" href="DeviceController.html">Device Controller</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
                         '<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
 

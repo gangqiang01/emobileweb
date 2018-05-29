@@ -21,7 +21,6 @@ $(function(){
         if(DatchControl != undefined){
             DatchControl　=　JSON.parse(DatchControl);
             DatchControlData = DatchControl.DatchDevices;
-            console.log(DatchControlData);
         }
         if(pagetype.type == "datch"){
             isdatach = true;
@@ -133,7 +132,7 @@ $(function(){
                 responsive: true
             });
         }
-        $('#DeviceSensorsTables tbody').on( 'click', 'tr>td:first-child', function (e, dt, type, indexes) {
+        $('#DeviceSensorsTables tbody').on( 'click', 'tr>td:first-child>a', function (e, dt, type, indexes) {
             if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
                 table = $('#DeviceSensorsTables').DataTable();
             }
@@ -142,10 +141,10 @@ $(function(){
                     paging: false
                 });
             }
-            var sensortype = table.row(this).data()[0];
-            var  PluginId = table.row( this ).data()[2];
-            var sensorId = table.row(this).data()[3];
-            var sensorpower = table.row(this).data()[1];
+            var sensortype = table.row($(this).parent()).data()[0];
+            var  PluginId = table.row( $(this).parent() ).data()[2];
+            var sensorId = table.row($(this).parent()).data()[3];
+            var sensorpower = table.row($(this).parent()).data()[1];
             var GetSensorsData = {};
             if(!isdatach){
                 GetSensorsData.agentId = AgentId;
