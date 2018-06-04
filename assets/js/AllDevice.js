@@ -7,7 +7,7 @@ $(function() {
     var DatchControlData = []
     var selectedrowids=[];
 	LoginStatus("AllDevice.html");
-	SetHTML("barset_alldevice");
+	SetHTML("barset_devicemanagement");
     $('.command-tag-yellow').on('click', function(e){
         GetAllDevices();
     });

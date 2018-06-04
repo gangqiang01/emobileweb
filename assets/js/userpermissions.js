@@ -70,7 +70,8 @@ function LoginStatus(page) {
 					if(page != undefined){
                         setCookie("page", page, 60);
                         setCookie("aid", data.aid, 60);
-                        var timer = window.setInterval(function(){CheckOnlineDevice()},7000);
+                        // 启动设备在线检测
+                        // var timer = window.setInterval(function(){CheckOnlineDevice()},7000);
                     }
                 }
             }
@@ -318,7 +319,7 @@ function SetNavbar(){
 				'<div class="navbar-header">'+
 					'<a class="navbar-brand" href="index.html">'+
 
-                        '<img src="assets/img/aimlink_logo.png" style="width:260px;margin:10px" />'+
+                        '<img src="assets/img/aimlink_logo.png" style="width:310px;margin:10px" />'+
                         // '<span style="display:inline-block;position:relative;top:5px;left:10px;color:#337ab7;font-size:23px">Android Control</span>'+
 					'</a>'+
 
@@ -327,12 +328,14 @@ function SetNavbar(){
                             '<a id="barset_index" href="index.html">Main</a>'+
                         '</li>'+
                         '<li>'+
-                            '<a id="barset_alldevice" href="AllDevice.html">Device Management</a>'+
+                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="barset_devicemanagement">Device Management<span class="caret"></span></a>'+
+                            '<ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">'+
+                                '<li><a id="barset_alldevice" href="AllDevice.html">Device List</a></li>'+
+                                '<li><a id="barset_devicegroup" href="DeviceGroup.html">Device Group</a>'+
+                            '</ul>'+
                         '</li>'+
-                        '<li>'+
-                            '<a id="barset_devicegroup" href="DeviceGroup.html">Device Group</a>'+
-                        '</li>'+
-                        '<li><a id="barset_schedule" href="DeviceController.html">Device Controller</a></li>'+
+                        '<li><a id="barset_devicesetting" href="DeviceSetting.html">Device Control</a></li>'+
+                        '<li><a id="barset_devicesetting" href="DeviceSetting.html">Batch Control</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
                         '<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
 

@@ -31,7 +31,8 @@
 }
 .info-box-icon-title{
 	color:#fff;
-	font-size:15px;
+    font-size:15px;
+    margin-bottom: 20px;
 }
 .info-box-content {
   padding-left: 10px;
@@ -98,6 +99,15 @@
   background-color: SteelBlue;
 } 
 
+
+.color-green{
+    color: #00a65a;
+  }	
+  
+  .color-red{
+    color: #dd4b39;
+  }
+  
 body {
 	font-family: 'Open Sans', sans-serif;
 	color: #353535;

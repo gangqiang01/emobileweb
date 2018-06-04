@@ -149,7 +149,10 @@ function apifile(myurl,data){
    })
 }
 
-function apiget(myurl,object){
+function apiget(myurl, object, isasync){
+    if(isasync ==  undefined){
+        isasync = true
+    }
     var array = [];
     if(object != undefined){
         for(key in object){
@@ -167,6 +170,7 @@ function apiget(myurl,object){
             url: geturl,
             timeout:15000,
             crossDomain: true,
+            async: isasync,
             contentType:'application/json',
             xhrFields: {
                 withCredentials: true
@@ -175,9 +179,7 @@ function apiget(myurl,object){
                 if(data.result||data.result == undefined){
                     resolve(data)
                 }else{
-                    swal("","network timeout","error").then(function(){
-                        $(".loading").hide();
-                    }) 
+                    $(".loading").hide();
                 }               
             },
             error:function(err){
@@ -200,11 +202,14 @@ function apiget(myurl,object){
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
-                    swal("","network timeout","error").then(
-                        function(){
-                            location.reload();
-                        }
-                    );
+                    if(location.pathname.indexOf("DeviceSetting.html")<0){
+                        swal("","network timeout","error").then(
+                            function(){
+                                    location.reload();
+                        });
+                    } else{
+                        console.log("network timeout")
+                    }  
                 }
             }
         });

@@ -2,7 +2,7 @@ $(function(){
     var selectedrowids=[];
     var accountsid, deivcedecription, groupname;
     LoginStatus("DeviceGroup.html");
-    SetHTML("barset_devicegroup");
+    SetHTML("barset_devicemanagement");
     GetDeviceGroup();
     dialogmodel();
 
