@@ -1,24 +1,25 @@
 var ftpurl = "http://47.95.248.121:30010/";
-var timer, SelectedDeviceId, SelectedAgentId;
+var timer, timer1, SelectedDeviceId, SelectedAgentId;
 var cpudata = new Array(7);
 var memorydata = new Array(7);
 var SystemMonitorPlugin = "ProcessMonitor";
 var AimSdkPlugin = "AimSdk";
 var ReturnCount = 0;
 var AllOptions = "";
+var setting_sign = 0;
 var GetSettingsStatusSensor = {
     wifi: "/devicectrl/ctrl-wifi",
     bluetooth: "/devicectrl/ctrl-bluetooth",
-    lockscreen: "/devicectrl/ctrl-lockscreen"
+    lockscreen: "/securityctrl/ctrl-lockscreen"
 };
 var AppFuncSensor = {
     allappinfo: "/appctrl/get-all-app-info",
-    disableapp: "/appctrl/enable-disable-app",
-    enableapp: "/appctrl/enable-disable-app",
+    disableapp: "/appctrl/disable-some-app",
+    enableapp: "/appctrl/enable-some-app",
     installapp: "/appctrl/install-some-app",
     removeapp: "/appctrl/remove-some-app",
     startapp: "/appctrl/start-some-app"
-}
+};
 
 
 
@@ -48,15 +49,25 @@ function GetDeviceDetails(agentid, deviceid){
             window.clearInterval(timer);
         }
     }
-  
+    devicemonitor();
     timer=window.setInterval(function(){
         devicemonitor()
-    },5000)
-
-    getsensorstatus();
+    },3000)
+    $("#device-tab a:first").tab("show");
+    // getsensorstatus();
     getappcontrol();
+    timer1= window.setTimeout(function(){
+        getsensorstatus()
+    },1000)
 }
 
+// function funcchange(){
+//     if(!SelectedAgentId){
+//         return;
+//     }
+//     getsensorstatus()();
+
+// }
 // devicemonitor set
 function gettimeoptions(){
     var options=[];
@@ -109,7 +120,7 @@ function devicemonitor(){
         cpudata.shift();
         memorydata.push(MemoryNowPercentage);
         memorydata.shift();
-        drawcpuchart(cpudata,CpuNowPercentage,)
+        drawcpuchart(cpudata,CpuNowPercentage)
         drawmemorychart(memorydata, MemoryNowPercentage)
     })
 }
@@ -286,56 +297,73 @@ function ChangeAidtoDid(data, aid){
 	return false;
 }
 
-// function initsettings(count){
-
-//     var GetSensorsData={};
+function initsettings(count){
+    if(count<0){
+        return;
+    }
+    var GetSensorsData={};
+    var deviceid;
+    console.log(Object.keys(GetSettingsStatusSensor))
+    var eleid = Object.keys(GetSettingsStatusSensor)[count];
+    var sensorid =  GetSettingsStatusSensor[eleid];
+    GetSensorsData.agentId = SelectedAgentId;
+    GetSensorsData.plugin = AimSdkPlugin;
+    GetSensorsData.sensorId = sensorid;
+    deviceid = SelectedDeviceId;
+    GetSensorsData._ = Date.parse(new Date());
+    var myurl = "rmm/v1/devicectrl/"+deviceid+"/data";
+    apiget(myurl, GetSensorsData).then(function(obj){
+        console.log(obj.sensorIds[0].sensorId,eleid);
+        var sensorval = obj.sensorIds[0].bv;
+        if(sensorval == "true"){
+            $("#"+eleid).bootstrapToggle('on');
+        }else if(sensorval == "false"){
+            $("#"+eleid).bootstrapToggle('off');
+        }
+        count--;
+        setting_sign++;
+        initsettings(count);
+    })
+    
+}
+// device settings
+function getsensorstatus(){
+    if(!SelectedAgentId || setting_sign>0){
+        return;
+    }
+    var count = Object.keys(GetSettingsStatusSensor).length-1;
+    initsettings(count);
+    window.clearTimeout(timer1);
+// function getsensorstatus(){
+//     var sensorids = "";
 //     var deviceid;
-//     console.log(Object.keys(GetSettingsStatusSensor))
-//     var eleid = Object.keys(GetSettingsStatusSensor)[count];
-//     var sensorid =  GetSettingsStatusSensor[eleid];
+//     for(var i=0;i<Object.keys(GetSettingsStatusSensor).length;i++){
+//         var eleid = Object.keys(GetSettingsStatusSensor)[i];
+//         if(i>Object.keys(GetSettingsStatusSensor).length-2){
+//             sensorids += GetSettingsStatusSensor[eleid];
+//         }else{
+//             sensorids += GetSettingsStatusSensor[eleid]+"|";
+//         }
+//     }
+//     sensorids+= "|/appctrl/get-all-app-info"
+//     var GetSensorsData={};
 //     GetSensorsData.agentId = SelectedAgentId;
 //     GetSensorsData.plugin = AimSdkPlugin;
-//     GetSensorsData.sensorId = sensorid;
+//     GetSensorsData.sensorId = sensorids;
 //     deviceid = SelectedDeviceId;
 //     GetSensorsData._ = Date.parse(new Date());
 //     var myurl = "rmm/v1/devicectrl/"+deviceid+"/data";
 //     apiget(myurl, GetSensorsData).then(function(obj){
-//         console.log(obj.sensorIds[0].sensorId,eleid);
-//         var sensorval = obj.sensorIds[0].bv;
-//         if(sensorval == "true"){
-//             $("#"+eleid).bootstrapToggle('on');
-//         }else if(sensorval == "false"){
-//             $("#"+eleid).bootstrapToggle('off');
-//         }
+//         console.log(obj);
+//         // var sensorval = obj.sensorIds[0].bv;
+//         // if(sensorval == "true"){
+//         //     $("#"+eleid).bootstrapToggle('on'); 
+//         // }else if(sensorval == "false"){
+//         //     $("#"+eleid).bootstrapToggle('off');
+//         // }
 //     })
-// }
-// device settings
-function getsensorstatus(){
-    var count = Object.keys(GetSettingsStatusSensor).length-1
-    for(var i=0;i<Object.keys(GetSettingsStatusSensor).length;i++){
-        (function(index){
-            var GetSensorsData={};
-            var deviceid;
-            console.log(Object.keys(GetSettingsStatusSensor))
-            var eleid = Object.keys(GetSettingsStatusSensor)[index];
-            var sensorid =  GetSettingsStatusSensor[eleid];
-            GetSensorsData.agentId = SelectedAgentId;
-            GetSensorsData.plugin = AimSdkPlugin;
-            GetSensorsData.sensorId = sensorid;
-            deviceid = SelectedDeviceId;
-            GetSensorsData._ = Date.parse(new Date());
-            var myurl = "rmm/v1/devicectrl/"+deviceid+"/data";
-            apiget(myurl, GetSensorsData).then(function(obj){
-                console.log(obj.sensorIds[0].sensorId,eleid);
-                var sensorval = obj.sensorIds[0].bv;
-                if(sensorval == "true"){
-                    $("#"+eleid).bootstrapToggle('on'); 
-                }else if(sensorval == "false"){
-                    $("#"+eleid).bootstrapToggle('off');
-                }
-            })
-        })(i)
-    }
+        
+ 
     console.log($('.btnFunction').next(".toggle-group"))
     $('.btnFunction').next(".toggle-group").on("click",function() {
         if(!SelectedAgentId){
@@ -364,7 +392,7 @@ function getsensorstatus(){
 		setsensordata.agentId = SelectedAgentId;
         setsensordata.plugin = AimSdkPlugin;
         setsensordata.sensorIds = [];
-        setsensordata.sensorIds[0]={"n":setsensorid, "v":setsensorval};
+        setsensordata.sensorIds[0]={"n":setsensorid, "bv":setsensorval};
         apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
             if(data.items[0].statusCode == "200"){
                 swal("","success","success").then(function(){
@@ -383,7 +411,7 @@ function powfunc(cid){
     }
     swal({
         title: "Are you sure?",
-        text: cid+"this device",
+        text: cid+" this device",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -427,13 +455,14 @@ function SetAppList(data){
     $(".applist").html(aptmsg);
 }
 
-function　setappcontrol(cid){
+function　appcontrol(cid){
     var setsensorval;
+    var setsensordata = {};
     if(!SelectedAgentId){
         swal("","Please select your device","info")
         return;
     }
-    setsensorid = AppfuncSensor[cid];
+    
     if(cid == "installapp"){
         // var select = document.getElementById("installapp");
         // var appname = select.options[select.selectedIndex].text;
@@ -442,10 +471,11 @@ function　setappcontrol(cid){
     }else{
         var setsensorval = $("#"+cid).val();
     }
+    setsensorid = AppFuncSensor[cid];
     setsensordata.agentId = SelectedAgentId;
     setsensordata.plugin = AimSdkPlugin;
     setsensordata.sensorIds = [];
-    setsensordata.sensorIds[0]={"n":setsensorid, "v":setsensorval};
+    setsensordata.sensorIds[0]={"n":setsensorid, "sv":setsensorval};
     apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
         if(data.items[0].statusCode == "200"){
             swal("","success","success").then(function(){

@@ -16,7 +16,10 @@
     <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
     <!-- CUSTOM STYLE  -->
     <link href="assets/css/style.css" rel="stylesheet" />
-	<link rel="stylesheet" href="assets/css/thirdpart/bootstrap-select.css">
+    <link rel="stylesheet" href="assets/css/thirdpart/bootstrap-select.css">
+    <link rel="stylesheet" href="assets/css/thirdpart/bootstrap-multiselect.css">
+    <link href="assets/css/thirdpart/bootstrap-toggle.min.css" rel="stylesheet">
+    
 	<link rel="stylesheet" href="assets/css/devicesetting.css">
 	
     <!-- GOOGLE FONT -->
@@ -27,15 +30,13 @@
 	<script src="assets/js/userpermissions.js" type='text/javascript'></script>
     <script src="assets/js/thirdpart/bluebird.min.js"></script>
 	<script src="assets/js/api.js"></script>	
-	<script  type="text/javascript" src="assets/mqtt/mqttws31.js"></script>
-	<script src="assets/js/mqtt_client.js"></script>
 	<script src="assets/js/thirdpart/bootstrap-select.js"></script>
-	
-	<link href="assets/css/thirdpart/bootstrap-toggle.min.css" rel="stylesheet">
-    <script src="assets/js/thirdpart/bootstrap-toggle.min.js"></script>
-    <script src="assets/js/thirdpart/chart.min.js"></script>
+	<script src="assets/js/thirdpart/bootstrap-multiselect.js"></script>
 
-    <script  type="text/javascript" src="assets/js/DeviceSetting.js"></script>
+    <script src="assets/js/thirdpart/bootstrap-toggle.min.js"></script>
+
+
+    <script  type="text/javascript" src="assets/js/BatchControl.js"></script>
 </head>
 <body id="CookieListener">
 	<div class="navbar-fixed-top"></div>
@@ -45,7 +46,7 @@
          <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-                <h4 class="header-line"><i class="fa fa-desktop fa-x" style="padding:5px"></i>Device Control</h4>
+                <h4 class="header-line"><i class="fa fa-desktop fa-x" style="padding:5px"></i>Batch Control</h4>
             </div>
 
         </div>
@@ -59,13 +60,12 @@
                         
                     </select>
                 </div>
-       
                 <div class="alert alert-info back-widget-set text-center">
                     <i class="fa fa-tablet fa-5x"></i><br>
-                    <p>Control Device</p>
-					<select id="devId" class="selectpicker" data-width="fit" title="select device">
-						
-					</select>
+                    <p>Batch Devices</p>
+                    <select id="devId" data-width="fit" title="select device" multiple="multiple">
+                        
+                    </select>
                 </div>
             </div>
             <div class="col-md-9 col-sm-9 col-xs-12">
@@ -73,20 +73,67 @@
 					
 					<div class="panel-body">
 						<ul class="nav nav-tabs" style="margin-left:15px;">
-							<li class="active"><a href="#monitor" data-toggle="tab"><i class="fa fa-home" aria-hidden="true" style="padding-right:3px;"></i>Device Monitor</a></li>
+                            <li class="active"><a href="#settings" data-toggle="tab"><i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device Settings</a></li>
 							<li class=""><a href="#app" data-toggle="tab"><i class="fa fa-window-restore" aria-hidden="true" style="padding-right:3px;"></i>App Management</a></li>
-							<li class=""><a href="#settings" data-toggle="tab"><i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device Settings</a></li>
 						</ul>
 						<div class="tab-content" id="tab-content">
-							<div class="tab-pane fade active in" id="monitor">
-								<div class="col-md-6 col-sm-12 col-xs-12">
-                                    <canvas id="cup_chart"height="150" ></canvas>
-								  <!-- /.info-box -->
-								</div>
-								<div class="col-md-6 col-sm-12 col-xs-12">
-                                    <canvas id="memory_chart" height="150" ></canvas>
-								</div>
-							</div>
+                            <div class="tab-pane fade active in" id="settings">
+                                <div class="col-md-4 col-sm-6 col-xs-6">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-aqua" style="margin:0px 3px 0px 3px;display:inline;">
+                                            <i class="fa fa-wifi info-box-icon-white"></i>
+                                            <p class="info-box-icon-title">Wifi</p>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="wifi" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="wifi" data-type="off">OFF</button>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-6">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-DarkViolet" style="margin:0px 3px 0px 3px;display:inline;">
+                                            <i class="fa fa-bluetooth-b info-box-icon-white"></i>
+                                            <p class="info-box-icon-title">Bluetooth</p>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="bluetooth" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="bluetooth" data-type="off">OFF</button>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-6">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-DarkRed" style="margin:0px 3px 0px 3px;display:inline;">
+                                            <i class="fa fa-lock info-box-icon-white"></i>
+                                            <p class="info-box-icon-title">Lock Screen</p>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="lockscreen" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="lockscreen" data-type="off">OFF</button>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-6">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-Indigo" style="margin:0px 3px 0px 3px;display:inline;">
+                                            <i class="fa  fa-power-off info-box-icon-white"></i>
+                                            <p class="info-box-icon-title">shutdown</p>
+                                            <button class="btn btn-info" onclick="powfunc('shutdown')">shutdown</button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-6">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-SteelBlue" style="margin:0px 3px 0px 3px;display:inline;">
+                                            <i class="fa fa-recycle info-box-icon-white"></i>
+                                            <p class="info-box-icon-title">Reboot</p>
+                                            <button class="btn btn-info" onclick="powfunc('restart')">Reboot</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
 							<div class="tab-pane fade" id="app" style="padding:2px;">
 								<div class="row" style="margin-top:50px">
                                     <div class="col-md-10 col-md-offset-1  control-label form-group">
@@ -99,7 +146,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="getappcontrol('installapp')">install</a>
+                                            <a class="btn btn-primary" onclick="appcontrol('installapp')">install</a>
                                         </div>
                                     </div>
                                 </div>
@@ -107,12 +154,12 @@
                                     <div class="col-md-10 col-md-offset-1  control-label form-group">
                                         <label for="basic" class="col-lg-3 control-label"><i class="fa fa-trash" style="margin-right:10px;color:red"></i>Installed App:</label>
                                         <div class="col-md-7">
-                                            <select id="uninstallapp" class="show-tick form-control applist">
+                                            <select id="removeapp" class="show-tick form-control applist">
                 
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="appcontrol('uninstallapp')">uninstall</a>
+                                            <a class="btn btn-primary" onclick="appcontrol('removeapp')">uninstall</a>
                                         </div>
                                     </div>
                                 </div>
@@ -120,12 +167,12 @@
                                     <div class="col-md-10 col-md-offset-1 control-label form-group">
                                         <label for="basic" class="col-lg-3 control-label"><i class="fa fa-hand-pointer-o" style="margin-right:10px;color:#428bca"></i>Launch App:</label>
                                         <div class="col-md-7">
-                                            <select id="launchapp" class=" show-tick form-control applist">
+                                            <select id="startapp" class=" show-tick form-control applist">
                 
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                                <a class="btn btn-primary" onclick="appcontrol('launchapp')">Launch</a>
+                                                <a class="btn btn-primary" onclick="appcontrol('startapp')">Launch</a>
                                         </div>
                                     </div>
                                 </div>
@@ -183,53 +230,7 @@
                                 </div>
 								
 							</div>
-							<div class="tab-pane fade" id="settings">
-								<div class="col-md-4 col-sm-6 col-xs-6">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-aqua" style="margin:0px 3px 0px 3px;display:inline;">
-                                            <i class="fa fa-wifi info-box-icon-white"></i>
-                                            <p class="info-box-icon-title">Wifi</p>
-                                            <input class="btnFunction" value="wifi" type="checkbox" checked data-toggle="toggle" id="wifi">
-                                        </span>
-                                    </div>
-								</div>
-                                <div class="col-md-4 col-sm-6 col-xs-6">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-DarkViolet" style="margin:0px 3px 0px 3px;display:inline;">
-                                            <i class="fa fa-bluetooth-b info-box-icon-white"></i>
-                                            <p class="info-box-icon-title">Bluetooth</p>
-                                            <input class="btnFunction" value="bluetooth" type="checkbox"checked data-toggle="toggle" id="bluetooth">
-                                        </span>
-                                    </div>
-                                </div>
-								<div class="col-md-4 col-sm-6 col-xs-6">
-									<div class="info-box">
-										<span class="info-box-icon bg-DarkRed" style="margin:0px 3px 0px 3px;display:inline;">
-                                            <i class="fa fa-lock info-box-icon-white"></i>
-											<p class="info-box-icon-title">Lock Screen</p>
-                                            <input class="btnFunction" value="lockscreen" type="checkbox" checked data-toggle="toggle" id="lockscreen">
-										</span>
-								  </div>
-								</div>
-								<div class="col-md-4 col-sm-6 col-xs-6">
-									<div class="info-box">
-										<span class="info-box-icon bg-Indigo" style="margin:0px 3px 0px 3px;display:inline;">
-											<i class="fa  fa-power-off info-box-icon-white"></i>
-											<p class="info-box-icon-title">shutdown</p>
-                                            <button class="btn btn-info" onclick="powfunc('shutdown')">shutdown</button>
-										</span>
-									</div>
-								</div>
-								<div class="col-md-4 col-sm-6 col-xs-6">
-								  <div class="info-box">
-										<span class="info-box-icon bg-SteelBlue" style="margin:0px 3px 0px 3px;display:inline;">
-											<i class="fa fa-recycle info-box-icon-white"></i>
-											<p class="info-box-icon-title">Reboot</p>
-                                            <button class="btn btn-info" onclick="powfunc('restart')">Reboot</button>
-										</span>
-								  </div>
-								</div>
-							</div>
+							
 						</div>
 					</div>
 				</div>

@@ -28,9 +28,6 @@ $(function(){
             $('#DevicesControl').tagsinput({
                 itemValue: 'value',
                 itemText: 'text',
-                source: function(query) {
-                    return $.getJSON('cities.json');
-                },
                 allowDuplicates: true
             });
             if(DatchControlData.length > 0){

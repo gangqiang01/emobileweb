@@ -13,7 +13,7 @@
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/thirdpart/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
-    <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link rel='stylesheet prefetch' href='assets/font-awesome-4.7.0/css/font-awesome.min.css'>
     <!-- CUSTOM STYLE  -->
     <link href="assets/css/style.css" rel="stylesheet" />
 	<link rel="stylesheet" href="assets/css/thirdpart/bootstrap-select.css">
@@ -72,10 +72,10 @@
 				<div class="panel panel-danger" >
 					
 					<div class="panel-body">
-						<ul class="nav nav-tabs" style="margin-left:15px;">
-							<li class="active"><a href="#monitor" data-toggle="tab"><i class="fa fa-home" aria-hidden="true" style="padding-right:3px;"></i>Device Monitor</a></li>
-							<li class=""><a href="#app" data-toggle="tab"><i class="fa fa-window-restore" aria-hidden="true" style="padding-right:3px;"></i>App Management</a></li>
-							<li class=""><a href="#settings" data-toggle="tab"><i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device Settings</a></li>
+						<ul class="nav nav-tabs" style="margin-left:15px;" id="device-tab">
+							<li class="active " ><a href="#monitor" data-toggle="tab"><i class="fa fa-line-chart" aria-hidden="true" style="padding-right:3px;"></i>Device Monitor</a></li>
+							<li class="" ><a href="#app" data-toggle="tab"><i class="fa fa-window-restore" aria-hidden="true" style="padding-right:3px;"></i>App Management</a></li>
+							<li class=""  onclick= "getsensorstatus()"><a href="#settings" data-toggle="tab"><i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device Settings</a></li>
 						</ul>
 						<div class="tab-content" id="tab-content">
 							<div class="tab-pane fade active in" id="monitor">
@@ -99,7 +99,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="getappcontrol('installapp')">install</a>
+                                            <a class="btn btn-primary" onclick="appcontrol('installapp')">install</a>
                                         </div>
                                     </div>
                                 </div>
@@ -107,12 +107,12 @@
                                     <div class="col-md-10 col-md-offset-1  control-label form-group">
                                         <label for="basic" class="col-lg-3 control-label"><i class="fa fa-trash" style="margin-right:10px;color:red"></i>Installed App:</label>
                                         <div class="col-md-7">
-                                            <select id="uninstallapp" class="show-tick form-control applist">
+                                            <select id="removeapp" class="show-tick form-control applist">
                 
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="appcontrol('uninstallapp')">uninstall</a>
+                                            <a class="btn btn-primary" onclick="appcontrol('removeapp')">uninstall</a>
                                         </div>
                                     </div>
                                 </div>
@@ -120,12 +120,12 @@
                                     <div class="col-md-10 col-md-offset-1 control-label form-group">
                                         <label for="basic" class="col-lg-3 control-label"><i class="fa fa-hand-pointer-o" style="margin-right:10px;color:#428bca"></i>Launch App:</label>
                                         <div class="col-md-7">
-                                            <select id="launchapp" class=" show-tick form-control applist">
+                                            <select id="startapp" class=" show-tick form-control applist">
                 
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                                <a class="btn btn-primary" onclick="appcontrol('launchapp')">Launch</a>
+                                                <a class="btn btn-primary" onclick="appcontrol('startapp')">Launch</a>
                                         </div>
                                     </div>
                                 </div>

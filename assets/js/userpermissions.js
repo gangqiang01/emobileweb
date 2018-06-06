@@ -335,7 +335,7 @@ function SetNavbar(){
                             '</ul>'+
                         '</li>'+
                         '<li><a id="barset_devicesetting" href="DeviceSetting.html">Device Control</a></li>'+
-                        '<li><a id="barset_devicesetting" href="DeviceSetting.html">Batch Control</a></li>'+
+                        '<li><a id="barset_batchcontrol" href="BatchControl.html">Batch Control</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
                         '<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
 
