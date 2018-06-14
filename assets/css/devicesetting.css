@@ -23,6 +23,23 @@
   background: rgba(0, 0, 0, 0.2);
   padding-top: 20px;
 }
+.info-box-icon-top{
+    border-top-left-radius: 2px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 2px;
+    display: block;
+    margin:0 auto;
+    margin-bottom: 20px;
+    height: 120px;
+    width: 120px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 45px;
+    background: rgba(0, 0, 0, 0.2);
+    padding-top: 20px;
+}
+
 .info-box-icon > img {
   max-width: 100%;
 }
@@ -51,6 +68,13 @@
 .info-box-content-right{
   display:inline;
   width:50%;
+}
+/* #monitor{
+    margin-top:2rem;
+} */
+
+#tab-content{
+    margin:2rem
 }
 .info-box-content-border{
 	border-bottom: 1px solid #eee;
@@ -124,60 +148,16 @@ body {
 	color: inherit;
 	font-weight: bold;
 }
-.table-filter {
-	background-color: #fff;
-	border-bottom: 1px solid #eee;
-}
-.table-filter tbody tr:hover {
-	cursor: pointer;
-	background-color: #eee;
-}
-.table-filter tbody tr td {
-	padding: 10px;
-	vertical-align: middle;
-	border-top-color: #eee;
-}
-.table-filter tbody tr.selected td {
-	background-color: #eee;
+
+#AppTables .img-btn{
+	max-width: 50px;
+    height: auto;
 }
 
-.table-app-management .media-photo {
-	width: 35px;
+#AppTables .img_span{
+    line-height: 5rem;
 }
-.table-app-management .img-btn{
-	max-width: 100%;
-    height: auto;
-    width: auto\9; /* ie8 */
-}
-.table-app-management .media-body {
-    display: block;
-    /* Had to use this style to force the div to expand (wasn't necessary with my bootstrap version 3.3.6) */
-}
-.table-app-management .media-meta {
-	font-size: 11px;
-	color: #999;
-}
-.table-app-management .media .title {
-	color: #2BBCDE;
-	font-size: 20px;
-	font-family: Verdana, Geneva, sans-serif;
-	font-weight: bold;
-	line-height: normal;
-	margin: 5px 0px 15px 0px;
-}
-.table-app-management .media .title span {
-	font-size: .8em;
-	margin-right: 20px;
-}
-.table-app-management .media .title span.pagado {
-	color: #5cb85c;
-}
-.table-app-management .media .title span.pendiente {
-	color: #f0ad4e;
-}
-.table-app-management .media .title span.cancelado {
-	color: #d9534f;
-}
+
 .table-app-management .media .summary {
 	font-size: 14px;
 	font-family: "Courier New", Courier, monospace;

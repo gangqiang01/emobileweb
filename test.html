@@ -24,7 +24,7 @@
 	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <body data-spy="scroll" data-target="#nav-exp"> 
-            <div class="btn-group">
+            <div class="btn-group" >
                     <select id="devId" multiple="multiple">
                         <optgroup class="group-1" label="a-class">
                             <option value="a1">aaa1</option>       
@@ -36,17 +36,40 @@
                             <option value="b3">bbb3</option>
                         </optgroup>      
                     </select>
+
+        
+                 
                     <button class="info" id="getdevice" data-type=false> getdevice</button> 
             </div>
-            
+            <input id="toggle-event" type="checkbox" data-toggle="toggle">
+            <div id="console-event"></div>
+            <label for="">
+                <input type="checkbox">
+                click me  aa
+            </label>
+            <!-- <script>
+            $(function() {
+                $('#toggle-event').next(".toggle-group").on("click",function() {
+                    console.log($("#toggle-event").prop('checked'));
+                })
+                // $('#toggle-event').change(function() {
+                //     console.log($(this));
+                // $('#console-event').html('Toggle: ' + $(this).prop('checked'))
+                // })
+            })
+            </script> -->
             <script>
                 $("#devId").multiselect({
                     includeSelectAllOption: true,
                     onChange: function(option, checked){
-                        var selectedOptions = $('#devId option:selected');
+                        console.log(option);
+                        var selectedOptions = $('#devId option:selected').val();
                         console.log($('#devId option:selected'));
                        
-                    }
+                    },
+                    onSelectAll: function() {
+                        console.log($('#devId option:selected').val());
+                    },
                 });
                 $("#getdevice").on("click",function(){
                     var selected = [];
@@ -61,6 +84,7 @@
                         console.log(selected);
                 })
             </script>
+            
     </body>  
 </html>  
 

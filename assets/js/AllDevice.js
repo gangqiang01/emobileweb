@@ -140,13 +140,6 @@ $(function() {
                 DatchControlObject = JSON.stringify(DatchControlObject);
                 sessionStorage["DatchControlObject"] =  DatchControlObject; 
         });
-    
-        $('#LogTable').DataTable( {
-            "scrollY":        "200px",
-            "scrollCollapse": true,
-            "paging":         false,
-            "order": [[ 0, "desc" ]]
-        } );
         GetDeviceGroup();
     }
 

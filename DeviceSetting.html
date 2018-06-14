@@ -17,7 +17,9 @@
     <!-- CUSTOM STYLE  -->
     <link href="assets/css/style.css" rel="stylesheet" />
 	<link rel="stylesheet" href="assets/css/thirdpart/bootstrap-select.css">
-	<link rel="stylesheet" href="assets/css/devicesetting.css">
+    <link rel="stylesheet" href="assets/css/devicesetting.css">
+    <link href="assets/css/thirdpart/jquery.dataTables.min.css" rel="stylesheet" type='text/css'/>
+    <link href="assets/css/thirdpart/select.dataTables.min.css" rel="stylesheet" type='text/css'/>
 	
     <!-- GOOGLE FONT -->
 	
@@ -27,10 +29,9 @@
 	<script src="assets/js/userpermissions.js" type='text/javascript'></script>
     <script src="assets/js/thirdpart/bluebird.min.js"></script>
 	<script src="assets/js/api.js"></script>	
-	<script  type="text/javascript" src="assets/mqtt/mqttws31.js"></script>
-	<script src="assets/js/mqtt_client.js"></script>
+	<!-- <script  type="text/javascript" src="assets/mqtt/mqttws31.js"></script>
+	<script src="assets/js/mqtt_client.js"></script> -->
 	<script src="assets/js/thirdpart/bootstrap-select.js"></script>
-	
 	<link href="assets/css/thirdpart/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="assets/js/thirdpart/bootstrap-toggle.min.js"></script>
     <script src="assets/js/thirdpart/chart.min.js"></script>
@@ -73,117 +74,46 @@
 					
 					<div class="panel-body">
 						<ul class="nav nav-tabs" style="margin-left:15px;" id="device-tab">
-							<li class="active " ><a href="#monitor" data-toggle="tab"><i class="fa fa-line-chart" aria-hidden="true" style="padding-right:3px;"></i>Device Monitor</a></li>
-							<li class="" ><a href="#app" data-toggle="tab"><i class="fa fa-window-restore" aria-hidden="true" style="padding-right:3px;"></i>App Management</a></li>
-							<li class=""  onclick= "getsensorstatus()"><a href="#settings" data-toggle="tab"><i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device Settings</a></li>
+                            <li class="active" >
+                                <a href="#monitor" data-toggle="tab">
+                                    <i class="fa fa-line-chart" aria-hidden="true" style="padding-right:3px;"></i>Device Monitor
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#settings" data-toggle="tab">
+                                    <i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device Settings
+                                </a>
+                            </li>
+							<li class="" >
+                                <a href="#appcontrol" data-toggle="tab">
+                                    <i class="fa fa-window-restore" aria-hidden="true" style="padding-right:3px;"></i>App Control
+                                </a>
+                            </li>
+                            <li class="" >
+                                <a href="#appmanagement" data-toggle="tab">
+                                    <i class="fa fa-hand-lizard-o" aria-hidden="true" style="padding-right:3px;"></i>App Management
+                                </a>
+                            </li>
+                            <li class="" >
+                                <a href="#deviceinfo" data-toggle="tab">
+                                    <i class="fa fa-info fa-x" aria-hidden="true" style="padding-right:3px;"></i>Device Info
+                                </a>
+                            </li>
 						</ul>
 						<div class="tab-content" id="tab-content">
+
 							<div class="tab-pane fade active in" id="monitor">
 								<div class="col-md-6 col-sm-12 col-xs-12">
-                                    <canvas id="cup_chart"height="150" ></canvas>
+                                    <canvas id="cpu_chart" height="150" ></canvas>
 								  <!-- /.info-box -->
 								</div>
 								<div class="col-md-6 col-sm-12 col-xs-12">
                                     <canvas id="memory_chart" height="150" ></canvas>
 								</div>
-							</div>
-							<div class="tab-pane fade" id="app" style="padding:2px;">
-								<div class="row" style="margin-top:50px">
-                                    <div class="col-md-10 col-md-offset-1  control-label form-group">
-                                        <label for="basic" class="col-lg-3 control-label"><i class="fa fa-download" style="margin-right:10px;color:#428bca"></i>APP List:</label>
-                                        <div class="col-md-7">
-                                            <select id="installapp" class="show-tick form-control">
-                                                <option value="">hello1.apk</option>
-                                                <option value="">SUSIGPIO.apk</option>
-                                                <option value="">usb-device-info.apk</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="appcontrol('installapp')">install</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-1  control-label form-group">
-                                        <label for="basic" class="col-lg-3 control-label"><i class="fa fa-trash" style="margin-right:10px;color:red"></i>Installed App:</label>
-                                        <div class="col-md-7">
-                                            <select id="removeapp" class="show-tick form-control applist">
-                
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="appcontrol('removeapp')">uninstall</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-1 control-label form-group">
-                                        <label for="basic" class="col-lg-3 control-label"><i class="fa fa-hand-pointer-o" style="margin-right:10px;color:#428bca"></i>Launch App:</label>
-                                        <div class="col-md-7">
-                                            <select id="startapp" class=" show-tick form-control applist">
-                
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                                <a class="btn btn-primary" onclick="appcontrol('startapp')">Launch</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- <div class="row">
-                                    <div class="col-md-10 col-md-offset-1  control-label form-group">
-                                        <label for="basic" class="col-lg-3 control-label"><i class="fa fa-rocket" style="margin-right:10px;color:#428bca"></i>Upgrade App:</label>
-                                        <div class="col-md-7">
-                                            <select id="upgradeapp" class=" show-tick form-control">
-                
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="appcontrol('upgradeapp')">Upgrade</a>
-                                        </div>
-                                    </div>
-                                </div> -->
+                            </div>
 
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-1  control-label form-group">
-                                        <label for="basic" class="col-lg-3 control-label"><i class="fa fa-ban" style="margin-right:10px;color:red"></i>Disable App:</label>
-                                        <div class="col-md-7">
-                                            <select id="disableapp" class=" show-tick form-control applist">
-                
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="appcontrol('disableapp')">Disable</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-1  control-label form-group">
-                                        <label for="basic" class="col-lg-3 control-labela"><i class="fa fa-key" style="margin-right:10px;color:#428bca"></i>Enable App:</label>
-                                        <div class="col-md-7">
-                                            <select id="enableapp" class=" show-tick form-control applist">
-                
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="appcontrol('enableapp')">Enable</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-1 control-label form-group">
-                                        <label for="basic" class="col-lg-3 control-label"><i class="fa fa-paper-plane" style="margin-right:10px;color:#428bca"></i>Message:</label>
-                                        <div class="col-lg-7">
-                                            <input id="message" class="show-tick form-control" placeholder="Please save a message to be send to your device"/>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <a class="btn btn-primary" onclick="sendmessage()">Send</a>
-                                        </div>
-                                    </div>
-                                </div>
-								
-							</div>
-							<div class="tab-pane fade" id="settings">
+                            <!-- setting -->
+                            <div class="tab-pane fade" id="settings">
 								<div class="col-md-4 col-sm-6 col-xs-6">
                                     <div class="info-box">
                                         <span class="info-box-icon bg-aqua" style="margin:0px 3px 0px 3px;display:inline;">
@@ -229,7 +159,130 @@
 										</span>
 								  </div>
 								</div>
-							</div>
+                            </div>
+                            <!-- appcontrol -->
+							<div class="tab-pane fade" id="appcontrol">
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1 control-label form-group">
+                                        <label for="basic" class="col-sm-3 col-xs-12 control-label"><i class="fa fa-hand-pointer-o" style="margin-right:10px;color:#428bca"></i>Launch App:</label>
+                                        <div class="col-sm-7 col-xs-10">
+                                            <select id="startapp" class=" show-tick form-control applist selectpicker">
+                
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-2">
+                                                <a class="btn btn-primary" onclick="appcontrol('startapp')">Launch</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1  control-label form-group">
+                                        <label for="basic" class="col-sm-3 col-xs-12 control-label"><i class="fa fa-ban" style="margin-right:10px;color:red"></i>Disable App:</label>
+                                        <div class="col-sm-7 col-xs-10">
+                                            <select id="disableapp" class="show-tick form-control applist selectpicker" data-type="">
+                
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-2">
+                                            <a class="btn btn-primary" onclick="appcontrol('disableapp')">Disable</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1  control-label form-group">
+                                        <label for="basic" class="col-sm-3 col-xs-12 control-labela"><i class="fa fa-key" style="margin-right:10px;color:#428bca"></i>Enable App:</label>
+                                        <div class="col-sm-7 col-xs-10">
+                                            <select id="enableapp" class=" show-tick form-control applist selectpicker">
+                
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-2">
+                                            <a class="btn btn-primary" onclick="appcontrol('enableapp')">Enable</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1 control-label form-group">
+                                        <label for="basic" class="col-sm-3 col-xs-12 control-label"><i class="fa fa-paper-plane" style="margin-right:10px;color:#428bca"></i>Message:</label>
+                                        <div class="col-sm-7 col-xs-10">
+                                            <input id="message" class="show-tick form-control" placeholder="Please save a message to be send to your device"/>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-2">
+                                            <a class="btn btn-primary" onclick="sendmessage()">Send</a>
+                                        </div>
+                                    </div>
+                                </div> -->
+								
+                            </div>
+                            <!-- appmanagement -->
+							<div class="tab-pane fade" id="appmanagement">
+                                <div class="table-responsive">
+                                    <table class="display responsive" cellspacing="0" width="100%" id="AppTables">
+                                        <thead>
+                                            <tr>
+                                                <th >APP Name</th>
+                                                <th >Package Name</th>
+                                                <th>Version Name</th>
+                                                <th >APP Action</th>  
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="deviceinfo" style="padding:20px 10PX;">
+                                <div class="row">
+                                    <div class="col-md-8  col-md-offset-2">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="info-box-icon-top bg-red" >
+                                                    <i class="fa fa-android info-box-icon-white"></i>
+                                                    <p class="info-box-icon-title">Device Info</p>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12   control-label form-group">
+                                                <label for="basic" class="col-md-3 control-label">System　Version:</label>
+                                                <div class="col-md-7">
+                                                    <input type="text" disabled id="systemversion" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12  control-label form-group">
+                                                <label for="basic" class="col-md-3 control-label">Boardname:</label>
+                                                <div class="col-md-7">
+                                                    <input type="text" disabled id="systemboard" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12  control-label form-group">
+                                                <label for="basic" class="col-md-3 control-label">System Model:</label>
+                                                <div class="col-md-7">
+                                                    <input type="text" disabled id="systemmodel" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12  control-label form-group">
+                                                <label for="basic" class="col-md-3 control-label">Agent Version:</label>
+                                                <div class="col-md-7">
+                                                    <input type="text" disabled id="agentversion" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -250,8 +303,15 @@
             </div>
         </div>
     </section>
+    <div class="loading" style="display:none" >
+        <i class="fa fa-spinner fa-pulse fa-3x fa-fw load_gif" ></i>
+    </div>
 
     <script src="assets/js/thirdpart/sweetalert.min.js"></script>
+    <script src="assets/js/thirdpart/jquery.dataTables.js"></script>
+    <script src="assets/js/thirdpart/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.min.js"></script>
 </body>
 
 </html>

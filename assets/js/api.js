@@ -1,4 +1,5 @@
 var baseurl = "https://portal-rmm.wise-paas.com"
+var ftpurl = ""
 function apipost(myurl,object){
     var posturl = baseurl+"/"+myurl
     return new Promise(function(resolve, reject){
@@ -14,15 +15,19 @@ function apipost(myurl,object){
                 resolve(data)
             },
             error:function(err){
+                $(".loading").hide();
                 if(err.status == 401){
                     swal("","Login expired","error").then(function(){
                           window.location.href = "Login.html"
                     }) 
                 }else if(err.status == 403){
+                    $(".loading").hide();
                     swal("",JSON.parse(err.responseText).Description,"error")
+                    
                 }
             },
             complete: function (XMLHttpRequest,status) {
+                $(".loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
@@ -52,6 +57,7 @@ function apiput(myurl,object){
                 resolve(data)
             },
             error:function(err){
+                $(".loading").hide();
                 if(err.status == 401){
                         swal("","Login expired","error").then(function(){
                             window.location.href = "Login.html"
@@ -88,6 +94,7 @@ function apidelete(myurl){
                 resolve(data)
             },
             error:function(err){
+                $(".loading").hide();
                 if(err.status == 401){
                     swal("","Login expired","error").then(function(){
                           window.location.href = "Login.html"
@@ -97,14 +104,11 @@ function apidelete(myurl){
                 }
             },
             complete: function (XMLHttpRequest,status) {
+                $(".loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
-                    swal("","network timeout","error").then(
-                        function(){
-                            location.reload();
-                        }
-                    );
+                    swal("","network timeout","error")
                 }
             }
        });
@@ -135,6 +139,7 @@ function apifile(myurl,data){
                 }
             },
             complete: function (XMLHttpRequest,status) {
+                $(".loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
@@ -163,7 +168,7 @@ function apiget(myurl, object, isasync){
     }else{
         var geturl = baseurl + "/"+myurl;
     }
-
+    var geturl = encodeURI(geturl);
     return new Promise(function(resolve,reject){
         $.ajax({
             type:"get",
@@ -199,14 +204,12 @@ function apiget(myurl, object, isasync){
                 }
             },
             complete: function (XMLHttpRequest,status) {
+                $(".loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
                     if(location.pathname.indexOf("DeviceSetting.html")<0){
-                        swal("","network timeout","error").then(
-                            function(){
-                                    location.reload();
-                        });
+                        swal("","network timeout","error")
                     } else{
                         console.log("network timeout")
                     }  
@@ -214,4 +217,55 @@ function apiget(myurl, object, isasync){
             }
         });
     })
+}
+
+function repoapiget(myurl, object, token){
+    var array = [];
+    if(object != undefined){
+        for(key in object){
+            array.push(key+"="+object[key]);
+        }
+        var parameter = array.join("&")
+        var geturl = myurl+ "?" + parameter;
+    }else{
+        var geturl = myurl;
+    }
+
+    var geturl = encodeURI(myurl);
+    return new Promise(function(resolve,reject){
+        $.ajax({
+            type:"get",
+            url: geturl,
+            timeout:10000,
+            // dataType:'jsonp',
+            contentType:'application/json',
+            beforeSend: function(request) {  
+                request.setRequestHeader("accesstoken", token);  
+            },
+            success:function(data){
+                resolve(data)           
+            },
+        });
+    })
+}
+
+function repoapipost(myurl, object){
+        var array = [];
+    if(object != undefined){
+        for(key in object){
+            array.push(key+"="+object[key]);
+        }
+        var parameter = array.join("&")
+    }
+    return new Promise(function(resolve, reject){
+       $.ajax({
+            type:"post",
+            url: myurl,
+            data: {username:"jinxin",passwd:"jinxin"},
+            timeout:10000,
+            success:function(data){
+                resolve(data)
+            }
+       });
+   })
 }
