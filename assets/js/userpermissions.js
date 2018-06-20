@@ -55,6 +55,7 @@ Array.prototype.removeObjWithArr = function (_obj) {
         }
     }
 };
+
 Array.prototype.remove = function(val) {
 	var index = this.indexOf(val);
 	if (index > -1) {

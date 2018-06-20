@@ -1,5 +1,5 @@
 // var ftpurl = "http://47.95.248.121:30010/";
-var timer , SelectedDeviceId, SelectedAgentId;
+var deviceMonitorTimer , SelectedDeviceId, SelectedAgentId;
 
 var SystemMonitorPlugin = "ProcessMonitor";
 var AimSdkPlugin = "AimSdk";
@@ -42,7 +42,6 @@ function initdraw(){
     drawMemoryChart(new Array(7));
 //    var apptable = $('#AppTables').DataTable();
 //     apptable.clear().draw();
-
 }
 
 
@@ -54,8 +53,8 @@ function getDeviceDetails(agentid, deviceid){
     SelectedDeviceId = deviceid;
     SelectedAgentId = agentid;
     if(SelectedDeviceId == undefined || SelectedAgentId == undefined){
-        if(timer != undefined){
-            window.clearInterval(timer);
+        if(deviceMonitorTimer != undefined){
+            window.clearInterval(deviceMonitorTimer);
         }
     }
 
@@ -99,7 +98,7 @@ function startDeviceMonitor(){
     apiput("rmm/v1/devicectrl/intermittent_report", intervalReportData).then(function(data){
         if(data.result = true){
             deviceMonitor();
-            timer=window.setInterval(function(){
+            deviceMonitorTimer=window.setInterval(function(){
                 deviceMonitor()
             },3000)
          }else{
@@ -118,14 +117,14 @@ function deviceMonitor(){
     apiget(myurl, GetSystemMonitorData).then(function(data){
         if(data.connected == false){
             swal("","this Device has been offline","info").then(function(){
-                window.clearInterval(timer);
+                window.clearInterval(deviceMonitorTimer);
                 return;
             });
 
         }else if(data.ProcessMonitor == undefined){
             swal("","your data miss","info").then(
                 function(){
-                    window.clearInterval(timer)
+                    window.clearInterval(deviceMonitorTimer)
                     return;
                 }
             ); 
