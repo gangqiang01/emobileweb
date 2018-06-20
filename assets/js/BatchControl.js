@@ -1,11 +1,11 @@
-var RepoAppBaseDownloadUrl = "http://172.21.73.109:30002"
-var reponame = "95cbbb6613127668fdd633b2cc006d47"
-var timer, SelectedDeviceData;
-var repo_username = "jinxin";
-var repo_passwd = "jinxin";
-var deviceapparray = [];
-var AimSdkPlugin = "AimSdk";
-var RepoAppBaseUrl = "http://172.21.73.109:30001/vuethink/php/index.php/admin/Restrepo/"
+var RepoAppBaseDownloadUrl = "http://172.21.73.109:30002",
+    reponame = "95cbbb6613127668fdd633b2cc006d47",
+    timer, SelectedDeviceData,
+    repo_username = "jinxin",
+    repo_passwd = "jinxin",
+    deviceapparray = [],
+    AimSdkPlugin = "AimSdk",
+    RepoAppBaseUrl = "http://172.21.73.109:30001/vuethink/php/index.php/admin/Restrepo/";
 const SPLIT = "^";
 var SettingsStatusSensor = {
     wifi: "/devicectrl/ctrl-wifi",
@@ -88,10 +88,8 @@ function GetAllDevices(){
 }
 
 function GetDevicesId(data){
-    var txtdevice = ""; var txtOnline="";
-    var txtOffline = "";
-    var tmpCheck=false;
-    var sign = 0;
+    var txtdevice = "",txtOnline="",txtOffline = "", sign = 0, selectedDeviceOptions;
+   
 	for(var i=0;i<Object.keys(data).length;i++){
         if(data[i][2] === true){
             txtOnline = txtOnline+ '<option value='+data[i][3]+SPLIT+data[i][0]+'>'+data[i][1]+'</option>';
@@ -106,9 +104,16 @@ function GetDevicesId(data){
 	
     txtdevice = txtOnline + txtOffline;
     // console.log($("#devIdone"))
-    $("#devId").html(txtdevice).multiselect({
+    $('#selectedDevices').tagsinput({
+        itemValue: 'value',
+        itemText: 'text',
+        allowDuplicates: true,
+    });
+    
+    $("#devId").attr("multiple","multiple").html(txtdevice).multiselect({
         includeSelectAllOption: true,
         onChange: function(option, checked){
+            selectedDeviceOptions =  $('#devId option:selected');
             if(sign == 0){
                 if($('#devId option:selected').length > 0){
                     var SelectedDeviceId = $('#devId option:selected').val().split(SPLIT)[0];
@@ -121,14 +126,29 @@ function GetDevicesId(data){
                     sign--;
                 }
             }
-            
+            $('#selectedDevices').tagsinput("removeAll");
+            selectedDeviceOptions.each(function(DeviceObject){
+                console.log($(this).text())
+                $('#selectedDevices').tagsinput('add', { "value": $(this).val() , "text": $(this).text()});
+            })  
         },
         onSelectAll: function() {
+            selectedDeviceOptions =  $('#devId option:selected');
             if(sign == 0){
                 var SelectedDeviceId = $('#devId option:selected').val().split(SPLIT)[0];
                 var SelectedAgentId = changeDidtoAid(data, SelectedDeviceId);
                 getSensorStatus(SelectedAgentId, SelectedDeviceId);
             }
+            sign= selectedDeviceOptions.length-1;
+            $('#selectedDevices').tagsinput("removeAll");
+            selectedDeviceOptions.each(function(DeviceObject){
+                $('#selectedDevices').tagsinput('add', { "value": $(this).val() , "text": $(this).text()});
+            })
+        },
+
+        onDeselectAll: function(){
+            $('#selectedDevices').tagsinput("removeAll");
+            sign=0;
         }
     });
 }
@@ -209,19 +229,19 @@ function getSensorStatus(SelectedAgentId, SelectedDeviceId){
         }
 		switch(type) {
 			case "wifi":
-                setsensorid = GetSettingsStatusSensor.wifi;
+                setsensorid = SettingsStatusSensor.wifi;
 				break;
 			case "bluetooth":
-                setsensorid = GetSettingsStatusSensor.bluetooth;
+                setsensorid = SettingsStatusSensor.bluetooth;
 				break;
 			case "lockscreen":
-                setsensorid = GetSettingsStatusSensor.lockscreen;
+                setsensorid = SettingsStatusSensor.lockscreen;
 				break;
 			default:
 				break;
         }
         $('#devId option:selected').each(function() {
-            var selectedagentid =　getSelectedAgentId(this);
+            var selectedagentid =　getSelectedAgentId($(this));
             setsensordata.agentId = selectedagentid;
             setsensordata.plugin = AimSdkPlugin;
             setsensordata.sensorIds = [];
@@ -367,6 +387,7 @@ function　setAppSensor(cid, setsensorval){
         .then(function(willfunc){
             if (willfunc) {
                 $(".loading").show();
+                var optionLength = $('#devId option:selected').length;
                 $('#devId option:selected').each(function() {
                     var setsensordata = {};
                     setsensorid = AppFuncSensor[cid]; 
@@ -378,11 +399,10 @@ function　setAppSensor(cid, setsensorval){
                     apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
                         if(data.items[0].statusCode == "200"){
                             $(".loading").hide();
-                            swal("","success","success").then(function(){
-                                window.setTimeout(function(){
-                                    getSensorStatus();
-                                },1000)
-                            })
+                            window.setTimeout(function(){
+                                getSensorStatus();
+                            },3000)
+                            
                         }
                     })
                 })

@@ -60,12 +60,7 @@ function getDeviceDetails(agentid, deviceid){
     }
 
     // $('#AppTables').DataTable().destroy();
-
-    deviceMonitor();
-
-    timer=window.setInterval(function(){
-        deviceMonitor()
-    },3000)
+    startDeviceMonitor()
     // $("#device-tab a:first").tab("show");
     getSensorStatus();
 
@@ -81,7 +76,7 @@ function getTimeOptions(){
     for (var i=0;i<=6;i++){
         time =  Hours+":"+Min+":"+Sec;
         options.unshift(time)
-        Sec = Sec - 5;
+        Sec = Sec - 3;
         if(Sec<10&&0<=Sec){
             Sec = "0"+Sec;
         }else if(Sec<0){
@@ -95,7 +90,23 @@ function getTimeOptions(){
     return options;
 	
 }
-
+function startDeviceMonitor(){
+    var intervalReportData = {};
+    intervalReportData.agentid = SelectedAgentId;
+    intervalReportData.plugin = SystemMonitorPlugin;
+    intervalReportData.interval = 1;
+    intervalReportData.timeout = 30;
+    apiput("rmm/v1/devicectrl/intermittent_report", intervalReportData).then(function(data){
+        if(data.result = true){
+            deviceMonitor();
+            timer=window.setInterval(function(){
+                deviceMonitor()
+            },3000)
+         }else{
+            console.log("inetervalreport error")
+        }
+    })
+}
 function deviceMonitor(){
     var cpuNowPercentage, MemoryNowPercentage;
     var GetSystemMonitorData = {};
@@ -525,9 +536,10 @@ function　setAppSensor(cid, setsensorval){
                     if(data.items[0].statusCode == "200"){
                         $(".loading").hide();
                         swal("","success","success").then(function(){
+                            var interval = cid == "installapp" ? 5000 : 1000;
                             window.setTimeout(function(){
                                 getSensorStatus();
-                            },1000)
+                            }, interval);
                         })
                     }
                 })
@@ -580,17 +592,35 @@ function drawAppManagement(AppManagementInfoArray) {
                             '<i class="fa fa-download fa-x" style="padding-right:5px"></i>Install</a>'+
                         '</div>';
                     }else if(data[3] == "uninstallapp"){
-                        fa = '<div class="btn-group" role="group" >'+
+                        if(data[1] === "org.flyve.mdm.agent"){
+                            fa = '<div class="btn-group" role="group" >'+
+                            '<a class="btn btn-danger" data-type="removeapp" disabled>'+
+                            '<i class="fa fa-trash fa-x" style="padding-right:5px"></i>Uninstall</a>'+
+                        '</div>'; 
+                        }else{
+                            fa = '<div class="btn-group" role="group" >'+
                             '<a class="btn btn-danger" data-type="removeapp">'+
                             '<i class="fa fa-trash fa-x" style="padding-right:5px"></i>Uninstall</a>'+
                         '</div>'; 
+                        }
+                        
                     }else if(data[3] == "upgradeapp"){
-                        fa = '<div class="btn-group" role="group" >'+
+                        if(data[1] === "org.flyve.mdm.agent"){
+                            fa = '<div class="btn-group" role="group" >'+
+                            '<a class="btn btn-info" data-type="upgradeapp">'+
+                            '<i class="fa fa-arrow-circle-up fa-x" ></i>Upgrade</a>'+
+                            '<a class="btn btn-danger" data-type="removeapp" disabled>'+
+                            '<i class="fa fa-trash fa-x"></i>Uninstall</a>'+
+                        '</div>'
+                        }else{
+                            fa = '<div class="btn-group" role="group" >'+
                             '<a class="btn btn-info" data-type="upgradeapp">'+
                             '<i class="fa fa-arrow-circle-up fa-x" ></i>Upgrade</a>'+
                             '<a class="btn btn-danger" data-type="removeapp">'+
                             '<i class="fa fa-trash fa-x"></i>Uninstall</a>'+
                         '</div>'
+                        }
+                        
                     }
                     return fa;
                 }

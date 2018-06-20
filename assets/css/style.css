@@ -38,6 +38,17 @@ body {
     padding-bottom:25px;
     border-bottom:1px solid #eeeeee;
 }
+.title-line {
+    font-weight:900;
+    font-size:1.5rem;
+    color:#0081C6;
+    padding-bottom:10px;
+    border-bottom:1px solid #eeeeee;
+}
+.item-line{
+    border-bottom:1px solid #eeeeee;
+    padding:3px;
+}
 .pad-botm {
     padding-bottom:30px;
 }

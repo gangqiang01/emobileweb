@@ -13,6 +13,7 @@
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/thirdpart/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/thirdpart/bootstrap-select.css">
     <!-- <link href="assets/css/AllDevice.css" rel="stylesheet" /> -->
     <link href="assets/css/style.css" rel="stylesheet" />
 	<link href="assets/css/main.css" rel="stylesheet">
@@ -29,8 +30,9 @@
     <script src="assets/js/thirdpart/bluebird.min.js"></script>
     <!-- BOOTSTRAP SCRIPTS  -->
     <script src="assets/js/thirdpart/bootstrap.js"></script>
+    <script src="assets/js/thirdpart/bootstrap-select.js"></script>
     <script  type="text/javascript" src="assets/js/thirdpart/sweetalert.min.js"></script>
-    <script  type="text/javascript" src="assets/js/DeviceGroup.js"></script>
+    <script  type="text/javascript" src="assets/js/AllEventMsg.js"></script>
     <!--numpad -->
   
 </head>
@@ -42,7 +44,7 @@
          <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-				<p class="header-line"> <i class="fa fa-object-group fa-x" style="padding:5px"></i>Device Group</p>
+				<p class="header-line"> Event Messagement</p>
             </div>
         </div>
         <div class="row">
@@ -52,29 +54,28 @@
 
                 <div class="panel panel-default panel-devices">
                     <div class="panel-heading">
-                        All Devices Group
-                        <div class="btn-group pull-right" style="margin-right:5px;font-size:large">
-                            <a href="AddGroup.html" id="AddDevice" class="btn" data-toggle='modal' data-target='#myModal'>
-                                <i class="fa fa-plus-square-o "></i>
-                                Add group
-                            </a>
-                            <a href="javascript: void(0)" onclick="DeleteGroup()" id="delete-group" class="btn">
-                                <i class="fa fa-trash-o "></i>
-                                Delete group
-                            </a>
-                        </div>
-
+                        <label for="">everity:</label>
+                        <select id="severitySelect" class="selectpicker" data-width="fit" >
+                            <option value="All">All</option>
+                            <option value="Information">Information</option>
+                            <option value="Warning">Warning</option>
+                            <option value="Error">Error</option>
+                        </select> 
+                        <label for=""> Category:</label>
+                        <select id="categorySelect" class="selectpicker" data-width="fit" ></select>
+                        <label for=""> Device Group:</label>
+                        <select id="devicegroup"  class="selectpicker" data-width="fit" ></select> 
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
                             <table class="display responsive" cellspacing="0" width="100%" id="DataTables">
                                 <thead>
                                     <tr>
-                                        <th style="width:30px"></th>
-                                        <th>Gid</th>
-                                        <th>Group Name</th>
-                                        <th>Description</th>
-                                        <th>Create Time</th>    
+                                        <th>Time Stamp</th>
+                                        <th>Device Name</th>
+                                        <th>Severify</th>
+                                        <th>Subtype</th>
+                                        <th>Event　Message</th>    
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,45 +90,13 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="sensor_dialog_title"></h4>
-            </div>
-            <div class="modal-body">
-                <form action="">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Account Name:</label>
-                        <input type="text" class="form-control" id="AccountName" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Group Name:</label>
-                        <input type="text" class="form-control" id="GroupName" >
-                        <span id="GroupNameAlert" style="color:brown;margin-left:3px;display:none">Only allow a-z,A-Z,0-9 with 4-30 characters</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Description(Optional):</label>
-                        <input type="text" class="form-control" id="Description" >
-                        <span id="DecriptionAlert" style="color:brown;margin-left:3px;display:none">Only allow a-z,A-Z,0-9 with maximum 30characters</span>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer" id="sensor_dialog_footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="DialogAdd">Add</button>
-            </div>
-            </div>
-        </div>
-    </div>
 
      <!-- CONTENT-WRAPPER SECTION END-->
     <section class="footer-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                   &copy; 2017<a href="http://www.aimobile.com.tw/" target="_blank"  >Aimobile </a> |<a href="http://www.binarytheme.com/" target="_blank"  > Designed by : binarytheme.com</a>
+                   &copy; 2017<a href="http://www.aimobile.com.tw/" target="_blank"  >Aimlink </a> |<a href="http://www.binarytheme.com/" target="_blank"  > Designed by : binarytheme.com</a>
                 </div>
 
             </div>

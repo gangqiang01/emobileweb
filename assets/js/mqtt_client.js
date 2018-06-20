@@ -105,8 +105,8 @@ function onMessageArrived(message) {
 			var deviceid = MessageReceived[3].split(":");
 			SetNotificationBell("add");
 			var device = "'"+MessageReceived[1]+"'";var accept = "'accept'";var refuse = "'refuse'";
-			var invitecontent = SetSubscribeNotification(deviceid[0], MessageReceived[3], device, accept, refuse );
-			document.getElementById("notification_content").innerHTML += invitecontent;		
+			// var invitecontent = SetSubscribeNotification(deviceid[0], MessageReceived[3], device, accept, refuse );
+			// document.getElementById("notification_content").innerHTML += invitecontent;		
 		}
 		
 	}else if( message.payloadString.indexOf("checkRoot") >=0){
@@ -153,8 +153,8 @@ function onMessageArrived(message) {
 		var MessageReceived = tmp.split("/");
 		SetNotificationBell("add");
 		var device = "'"+MessageReceived[1]+"'";var accept = "'accept'";var refuse = "'refuse'";
-		var invitecontent = SetSubscribeNotification(MessageReceived[1], MessageReceived[3], device, accept, refuse );
-		document.getElementById("notification_content").innerHTML += invitecontent;				
+		// var invitecontent = SetSubscribeNotification(MessageReceived[1], MessageReceived[3], device, accept, refuse );
+		// document.getElementById("notification_content").innerHTML += invitecontent;				
 	}else if( message.payloadString.indexOf("sendtaskcomplete") >=0){
 		// task completed at schedule
 		var tmp = message.payloadString;

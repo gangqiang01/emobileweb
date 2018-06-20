@@ -11,5 +11,5 @@ $(function() {
 	});
 	$(".alert").on("click", function(){
 		window.location.href = $(this).find( ".alert-a" ).attr('href');
-	});
+    });
 });

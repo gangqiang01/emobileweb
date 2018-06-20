@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="assets/css/devicesetting.css">
     <link href="assets/css/thirdpart/jquery.dataTables.min.css" rel="stylesheet" type='text/css'/>
     <link href="assets/css/thirdpart/select.dataTables.min.css" rel="stylesheet" type='text/css'/>
+    <link href="assets/css/thirdpart/bootstrap-tagsinput.css" rel="stylesheet" />
 	
     <!-- GOOGLE FONT -->
 	
@@ -59,15 +60,20 @@
                     <i class="fa fa-object-group fa-5x" style="margin-bottom:10px"></i><br> 
                     <p>Device Group</p>
                     <select id="groupId" class="selectpicker" data-width="fit" >
-                        
+                      
                     </select>
                 </div>
                 <div class="alert alert-info back-widget-set text-center">
                     <i class="fa fa-tablet fa-5x"></i><br>
                     <p>Batch Devices</p>
-                    <select id="devId" data-width="fit" title="select device" multiple="multiple">
-                        
+                    <select id="devId" data-width="fit" title="select device" >
+        
                     </select>
+                </div>
+                <div class="alert alert-primary back-widget-set text-center">
+                    <i class="fa fa-tags fa-5x"></i><br>
+                    <p>Selected Devices</p>
+                    <input type="text" id="selectedDevices" style="outline:none;border:none">
                 </div>
             </div>
             <div class="col-md-9 col-sm-9 col-xs-12">
@@ -254,8 +260,9 @@
     <script src="assets/js/thirdpart/sweetalert.min.js"></script>
     <script src="assets/js/thirdpart/jquery.dataTables.js"></script>
     <script src="assets/js/thirdpart/dataTables.select.min.js"></script>
-    <script src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.min.js"></script>
+    <script src="assets/js/thirdpart/dataTables.rowReorder.min.js"></script>
+    <script src="assets/js/thirdpart/dataTables.responsive.min.js"></script>
+    <script src="assets/js/thirdpart/bootstrap-tagsinput.js"></script>
 </body>
 
 </html>

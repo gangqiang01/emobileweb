@@ -200,7 +200,9 @@ function apiget(myurl, object, isasync){
                         })
                     } 
                 }else if(err.status == 403){
-                    swal("",JSON.parse(err.responseText).Description,"error")
+                    swal("","Login expired","error").then(function(){
+                        window.location.href = "Login.html"
+                    })
                 }
             },
             complete: function (XMLHttpRequest,status) {

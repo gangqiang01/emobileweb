@@ -1,4 +1,5 @@
-var timer;
+var checkOnlineTimer;
+var eventData = [];
 function isObjectValueEqual(a, b) {
     var aProps = Object.getOwnPropertyNames(a);
     var bProps = Object.getOwnPropertyNames(b);
@@ -60,18 +61,45 @@ Array.prototype.remove = function(val) {
 		this.splice(index, 1);
 	}
 };
+
+function connectWebsocket(){
+    var ws = new WebSocket("wss://portal-rmm.wise-paas.com/event/-1");
+    ws.onopen = function(evt) { 
+        console.log("Connection open ..."); 
+    };
+    
+    ws.onmessage = function(eventJson) {
+        console.log(eventJson);
+        var msgData = JSON.parse(eventJson.data);
+        localEventMsgJson = window.localStorage["eventMsg"] == undefined ? JSON.stringify([]): window.localStorage['eventMsg'];
+        localEventMsg = JSON.parse(localEventMsgJson);
+        eventData = localEventMsg.concat(msgData.events);
+        window.localStorage["eventMsg"] = JSON.stringify(eventData);
+        SetNotificationBell(eventData);
+        // var inviteContent = SetSubscribeNotification(eventData);
+        // document.getElementById("notification_content").innerHTML = inviteContent
+    };
+
+    ws.onclose = function(evt) {
+        console.log("Connection closed.");
+        ws = undefined;
+    };
+    
+}
 //verify user and save in page
 function LoginStatus(page) {
     if(checkCookie("SessionId")){
+        console.log(page);
         var url = "rmm/v1/accounts/login"
         apiget(url).then(
             function(data){
                 if(data.result){
-					if(page != undefined){
+                    connectWebsocket();
+					if(page != undefined){            
                         setCookie("page", page, 60);
                         setCookie("aid", data.aid, 60);
                         // 启动设备在线检测
-                        // var timer = window.setInterval(function(){CheckOnlineDevice()},7000);
+                        // var checkOnlineTimer = window.setInterval(function(){CheckOnlineDevice()},7000);
                     }
                 }
             }
@@ -127,7 +155,8 @@ function　loginout(){
     setCookie('connectcount','000', 0);
     setCookie('aid','000',0)
     sessionStorage.removeItem("groupids");
-    clearInterval(timer);
+    clearInterval(checkOnlineTimer);
+    localStorage.removeItem("eventMsg");
     return true;
 }
 
@@ -137,8 +166,11 @@ var ProfileInfo;
 
 function SetHTML(html){
 	SetNavbar();
-	//SetAlertNotification();
-	SetNotificationBell(0);
+    //SetAlertNotification();
+    localEventMsgJson = window.localStorage["eventMsg"] == undefined ? JSON.stringify([]): window.localStorage['eventMsg'];
+    localEventMsg = JSON.parse(localEventMsgJson);
+    SetNotificationBell(localEventMsg);
+
 	var UserName = getCookie('UserName');
 	$("#btnCollapse").on("click", function(){
 
@@ -187,8 +219,6 @@ function CheckOnlineDevice(){
                     setTimeout(function(){
                         GetAllDevices();
                     },15000);
-                }else{
-                    SetNotificationBell("add")
                 }
             }else if(prevent_connectcount < old_connectcount){
                 setCookie("connectcount",prevent_connectcount,60);
@@ -256,49 +286,97 @@ function GetNowTimes(){
 	time = d.getUTCFullYear()+"/"+Month+"/"+Day+" "+Hours+":"+Min+":"+Sec;
 	return time;
 }
+// get date form now fday and fmonth
+function getFromNowTimes(fday, fmonth){
+    var now = new Date();
+    fday = parseInt(fday);
+    var d = new Date(now.getTime() - fday * 24 * 3600 * 1000);
+    var time = "";
+    fmonth = parseInt(fmonth);
+    var Day = d.getUTCDate();if(Day<10) Day = "0"+Day;
+    var Month = (d.getUTCMonth()+1);
+    var Year = d.getUTCFullYear();
+    if(Month<10) Month = "0"+Month;
+    var Hours = d.getHours();
+    if(Hours<10) Hours = "0"+Hours;var Min = d.getUTCMinutes();if(Min<10) Min = "0"+Min;
+    var Sec = d.getUTCSeconds().toFixed(3);if(Sec<10) Sec = "0"+Sec;
+    if(Month - fmonth <= 0)  
+    {  
+        Year -= 1;  
+        Month = 12 + Month - fmonth;  
+    }  
+    else  
+    {  
+        Month -= fmonth;  
+    } 
+    time = d.getUTCFullYear()+"-"+Month+"-"+Day+" "+Hours+":"+Min+":"+Sec;
+    return time;
+}
 
 
 //set notification bell
-function SetNotificationBell(value){
-    if(value === "add"){
-        var el = document.querySelector('.notification');
-        // var count = Number(el.getAttribute('data-count')) || 1;
-        el.setAttribute('data-count', "");
-        el.classList.remove('notify');
-        el.offsetWidth = el.offsetWidth;
-        el.classList.add('notify');
+function SetNotificationBell(eventData){
+    var el = document.querySelector('.notification');
+    var count = eventData.length;
+    el.setAttribute('data-count', count);
+    el.classList.remove('notify');
+    el.offsetWidth = el.offsetWidth;
+    el.classList.add('notify');
+    if(count !== 0){
         el.classList.add('show-count');
         $( ".notification_content" ).remove( ":contains('No New Notifications!')" );
-        var invitecontent = SetSubscribeNotification();
-        document.getElementById("notification_content").innerHTML = invitecontent;
-    }else{
-            var el = document.querySelector('.notification');
-            el.classList.remove('notify');
-            el.offsetWidth = el.offsetWidth;
-            el.classList.add('notify');
-            el.classList.remove('show-count');
-            var invitecontent = SetNoneNotification();
-            document.getElementById("notification_content").innerHTML = invitecontent;
+        var inviteContent = SetSubscribeNotification(eventData);
+        document.getElementById("notification_content").innerHTML = inviteContent
+    }else if(count === 0){
+        el.classList.remove('show-count');
+        var invitecontent = SetNoneNotification();
+        document.getElementById("notification_content").innerHTML = invitecontent;	
     }
-}
-//write notification bell content
-function SetSubscribeNotification(){
- 
-	var content = '<li class="notification_content">'+
-		'<div class="notification_content-icon">'+
-			'<i class="fa fa-rss-square fa-2x" aria-hidden="true"></i>'+
-		'</div>'+
-		'<div>'+
-			'<p style="text-align:center">New Device Online</p>'+
-		'</div>'+
-		'<div class="notification_content-button">'+
-			`<button class="btn btn-success" style="width:50%;" onclick="SetSubscribe('check')"><i class="fa fa-check" style="padding-right:5px;" aria-hidden="true"></i>check</button>`+
-			`<button class="btn btn-danger" style="width:50%;margin-left:5px" onclick="SetSubscribe('refuse')><i class="fa fa-times" style="padding-right:5px;" aria-hidden="true"></i>refuse</button>`+
-		'</div>'+
-	'</li>';
-	return content;
+    $('[data-toggle="tooltip"]').tooltip({html : true,container: 'body'}); 
 }
 
+function SetSubscribeNotification(notifyMsgData){
+    var notifyMsg = '';
+    notifyMsgData.forEach(function(notifyMsgJson){
+        notifyMsgObj = JSON.parse(notifyMsgJson);
+        var tableMsg = '';
+        for(var key in notifyMsgObj){
+            if(key == "agent_name") tableMsg += `<tr><td  style='text-align:left;'>device:</td><td  style='text-align:left;'>${notifyMsgObj[key]}</td></tr>`;
+            if(key == "ts") tableMsg += `<tr><td  style='text-align:left;'>Date:</td><td  style='text-align:left;'>${UnixToTime(notifyMsgObj[key]["$date"])}</td></tr>`;
+            if(key == "type") tableMsg += `<tr><td  style='text-align:left;'>type:</td><td  style='text-align:left;'>${notifyMsgObj[key].toLowerCase()}</td></tr>`;
+            if(key == "message") tableMsg += `<tr><td  style='text-align:left;'>message:</td><td  style='text-align:left;'>${notifyMsgObj[key].toLowerCase()}</td></tr>`;
+        }
+        if(notifyMsgObj.severity == "ERROR"){
+            notifyMsg += `<div class="item-line" data-toggle="tooltip" data-placement="bottom" title="<table style='border:0'>${tableMsg}<table/>">
+                <i class="fa fa-times-circle fa-x text-danger" style="padding-right:5px;"  ></i>
+                ${notifyMsgObj.message.toLowerCase()}
+            </div>`
+        }else if(notifyMsgObj.severity == "WARNING"){
+            notifyMsg += `<div class="item-line"  data-toggle="tooltip" data-placement="bottom" title="<table style='border:0'>${tableMsg}<table/>">
+                <i class="fa fa-exclamation-triangle fa-x text-warning" style="padding-right:5px;"></i>
+                ${notifyMsgObj.message.toLowerCase()}
+            </div>`
+        }else{
+            notifyMsg += `<div class="item-line"  data-toggle="tooltip" data-placement="bottom" title="<table style='border:0'>${tableMsg}<table/>">
+                <i class="fa fa-info-circle fa-x text-success" style="padding-right:5px;"></i>
+                ${notifyMsgObj.message.toLowerCase()}
+            </div>`
+        }
+        
+    })
+	var content = '<li class="notification_content">'+
+		'<div class="text-center title-line">'+
+			'you have '+notifyMsgData.length+' new notifications'+
+		'</div>'+
+		'<div class="notification_content-title">'+notifyMsg+'</div>'+
+		'<div class="notification_content-button">'+
+			'<button class="btn btn-success"  onclick="SetSubscribe(\'allview\')"><i class="fa fa-eye" style="padding-right:5px;" aria-hidden="true"></i>View all event</button>'+
+			'<button class="btn btn-danger"   onclick="SetSubscribe(\'markview\')"><i class="fa fa-eye-slash" style="padding-right:5px;" aria-hidden="true"></i>Mark all as read</button>'+
+		'</div>'+
+	'</li>';	
+    return content;
+}
+		
 function SetNoneNotification(){
 	var content = '<li class="notification_content">'+
 			'<div class="notification_content-icon">'+
@@ -308,8 +386,18 @@ function SetNoneNotification(){
 				'<h3>No New Notifications!</h3>'+
 				'<p>all caught up</p>'+
 			'</div>'+
-		'</li>';
+		'</li>';	
 	return content;
+}
+
+function SetSubscribe(cid){
+    if(cid == "allview"){
+        window.location.href="AllEventMsg.html";
+        localStorage.removeItem("eventMsg");
+    }else if(cid == "markview"){
+        SetNotificationBell([]);
+        localStorage.removeItem("eventMsg");
+    }
 }
 
 
@@ -367,7 +455,7 @@ function SetNavbar(){
 							'<div class="container-bell">'+
 								'<div class="notification" ></div>'+
 							'</div>'+
-							'<ul class="dropdown-menu scrollable-menu" id="notification_content">'+
+                            '<ul class="dropdown-menu scrollable-menu" id="notification_content">'+
 							'</ul>'+
 						'</li>'+
 					'</ul>'+
@@ -394,19 +482,6 @@ function SetNavbar(){
 				$('li.notification-body').removeClass('open');
 			}
 		});
-}
-
-
-
-function SetSubscribe( value){
-
-	if(value === "check"){
-        SetNotificationBell(0);
-        window.location.href = "AllDevice.html";
-	}else if(value === "refuse"){
-		SetNotificationBell(0);
-	}
-
 }
 
 

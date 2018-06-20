@@ -4718,6 +4718,17 @@ a.thumbnail.active {
 .alert-danger .alert-link {
   color: #843534;
 }
+.alert-primary {
+    color: #516f99;
+    background-color: #437bca;
+    border-color: #c9e1f7;
+  }
+.alert-primary hr {
+border-top-color: #5e86be;
+}
+.alert-primary .alert-link {
+color: #437bca;
+}
 @-webkit-keyframes progress-bar-stripes {
   from {
     background-position: 40px 0;
@@ -6578,7 +6589,8 @@ button.close {
 	  border-color: #eeeeee;
 	  background-color: #fff;
 	  color: #333333;
-	  text-decoration: none;
+      text-decoration: none;
+      max-width: 400px;
 }
 .notification_content-icon {
 	color: #BFDBF7;
