@@ -3,6 +3,7 @@ var deviceMonitorTimer , SelectedDeviceId, SelectedAgentId;
 
 var SystemMonitorPlugin = "ProcessMonitor";
 var AimSdkPlugin = "AimSdk";
+var DroidRoot = "DroidRoot";
 var RepoAppBaseUrl = "http://172.21.73.109:30001/vuethink/php/index.php/admin/Restrepo/"
 var RepoAppBaseDownloadUrl = "http://172.21.73.109:30002"
 var SettingsStatusSensor = {
@@ -23,7 +24,8 @@ var AppFuncSensor = {
     installapp: "/appctrl/download-install-some-app",
     upgradeapp: "/appctrl/download-install-some-app",
     removeapp: "/appctrl/remove-some-app",
-    startapp: "/appctrl/start-some-app"
+    startapp: "/appctrl/start-some-app",
+    stopapp: "/rootctrl/stop-some-app"
 };
 
 
@@ -542,6 +544,18 @@ function　setAppSensor(cid, setsensorval){
                         })
                     }
                 })
+            }
+        })
+    }else if(cid == "stopapp"){
+        var setsensordata = {};
+        setsensorid = AppFuncSensor[cid]; 
+        setsensordata.agentId = SelectedAgentId;
+        setsensordata.plugin = DroidRoot;
+        setsensordata.sensorIds = [];
+        setsensordata.sensorIds[0]={"n":setsensorid, "sv":setsensorval};
+        apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+            if(data.items[0].statusCode == "200"){
+                swal("","success","success")
             }
         })
     }else{

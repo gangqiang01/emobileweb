@@ -64,27 +64,32 @@ Array.prototype.remove = function(val) {
 };
 
 function connectWebsocket(){
-    var ws = new WebSocket("wss://portal-rmm.wise-paas.com/event/-1");
-    ws.onopen = function(evt) { 
-        console.log("Connection open ..."); 
-    };
+    if(window.WebSocket){
+        var ws = new WebSocket("wss://portal-rmm.wise-paas.com/event/-1");
+        ws.onopen = function(evt) { 
+            console.log("Connection open ..."); 
+        };
+        
+        ws.onmessage = function(eventJson) {
+            console.log(eventJson);
+            var msgData = JSON.parse(eventJson.data);
+            localEventMsgJson = window.localStorage["eventMsg"] == undefined ? JSON.stringify([]): window.localStorage['eventMsg'];
+            localEventMsg = JSON.parse(localEventMsgJson);
+            eventData = localEventMsg.concat(msgData.events);
+            window.localStorage["eventMsg"] = JSON.stringify(eventData);
+            SetNotificationBell(eventData);
+            // var inviteContent = SetSubscribeNotification(eventData);
+            // document.getElementById("notification_content").innerHTML = inviteContent
+        };
     
-    ws.onmessage = function(eventJson) {
-        console.log(eventJson);
-        var msgData = JSON.parse(eventJson.data);
-        localEventMsgJson = window.localStorage["eventMsg"] == undefined ? JSON.stringify([]): window.localStorage['eventMsg'];
-        localEventMsg = JSON.parse(localEventMsgJson);
-        eventData = localEventMsg.concat(msgData.events);
-        window.localStorage["eventMsg"] = JSON.stringify(eventData);
-        SetNotificationBell(eventData);
-        // var inviteContent = SetSubscribeNotification(eventData);
-        // document.getElementById("notification_content").innerHTML = inviteContent
-    };
-
-    ws.onclose = function(evt) {
-        console.log("Connection closed.");
-        ws = undefined;
-    };
+        ws.onclose = function(evt) {
+            console.log("Connection closed.");
+            ws = undefined;
+        };
+    }else{
+        swal("","Your browser is not support WebSocket","error")
+    }
+    
     
 }
 //verify user and save in page
@@ -345,23 +350,23 @@ function SetSubscribeNotification(notifyMsgData){
             if(key == "agent_name") tableMsg += `<tr><td  style='text-align:left;'>device:</td><td  style='text-align:left;'>${notifyMsgObj[key]}</td></tr>`;
             if(key == "ts") tableMsg += `<tr><td  style='text-align:left;'>Date:</td><td  style='text-align:left;'>${UnixToTime(notifyMsgObj[key]["$date"])}</td></tr>`;
             if(key == "type") tableMsg += `<tr><td  style='text-align:left;'>type:</td><td  style='text-align:left;'>${notifyMsgObj[key].toLowerCase()}</td></tr>`;
-            if(key == "message") tableMsg += `<tr><td  style='text-align:left;'>message:</td><td  style='text-align:left;'>${notifyMsgObj[key].toLowerCase()}</td></tr>`;
+            // if(key == "message") tableMsg += `<tr><td  style='text-align:left;'>message:</td><td  style='text-align:left;'>${notifyMsgObj[key].toLowerCase()}</td></tr>`;
         }
         if(notifyMsgObj.severity == "ERROR"){
             notifyMsg += `<div class="item-line" data-toggle="tooltip" data-placement="bottom" title="<table style='border:0'>${tableMsg}<table/>">
-                <i class="fa fa-times-circle fa-x text-danger" style="padding-right:5px;"  ></i>
-                ${notifyMsgObj.message.toLowerCase()}
-            </div>`
+                <i class="fa fa-times-circle fa-x text-danger" style="padding-right:5px;"></i>
+                ${notifyMsgObj.subtype.toLowerCase()}
+            </div>`;
         }else if(notifyMsgObj.severity == "WARNING"){
             notifyMsg += `<div class="item-line"  data-toggle="tooltip" data-placement="bottom" title="<table style='border:0'>${tableMsg}<table/>">
                 <i class="fa fa-exclamation-triangle fa-x text-warning" style="padding-right:5px;"></i>
-                ${notifyMsgObj.message.toLowerCase()}
-            </div>`
+                ${notifyMsgObj.subtype.toLowerCase()}
+            </div>`;
         }else{
             notifyMsg += `<div class="item-line"  data-toggle="tooltip" data-placement="bottom" title="<table style='border:0'>${tableMsg}<table/>">
                 <i class="fa fa-info-circle fa-x text-success" style="padding-right:5px;"></i>
-                ${notifyMsgObj.message.toLowerCase()}
-            </div>`
+                ${notifyMsgObj.subtype.toLowerCase()}
+            </div>`;
         }
         
     })
@@ -371,7 +376,7 @@ function SetSubscribeNotification(notifyMsgData){
 		'</div>'+
 		'<div class="notification_content-title">'+notifyMsg+'</div>'+
 		'<div class="notification_content-button">'+
-			'<button class="btn btn-success"  onclick="SetSubscribe(\'allview\')"><i class="fa fa-eye" style="padding-right:5px;" aria-hidden="true"></i>View all event</button>'+
+			'<button class="btn btn-success "  onclick="SetSubscribe(\'allview\')"><i class="fa fa-eye" style="padding-right:5px;" aria-hidden="true"></i>View all event</button>'+
 			'<button class="btn btn-danger"   onclick="SetSubscribe(\'markview\')"><i class="fa fa-eye-slash" style="padding-right:5px;" aria-hidden="true"></i>Mark all as read</button>'+
 		'</div>'+
 	'</li>';	
@@ -403,6 +408,12 @@ function SetSubscribe(cid){
 
 
 function SetNavbar(){
+    var loginStatusMsg;
+    if(checkCookie('SessionId')){
+        loginStatusMsg = '<a href="Login.html" class="btn btn-danger card-bottom-right" onclick="loginout();">LOG ME OUT</a>'
+    }else{
+        loginStatusMsg = '<a href="Login.html" class="btn btn-success card-bottom-right";">LOGIN</a>'
+    }
 	$('.navbar-fixed-top').append( ' <div class="navbar navbar-inverse set-radius-zero " >'+
 			'<div class="container">'+
 				'<div class="navbar-header">'+
@@ -425,6 +436,7 @@ function SetNavbar(){
                         '</li>'+
                         '<li><a id="barset_devicesetting" href="DeviceSetting.html">Device Control</a></li>'+
                         '<li><a id="barset_batchcontrol" href="BatchControl.html">Batch Control</a></li>'+
+                        '<li><a id="barset_vncview" href="vncview.html">KVM</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
                         '<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
 
@@ -447,7 +459,7 @@ function SetNavbar(){
 							'</div>'+
                             '<div class="card-bottom">'+
                                 // '<a href="profile.html" class="btn btn-primary card-bottom-left">PROFILE</a>'+
-                                '<a href="Login.html" class="btn btn-danger card-bottom-right" onclick="loginout();">LOG ME OUT</a>'+
+                                  loginStatusMsg+
                             '</div>'+
 						'</div>'+
 						'</li>'+
