@@ -6590,7 +6590,7 @@ button.close {
 	  background-color: #fff;
 	  color: #333333;
       text-decoration: none;
-      max-width: 400px;
+      /* max-width: 400px; */
 }
 .notification_content-icon {
 	color: #BFDBF7;
