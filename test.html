@@ -27,8 +27,8 @@
     <script src="assets/js/thirdpart/bootstrap-tagsinput.js"></script>
     <body data-spy="scroll" data-target="#nav-exp"> 
             <div class="btn-group" ></div>>
-                    <select id="devId" multiple="multiple">
-                        <optgroup class="group-1" label="a-class">
+                    <select id="devId" multiple="multiple" class="cc">
+                        <optgroup class="group-1 cc" label="a-class">
                             <option value="a1">aaa1</option>       
                             <option value="a2">aaa2</option>
                         </optgroup>
@@ -39,10 +39,21 @@
                             
                         </optgroup>      
                     </select>
-
+                    <select name="" class="cc">
+                        <option value="">aa</option>
+                    </select>
+                    <input type="text" value="aaaa" id="abc">
+<button value='click ma' onclick="aaa()">'click ma</button>
+<script>
+    function aaa(){
+        alert('click me');
+        $(".cc").empty();
+        $("#abc").val('');
+    }
+</script>
         
                  
-                    <button class="info" id="getdevice" data-type=false> getdevice</button> 
+                    <button class="info" id="getdevice" data-type=false > getdevice</button> 
             </div>
             <button type="button" class="btn btn-default tooltip-options" data-toggle="tooltip" data-html=true
                     data-placement="right" data-html=true title="<p>右侧的 Tooltip</p><p>sssss</p><p>aaaaaaaa</p>">

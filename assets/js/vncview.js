@@ -2,16 +2,19 @@
 
 import * as WebUtil from '../../noVNC/app/webutil.js';
 import RFB from '../../noVNC/core/rfb.js';
-var  SelectedDeviceId, SelectedAgentId, desktopName, rfb;
-var vnc_mode = 3;
-var repeaterId = Math.floor(Math.random()*9000) + 1000;
 //onload page
 $(function() {
+    var  SelectedDeviceId, SelectedAgentId, desktopName, rfb;
+    var vnc_mode = 3;
+    var repeaterId = Math.floor(Math.random()*9000) + 1000;
+    
 	LoginStatus("vncview.html"); 
     SetHTML("barset_vncview");
-    document.getElementById('VNC_connect_button').onclick = getVNCpropertys;
+   $('#VNC_enter').on("click",'#VNC_connect_button', function(){
+        getVNCpropertys();
+    })
+    document.getElementById("VNC_closed").onclick = disconnectVNC;
     getDeviceGroup();
-
 });
 
 
@@ -20,6 +23,9 @@ function getDeviceDetails(agentid, deviceid){
     if(agentid == false){
         console.log("agentid:","is null")
         return;
+    }
+    if(rfb != undefined){
+        disconnectVNC();
     }
     SelectedDeviceId = deviceid;
     SelectedAgentId = agentid;
@@ -31,6 +37,9 @@ function getDeviceDetails(agentid, deviceid){
 
 }
 
+function disconnectVNC(){
+    if(rfb != undefined){rfb._sock.close()};
+}
 // init device
 function getDeviceGroup(){
     var devgetdata = {};
@@ -141,18 +150,29 @@ function updateDesktopName(e) {
 
 
 function status(text, level) {
+    var vncContentMsg = `<h2 class="VNC_title">VNC To Your Device</h2>
+    <a class="btn btn-info" id="VNC_connect_button">
+        <i class="fa fa-link"></i> Connect
+    </a>`;
     switch (level) {
         case 'normal':
         case 'warn':
-        case 'error':
+        case 'error':{
+            document.getElementById("VNC_enter").innerHTML=vncContentMsg;
             break;
+        }
         default:
             level = "warn";
     }
     if(text == "Connecting"){
         document.getElementById("VNC_enter").innerHTML='<img src="assets/img/connect_vnc.gif" alt="loading">';
+        document.getElementById("VNC_closed").style.display = "none"
+    }else if(text == "Disconnected"){
+        document.getElementById("VNC_closed").style.display = "none"
+        document.getElementById("VNC_enter").innerHTML=vncContentMsg;
     }else{
         document.getElementById("VNC_enter").innerHTML='';
+        document.getElementById("VNC_closed").style.display = ""
     }
     document.getElementById('noVNC_status_bar').className = "noVNC_status_" + level;
     document.getElementById('noVNC_status').textContent = text;

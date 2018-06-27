@@ -376,8 +376,8 @@ function SetSubscribeNotification(notifyMsgData){
 		'</div>'+
 		'<div class="notification_content-title">'+notifyMsg+'</div>'+
 		'<div class="notification_content-button">'+
-			'<button class="btn btn-success "  onclick="SetSubscribe(\'allview\')"><i class="fa fa-eye" style="padding-right:5px;" aria-hidden="true"></i>View all event</button>'+
-			'<button class="btn btn-danger"   onclick="SetSubscribe(\'markview\')"><i class="fa fa-eye-slash" style="padding-right:5px;" aria-hidden="true"></i>Mark all as read</button>'+
+			'<button class="btn btn-success "  onclick="SetSubscribe(\'allview\')" style="margin-right:10px"><i class="fa fa-eye" style="padding-right:5px;" aria-hidden="true"></i>View all event</button>'+
+			'<button class="btn btn-danger "   onclick="SetSubscribe(\'markview\')"><i class="fa fa-eye-slash" style="padding-right:5px;" aria-hidden="true"></i>Mark all as read</button>'+
 		'</div>'+
 	'</li>';	
     return content;
@@ -419,14 +419,14 @@ function SetNavbar(){
 				'<div class="navbar-header">'+
 					'<a class="navbar-brand" href="index.html">'+
 
-                        '<img src="assets/img/aimlink_logo.png" style="width:310px;margin:10px" />'+
+                        '<img src="assets/img/aimlink_logo.png" style="width:28rem;margin:10px" />'+
                         // '<span style="display:inline-block;position:relative;top:5px;left:10px;color:#337ab7;font-size:23px">Android Control</span>'+
 					'</a>'+
 
                     '<ul id="menu-top" class="nav navbar-nav navbar-right">'+
-                        '<li>'+
-                            '<a id="barset_index" href="index.html">Main</a>'+
-                        '</li>'+
+                        // '<li>'+
+                        //     '<a id="barset_index" href="index.html">Main</a>'+
+                        // '</li>'+
                         '<li>'+
                             '<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="barset_devicemanagement">Device Management<span class="caret"></span></a>'+
                             '<ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">'+
@@ -434,7 +434,7 @@ function SetNavbar(){
                                 '<li><a id="barset_devicegroup" href="DeviceGroup.html">Device Group</a>'+
                             '</ul>'+
                         '</li>'+
-                        '<li><a id="barset_devicesetting" href="DeviceSetting.html">Device Control</a></li>'+
+                        '<li><a id="barset_devicesetting" href="DeviceSetting.html">Remote Control</a></li>'+
                         '<li><a id="barset_batchcontrol" href="BatchControl.html">Batch Control</a></li>'+
                         '<li><a id="barset_vncview" href="vncview.html">KVM</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+

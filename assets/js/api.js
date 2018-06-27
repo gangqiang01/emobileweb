@@ -10,9 +10,14 @@ function apipost(myurl,object){
             contentType:'application/json;charset=utf-8', 
             crossDomain: true,
             xhrFields: { withCredentials: true },
-            timeout:10000,
+            // timeout:60000,
             success:function(data){
-                resolve(data)
+                if(data.result||data.result == undefined){
+                    resolve(data)
+                }else{
+                    $(".loading").hide();
+                    swal("","network timeout","error")
+                }
             },
             error:function(err){
                 $(".loading").hide();
@@ -31,11 +36,7 @@ function apipost(myurl,object){
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
-                    swal("","network timeout","error").then(
-                        function(){
-                            location.reload();
-                        }
-                    );
+                    swal("","network timeout","error")
                 }
             }
        });
@@ -54,7 +55,12 @@ function apiput(myurl,object){
             data: JSON.stringify(object),
             timeout:10000,
             success:function(data){
-                resolve(data)
+                if(data.result||data.result == undefined){
+                    resolve(data)
+                }else{
+                    $(".loading").hide();
+                    swal("","network timeout","error")
+                }  
             },
             error:function(err){
                 $(".loading").hide();
@@ -91,7 +97,11 @@ function apidelete(myurl){
             xhrFields: { withCredentials: true },
             timeout:10000,
             success:function(data){
-                resolve(data)
+                if(data.result||data.result == undefined){
+                    resolve(data)
+                }else{
+                    $(".loading").hide();
+                }  
             },
             error:function(err){
                 $(".loading").hide();
@@ -125,9 +135,14 @@ function apifile(myurl,data){
             processData: false,
             crossDomain: true,
             xhrFields: { withCredentials: true },
-            timeout:10000,
+            timeout:20000,
             success:function(data){
-                resolve(data)
+                if(data.result||data.result == undefined){
+                    resolve(data)
+                }else{
+                    $(".loading").hide();
+                    swal("","network timeout","error");
+                }  
             },
             error:function(err){
                 if(err.status == 401){
@@ -173,7 +188,7 @@ function apiget(myurl, object, isasync){
         $.ajax({
             type:"get",
             url: geturl,
-            timeout:15000,
+            timeout:20000,
             crossDomain: true,
             async: isasync,
             contentType:'application/json',

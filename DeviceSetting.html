@@ -34,7 +34,7 @@
 	<script src="assets/js/thirdpart/bootstrap-select.js"></script>
 	<link href="assets/css/thirdpart/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="assets/js/thirdpart/bootstrap-toggle.min.js"></script>
-    <script src="assets/js/thirdpart/chart.min.js"></script>
+    <script src="assets/js/thirdpart/Chart.js"></script>
 
     <script  type="text/javascript" src="assets/js/DeviceSetting.js"></script>
 </head>
@@ -81,7 +81,7 @@
                             </li>
                             <li class="">
                                 <a href="#settings" data-toggle="tab">
-                                    <i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device Settings
+                                    <i class="fa fa-wrench" aria-hidden="true" style="padding-right:3px;"></i>Device control
                                 </a>
                             </li>
 							<li class="" >
@@ -104,11 +104,11 @@
 
 							<div class="tab-pane fade active in" id="monitor">
 								<div class="col-md-6 col-sm-12 col-xs-12">
-                                    <canvas id="cpu_chart" height="150" ></canvas>
+                                    <canvas id="cpu_chart" height="200" ></canvas>
 								  <!-- /.info-box -->
 								</div>
 								<div class="col-md-6 col-sm-12 col-xs-12">
-                                    <canvas id="memory_chart" height="150" ></canvas>
+                                    <canvas id="memory_chart" height="200" ></canvas>
 								</div>
                             </div>
 
@@ -172,6 +172,20 @@
                                         </div>
                                         <div class="col-sm-2 col-xs-2">
                                                 <a class="btn btn-primary" onclick="appcontrol('startapp')">Launch</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-10 col-sm-offset-1  control-label form-group">
+                                        <label for="basic" class="col-sm-3 col-xs-12 control-labela"><i class="fa fa-key" style="margin-right:10px;color:#428bca"></i>Stop App:</label>
+                                        <div class="col-sm-7 col-xs-10">
+                                            <select id="stopapp" class=" show-tick form-control applist selectpicker">
+                
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-2">
+                                            <a class="btn btn-primary" onclick="appcontrol('stopapp')">Stop</a>
                                         </div>
                                     </div>
                                 </div>
@@ -250,7 +264,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12   control-label form-group">
-                                                <label for="basic" class="col-md-3 control-label">System　Version:</label>
+                                                <label for="basic" class="col-md-4 control-label">System　Version:</label>
                                                 <div class="col-md-7">
                                                     <input type="text" disabled id="systemversion" class="form-control">
                                                 </div>
@@ -258,7 +272,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12  control-label form-group">
-                                                <label for="basic" class="col-md-3 control-label">Boardname:</label>
+                                                <label for="basic" class="col-md-4 control-label">Board Name:</label>
                                                 <div class="col-md-7">
                                                     <input type="text" disabled id="systemboard" class="form-control">
                                                 </div>
@@ -266,7 +280,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12  control-label form-group">
-                                                <label for="basic" class="col-md-3 control-label">System Model:</label>
+                                                <label for="basic" class="col-md-4 control-label">System Model:</label>
                                                 <div class="col-md-7">
                                                     <input type="text" disabled id="systemmodel" class="form-control">
                                                 </div>
@@ -274,7 +288,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12  control-label form-group">
-                                                <label for="basic" class="col-md-3 control-label">Agent Version:</label>
+                                                <label for="basic" class="col-md-4 control-label">Agent Version:</label>
                                                 <div class="col-md-7">
                                                     <input type="text" disabled id="agentversion" class="form-control">
                                                 </div>
