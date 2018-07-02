@@ -437,6 +437,7 @@ function SetNavbar(){
                         '<li><a id="barset_devicesetting" href="DeviceSetting.html">Remote Control</a></li>'+
                         '<li><a id="barset_batchcontrol" href="BatchControl.html">Batch Control</a></li>'+
                         '<li><a id="barset_vncview" href="vncview.html">KVM</a></li>'+
+                        '<li><a id="barset_terminal" href="terminal.html">Terminal</a></li>'+
 						'<li class="card-body" style="padding-top:18px;margin-right:5px;float:right;" >'+
                         '<button id="user-circle" class="btn btn-info" style="background-color: Transparent;border: none;"><i class="fa fa-user-circle-o" aria-hidden="true"	style="color:#337ab7;font-size:2.5em;" ></i></button>'+
 

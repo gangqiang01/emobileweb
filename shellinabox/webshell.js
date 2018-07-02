@@ -8,7 +8,9 @@
 
 // IE does not define XMLHttpRequest by default, so we provide a suitable
 // wrapper.
-
+$(window).load(function () {
+    new ShellInABox();
+})
 
 function IsString(str) {
     return (typeof str == 'string') && str.constructor == String;
@@ -32,29 +34,31 @@ function extend(subClass, baseClass) {
 }
 ;
 
-function ShellInABox(container,agentId, sessionId, host, type) {
-    // this.rooturl = "https://"+host+"/terminal.html?"+"agentid="+agentId+"/sessionId="+sessionId;
-    // var hash = "agentid="+agentId+"/sessionId="+sessionId;
-    // this.url = this.rooturl.replace(/[?#].*/, '');
-    
-    // if (document.location.hash != '') {
-    //     var hash = decodeURIComponent(hash).
-    //             replace(/^#/, '');
-    //     this.nextUrl = hash.replace(/,.*/, '');
-    //     this.session = hash.replace(/[^,]*,/, '');
-    // } else {
-    //     this.nextUrl = this.url;
-    //     this.session = null;
-    // }
+function ShellInABox(url, container) {
+    if (url == undefined) {
+        this.rooturl = document.location.href;
+        this.url = document.location.href.replace(/[?#].*/, '');
+    } else {
+        this.rooturl = url;
+        this.url = url;
+    }
+    if (document.location.hash != '') {
+        var hash = decodeURIComponent(document.location.hash).
+                replace(/^#/, '');
+        this.nextUrl = hash.replace(/,.*/, '');
+        this.session = hash.replace(/[^,]*,/, '');
+    } else {
+        this.nextUrl = this.url;
+        this.session = null;
+    }
 
-    this.agentID = agentId;
-    this.sessionID = sessionId;
-    this.type =type;
-    this.host = host;
+    this.agentID = GetParams("agentID");
+    this.sessionID = GetParams("sessionID");
     this.user = GetParams("user");
+    this.host=GetParams("host");
     this.password = GetParams("password");
     this.subServer = GetParams("subServer");
-   
+    this.type = GetParams("type");
     //console.log("AgentID:"+this.agentID+",sessionID:"+this.sessionID+",user:"+this.user+",password:"+this.password);
     this.path = window.parent.location.href;
 
@@ -314,7 +318,6 @@ ShellInABox.prototype.terminalStartCmd = function(callback) {
         }
         _terminalWebsocket.turnOnTerminal(strHost, callback, function(msg) {
             var response;
-
             if (msg.data.indexOf('content') !== -1) {
                 response = JSON.parse(msg.data).content.terminalTiInfo.terminalContent;
                 response = response.replace(/\\\\/g, '\\');

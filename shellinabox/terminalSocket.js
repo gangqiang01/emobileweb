@@ -34,13 +34,13 @@ function terminalWebsocket() {
                 type: 'error'
             }).catch(swal.noop);
         }
+        _WebSocket.onclose = function () {
+        };
     }
     this.sendTerminalMessage = function(msg) {
         _WebSocket.send(JSON.stringify(msg));
     }
     this.closeTerminal = function() {
-        _WebSocket.onclose = function () {
-        };
         _WebSocket.close();
     }
 }

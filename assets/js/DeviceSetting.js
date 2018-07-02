@@ -86,6 +86,10 @@ $(function() {
         startDeviceMonitor();
     })
 
+    $("#groupId").on("change", function(){
+        GetAllDevices();
+    })
+
     function initdraw(){
         drawCpuChart(new Array(7));
         drawMemoryChart(new Array(7));
@@ -367,6 +371,8 @@ $(function() {
         });
     }
 
+
+    
     function changeAidtoDid(data, aid){
         for(var i=0,len=Object.keys(data).length;i<len;i++){
             if(data[i][0] === aid){

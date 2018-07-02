@@ -17,42 +17,18 @@
     <!-- CUSTOM STYLE  -->
     <link href="assets/css/style.css" rel="stylesheet" />
 	<link rel="stylesheet" href="assets/css/thirdpart/bootstrap-select.css">
-  <!-- terminal -->
-    <link rel="stylesheet" href="shellinabox/styles.css" type="text/css" />
-    <link rel="stylesheet" href="shellinabox/white-on-black.css" type="text/css" />
 
-
-    <!-- promise polyfills promises for IE11 -->
-    <script src="./noVNC/vendor/promise.js"></script>
-    <!-- ES2015/ES6 modules polyfill -->
-    <script type="module">
-        window._noVNC_has_module_support = true;
-    </script>
-    <script>
-        window.addEventListener("load", function() {
-            if (window._noVNC_has_module_support) return;
-            var loader = document.createElement("script");
-            loader.src = "./noVNC/vendor/browser-es-module-loader/dist/browser-es-module-loader.js";
-            document.head.appendChild(loader);
-        });
-    </script>
-    <!-- end vnc -->
-
-    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' /> -->
     <script src="assets/js/thirdpart/jquery-1.11.1.js"></script>
     <script src="assets/js/thirdpart/bootstrap.js"></script>
 	<script src="assets/js/userpermissions.js" type='text/javascript'></script>
     <script src="assets/js/thirdpart/bluebird.min.js"></script>
 	<script src="assets/js/api.js"></script>	
-	<!-- <script  type="text/javascript" src="assets/mqtt/mqttws31.js"></script>
-	<script src="assets/js/mqtt_client.js"></script> -->
+
     <script src="assets/js/thirdpart/bootstrap-select.js"></script>
-    <script type="text/javascript" src="shellinabox/vt100.js"></script>
     <script type="text/javascript" src="shellinabox/uuid-random.js"></script>
-    <script type="text/javascript" src="shellinabox/terminalSocket.js"></script>
-    <script type="text/javascript" src="shellinabox/webshell.js"></script>
+    <!-- <script type="text/javascript" src="shellinabox/terminalSocket.js"></script> -->
     <script type="text/javascript" src="assets/js/terminal.js" ></script>
-    <script type="text/javascript" src="assets/js/thirdpart/jquery.base64.js"></script>
+
 </head>
 <body id="CookieListener">
 	<div class="navbar-fixed-top"></div>
@@ -62,7 +38,7 @@
          <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-                <h4 class="header-line"><i class="fa fa-desktop fa-x" style="padding:5px"></i>Device Control</h4>
+                <h4 class="header-line"><i class="fa fa-terminal fa-x" style="padding:5px"></i>Device Terminal</h4>
             </div>
 
         </div>
@@ -91,20 +67,17 @@
             </div>
             <div class="col-md-9 col-sm-9 col-xs-12">
                 <div id="terminal" style="margin: 0px; overflow: hidden;">
-                    <div id="vt100" style="height:50rem">
-                            <i class="fa fa-times fa-x pointer" id="VNC_closed" style="display:none" ></i>
-                            <div id="noVNC_status_bar">
-                                <div id="noVNC_left_dummy_elem"></div>
-                                <div id="noVNC_status"></div>
-                               
-                                <div id="VNC_enter">
-                                    <h2 class="VNC_title">Open Your Device's Terminal</h2>
-                                    <a class="btn btn-info" id="open_terminal_button">
-                                        <i class="fa fa-link"></i> Open
-                                    </a>
-                                </div>
-                            </div>
+                    <div id="vt100">
+                        
+                        <div id="Terminal_enter">
+                            <h2 class="Terminal_title">Open Your Device's Terminal</h2>
+                            <a class="btn btn-info" id="open_terminal_button">
+                                <i class="fa fa-link"></i> Open
+                            </a>
+                        </div>   
                     </div>
+                    <i class="fa fa-times fa-x pointer" id="Terminal_closed" style="display:none" ></i>
+                    <iframe src="" frameborder="0" id="terminal_iframe"></iframe>
                 </div>
 			</div>  
         </div>        

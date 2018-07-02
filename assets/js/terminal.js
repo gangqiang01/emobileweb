@@ -3,16 +3,19 @@
 
 //onload page
 $(function() {
-    var  SelectedDeviceId, SelectedAgentId, desktopName, rfb;
-    var vnc_mode = 3;
-    var repeaterId = Math.floor(Math.random()*9000) + 1000;
+    var  SelectedDeviceId, SelectedAgentId;
+
     
-	LoginStatus("vncview.html"); 
-    SetHTML("barset_vncview");
+	LoginStatus("terminal.html"); 
+    SetHTML("barset_terminal");
     $('#open_terminal_button').on("click", function(){
         startTerminal();
     })
-    document.getElementById("VNC_closed").onclick = disconnectVNC;
+
+    $("#groupId").on("change", function(){
+        GetAllDevices();
+    })
+    document.getElementById("Terminal_closed").onclick = disconnectTerminal;
     getDeviceGroup();
     
     function getDeviceDetails(agentid, deviceid){
@@ -20,22 +23,15 @@ $(function() {
             console.log("agentid:","is null")
             return;
         }
-        if(rfb != undefined){
-            disconnectVNC();
-        }
+
+        disconnectTerminal();
+
         SelectedDeviceId = deviceid;
         SelectedAgentId = agentid;
-        if(SelectedDeviceId == undefined || SelectedAgentId == undefined){
-            if(deviceMonitorTimer != undefined){
-                window.clearInterval(deviceMonitorTimer);
-            }
-        }
+        
 
     }
 
-    function disconnectVNC(){
-        if(rfb != undefined){rfb._sock.close()};
-    }
     // init device
     function getDeviceGroup(){
         var devgetdata = {};
@@ -124,33 +120,44 @@ $(function() {
     }
 
     // device settings
-
-    function getTerminalpropertys(){
+    function startTerminal(){
         if(!SelectedAgentId){
             swal("","Please select your device","info")
             return;
         }
-        var getPatamsData={};
-        getPatamsData.agentid = SelectedAgentId;
-        getPatamsData.mode = vnc_mode;
-        getPatamsData.repeaterid = repeaterId;
-        apipost("rmm/v1/kvm",getPatamsData).then(function(data){
-            startVNC(data.IP, data.port, data.password, "");
+        var container = document.getElementById("vt100");
+        var agentid = SelectedAgentId;
+        var sessionid = uuid();
+        var type = "SSO";
+        var host = "portal-rmm.wise-paas.com";
+        
+        $("#vt100").hide();
+        var iframeSrcMsg=`./shellinabox/webshell.html?agentID=${agentid}&sessionID=${sessionid}&host=${host}&type=SSO`;
+        console.log($("#terminal_iframe").attr("attr"));
+        $("#terminal_iframe").attr("src",iframeSrcMsg);
+        $("#Terminal_closed").show();
+        $("#Terminal_closed").on('click', function(){
+            disconnectTerminal()
         })
     }
-        
-    function startTerminal(){
-            var container = document.getElementById("vt100");
-            var agentid = SelectedAgentId;
-            var sessionid = uuid();
-            var type = "SSO";
-            var host = "portal-rmm.wise-paas.com";
-            new ShellInABox(container,agentid,sessionid,host,type);
-        
+
+    function disconnectTerminal(){
+        var disconnectTerminalMsg = `
+            <div id="vt100">          
+                <div id="Terminal_enter">
+                    <h2 class="Terminal_title">Open Your Device's Terminal</h2>
+                    <a class="btn btn-info" id="open_terminal_button">
+                        <i class="fa fa-link"></i> Open
+                    </a>
+                </div>   
+            </div>
+            <i class="fa fa-times fa-x pointer" id="Terminal_closed" style="display:none" ></i>
+            <iframe src="" frameborder="0" id="terminal_iframe"></iframe>
+        `
+        $("#terminal").html( disconnectTerminalMsg);
+        // _terminalWebsocket.closeTerminal();
+        $('#open_terminal_button').on("click", function(){
+            startTerminal();
+        })
     }
-    // If a token variable is passed in, set the parameter in a cookie.
-    // This is used by nova-novncproxy.
-
-        
-
 });

@@ -13,7 +13,13 @@ $(function() {
     $('#VNC_enter').on("click",'#VNC_connect_button', function(){
         getVNCpropertys();
     })
+
     document.getElementById("VNC_closed").onclick = disconnectVNC;
+
+    $("#groupId").on("change", function(){
+        GetAllDevices();
+    })
+    
     getDeviceGroup();
     
     function getDeviceDetails(agentid, deviceid){

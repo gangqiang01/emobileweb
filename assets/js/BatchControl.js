@@ -74,6 +74,11 @@ $(function() {
             }
         })  
     })
+
+    $("#groupId").on("change", function(){
+        // emptyDeviceOptions();
+        GetAllDevices();
+    })
     // init device
     function getDeviceGroup(){
         var devgetdata = {};
@@ -148,7 +153,7 @@ $(function() {
             allowDuplicates: true,
         });
         
-        $("#devId").attr("multiple","multiple").html(txtdevice).multiselect({
+        $("#devId").attr("multiple","multiple").html(txtdevice).multiselect("destroy").multiselect({
             includeSelectAllOption: true,
             onChange: function(option, checked){
                 selectedDeviceOptions =  $('#devId option:selected');
@@ -192,8 +197,6 @@ $(function() {
             }
         });
     }
-
-
 
     function changeDidtoAid(data, did){
         for(var i=0,len=Object.keys(data).length;i<len;i++){

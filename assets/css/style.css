@@ -291,3 +291,88 @@ height: 60px;
 .device_category:hover{
     border-width:2px;
 }
+
+#terminal{
+    width:100%;
+    border:1px solid #ddd;
+    height:60rem;
+    position:relative;
+    background-color:#eaeaea;
+}
+
+#terminal_iframe{
+    height:60rem;
+    width:100%;
+}
+
+#Terminal_closed{
+    position: absolute;
+    color:#d3104b;
+    padding:5px;
+    right:2rem;
+    top:-4px;
+    cursor: pointer;
+}
+/* vnc style */
+#noVNC_content{
+    border:1px solid #ddd;
+    height:60rem;
+    position:relative;
+    background-color:#eaeaea;
+}
+
+#VNC_closed{
+    position: absolute;
+    color:#d3104b;
+    padding:5px;
+    right:3px;
+    top:-4px;
+    cursor: pointer;
+}
+
+#noVNC_status_bar {
+    width: 100%;
+    text-align: center;
+}
+
+#noVNC_status {
+    color: #fff;
+    font: bold 12px Helvetica;
+    margin: auto;
+}
+
+.noVNC_status_normal {
+    background: linear-gradient(#b2bdcd 0%,#899cb3 49%,#7e93af 51%,#6e84a3 100%);
+}
+
+.noVNC_status_error {
+    background: linear-gradient(#c83737 0%,#899cb3 49%,#7e93af 51%,#6e84a3 100%);
+}
+
+.noVNC_status_warn {
+    background: linear-gradient(#b4b41e 0%,#899cb3 49%,#7e93af 51%,#6e84a3 100%);
+}
+
+.noNVC_shown {
+    display: inline;
+}
+.noVNC_hidden {
+    display: none;
+}
+
+#noVNC_left_dummy_elem {
+     flex: 1;
+}
+
+#Terminal_enter .Terminal_title, #VNC_enter .VNC_title{
+    color:#337ab7;
+    margin-bottom:20px;
+}
+
+#VNC_enter, #Terminal_enter{
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    text-align: center;
+}
