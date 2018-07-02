@@ -105,14 +105,14 @@ $(function(){
         devgetdata.orderType = "aid";
         devgetdata.like = "";
         devgetdata._ = new Date().getTime();
-        $(".loading").show();
+        $("#page_loading").show();
         apiget("rmm/v1/accounts", devgetdata).then(function(data){
             accountsid = data.accounts[0].aid;
             var GetDeviceGroupData = {};
             GetDeviceGroupData._ = new Date().getTime();
             var myurl = "rmm/v1/accounts/"+accountsid+"/groups"
             apiget(myurl, GetDeviceGroupData).then(function(data){
-                $(".loading").hide();
+                $("#page_loading").hide();
                 var DeviceGroups = data.accounts[0].groups;
                 if ( $.fn.dataTable.isDataTable('#DataTables') ) {
                     table = $('#DataTables').DataTable();

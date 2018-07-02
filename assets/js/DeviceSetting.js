@@ -38,6 +38,54 @@ $(function() {
     drawAppManagement([])
     initdraw();
 
+    // bind func on html
+    $(".app_control_func").on("click", function(){
+        var cid = $(this).attr("data-type");
+        var setsensorval;
+        if(!SelectedAgentId){
+            swal("","Please select your device","info")
+            return;
+        }
+        setsensorval = $("#"+cid).val();
+        setAppSensor(cid, setsensorval)
+    });
+
+    $(".shutdown_reboot_func").on("click", function(){
+        var cid = $(this).attr("data-type");
+        if(!SelectedDeviceId){
+            swal("","Please select your device","info")
+            return;
+        }
+        swal({
+            title: "Are you sure?",
+            text: cid+" this device",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(function(willfunc){
+            if (willfunc) {
+                var powdata = {};
+                powdata.action = cid;
+                powdata.did = SelectedDeviceId;
+                apiput("rmm/v1/power/device", powdata).then(function(data){
+                    if(data.result == true){
+                        swal("", cid+" success", "success")
+                    }
+                })
+            }
+        })  
+    });
+
+    $("#device-tab a[href!=#monitor]").on("click",function(){
+        window.clearInterval(deviceMonitorTimer);
+        deviceMonitorTimer = undefined;
+    })
+    
+    $("#device-tab a[href=#monitor]").on("click", function(){
+        startDeviceMonitor();
+    })
+
     function initdraw(){
         drawCpuChart(new Array(7));
         drawMemoryChart(new Array(7));
@@ -99,24 +147,28 @@ $(function() {
         return options;
         
     }
+
     function startDeviceMonitor(){
-        var intervalTime = 1,timeoutTime = 60
-        var intervalReportData = {};
-        intervalReportData.agentid = SelectedAgentId;
-        intervalReportData.plugin = SystemMonitorPlugin;
-        intervalReportData.interval = intervalTime;
-        intervalReportData.timeout = timeoutTime;
-        apiput("rmm/v1/devicectrl/intermittent_report", intervalReportData).then(function(data){
-            if(data.result = true){
-                deviceMonitor();
-                deviceMonitorTimer=window.setInterval(function(){
-                    deviceMonitor()
-                },3000)
-            }else{
-                console.log("inetervalreport error")
-            }
-        })
+        if(deviceMonitorTimer == undefined){
+            var intervalTime = 1,timeoutTime = 60
+            var intervalReportData = {};
+            intervalReportData.agentid = SelectedAgentId;
+            intervalReportData.plugin = SystemMonitorPlugin;
+            intervalReportData.interval = intervalTime;
+            intervalReportData.timeout = timeoutTime;
+            apiput("rmm/v1/devicectrl/intermittent_report", intervalReportData).then(function(data){
+                if(data.result = true){
+                    deviceMonitor();
+                    deviceMonitorTimer=window.setInterval(function(){
+                        deviceMonitor()
+                    },3000)
+                }else{
+                    console.log("inetervalreport error")
+                }
+            })
+        }
     }
+
     function deviceMonitor(){
         var cpuNowPercentage, MemoryNowPercentage;
         var GetSystemMonitorData = {};
@@ -279,7 +331,6 @@ $(function() {
         devicegetdata.like = "";
         devicegetdata._ = new Date().getTime();
         apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
-            $(".loading").hide();
             console.log(data);
             var DeviceDetails = [];
             var DeviceData = data.groups[0].devices;
@@ -485,43 +536,6 @@ $(function() {
             optmsg+="<option value='"+val.packageName+"' data-subtext='"+val.versionName+"'>"+val.appName+"</option>";
         });
         $("select.applist").html(optmsg).selectpicker('refresh');
-    }
-        
-    // html trigger func 
-    function powfunc(cid){
-        if(!SelectedDeviceId){
-            swal("","Please select your device","info")
-            return;
-        }
-        swal({
-            title: "Are you sure?",
-            text: cid+" this device",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-        .then(function(willfunc){
-            if (willfunc) {
-                var powdata = {};
-                powdata.action = cid;
-                powdata.did = SelectedDeviceId;
-                apiput("rmm/v1/power/device", powdata).then(function(data){
-                    if(data.result == true){
-                        swal("", cid+" success", "success")
-                    }
-                })
-            }
-        })  
-    }
-    // html trigger
-    function appcontrol(cid){
-        var setsensorval;
-        if(!SelectedAgentId){
-            swal("","Please select your device","info")
-            return;
-        }
-        setsensorval = $("#"+cid).val();
-        setAppSensor(cid, setsensorval)
     }	
 
     function　setAppSensor(cid, setsensorval){
@@ -535,7 +549,7 @@ $(function() {
             })
             .then(function(willfunc){
                 if (willfunc) {
-                    $(".loading").show();
+                    $("#page_loading").show();
                     var setsensordata = {};
                     setsensorid = AppFuncSensor[cid]; 
                     setsensordata.agentId = SelectedAgentId;
@@ -544,12 +558,9 @@ $(function() {
                     setsensordata.sensorIds[0]={"n":setsensorid, "sv":setsensorval};
                     apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
                         if(data.items[0].statusCode == "200"){
-                            $(".loading").hide();
+                            $("#page_loading").hide();
                             swal("","success","success").then(function(){
-                                var interval = cid == "installapp" ? 8000 : 1000;
-                                window.setTimeout(function(){
                                     getSensorStatus();
-                                }, interval);
                             })
                         }
                     })

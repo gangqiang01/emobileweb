@@ -1,7 +1,6 @@
 // var ftpurl = "http://47.95.248.121:30010/";
 
-import * as WebUtil from '../../noVNC/app/webutil.js';
-import RFB from '../../noVNC/core/rfb.js';
+
 //onload page
 $(function() {
     var  SelectedDeviceId, SelectedAgentId, desktopName, rfb;
@@ -10,8 +9,8 @@ $(function() {
     
 	LoginStatus("vncview.html"); 
     SetHTML("barset_vncview");
-    $('#VNC_enter').on("click",'#VNC_connect_button', function(){
-        getVNCpropertys();
+    $('#open_terminal_button').on("click", function(){
+        startTerminal();
     })
     document.getElementById("VNC_closed").onclick = disconnectVNC;
     getDeviceGroup();
@@ -126,7 +125,7 @@ $(function() {
 
     // device settings
 
-    function getVNCpropertys(){
+    function getTerminalpropertys(){
         if(!SelectedAgentId){
             swal("","Please select your device","info")
             return;
@@ -139,96 +138,15 @@ $(function() {
             startVNC(data.IP, data.port, data.password, "");
         })
     }
-
-    function updateDesktopName(e) {
-        desktopName = e.detail.name;
-    }
-
-
-    function status(text, level) {
-        var vncContentMsg = `<h2 class="VNC_title">VNC To Your Device</h2>
-        <a class="btn btn-info" id="VNC_connect_button">
-            <i class="fa fa-link"></i> Connect
-        </a>`;
-        switch (level) {
-            case 'normal':
-            case 'warn':
-            case 'error':{
-                document.getElementById("VNC_enter").innerHTML=vncContentMsg;
-                break;
-            }
-            default:
-                level = "warn";
-        }
-        if(text == "Connecting"){
-            document.getElementById("VNC_enter").innerHTML='<img src="assets/img/connect_vnc.gif" alt="loading">';
-            document.getElementById("VNC_closed").style.display = "none"
-        }else if(text == "Disconnected"){
-            document.getElementById("VNC_closed").style.display = "none"
-            document.getElementById("VNC_enter").innerHTML=vncContentMsg;
-        }else{
-            document.getElementById("VNC_enter").innerHTML='';
-            document.getElementById("VNC_closed").style.display = ""
-        }
-        document.getElementById('noVNC_status_bar').className = "noVNC_status_" + level;
-        document.getElementById('noVNC_status').textContent = text;
-    }
-
-    function connected(e) {
-        if (WebUtil.getConfigVar('encrypt',true)) {
-            status("Connected (encrypted) to " + desktopName, "normal");
-
-
-        } else {
-            status("Connected (unencrypted) to " + desktopName, "normal");
-        }
-    }
-
-    function disconnected(e) {
-        if (e.detail.clean) {
-            status("Disconnected", "normal");
-        } else {
-            status("Something went wrong, connection is closed", "error");
-        }
-    }
-
-
-
-    // By default, use the host and port of server that served this fil
-
         
-    function startVNC(host, port, password, path){
-        var token = WebUtil.getConfigVar('token', null);
-        if (token) {
-            // if token is already present in the path we should use it
-            path = WebUtil.injectParamIfMissing(path, "token", token);
+    function startTerminal(){
+            var container = document.getElementById("vt100");
+            var agentid = SelectedAgentId;
+            var sessionid = uuid();
+            var type = "SSO";
+            var host = "portal-rmm.wise-paas.com";
+            new ShellInABox(container,agentid,sessionid,host,type);
         
-            WebUtil.createCookie('token', token, 1)
-        }
-
-        status("Connecting", "normal");
-        if ((!host) || (!port)) {
-            status('Must specify host and port in URL', 'error');
-        }
-
-        var url  = 'wss';
-
-        url += '://' + host;
-        if(port) {
-            url += ':' + port;
-        }
-        url += '/' + path;
-
-        rfb = new RFB(document.getElementById('noVNC_content'), url,
-                    { repeaterID: repeaterId,
-                        shared: true,
-                        credentials: { password: password } });
-        rfb.viewOnly = WebUtil.getConfigVar('view_only', false);
-        rfb.addEventListener("connect",  connected);
-        rfb.addEventListener("disconnect", disconnected);
-        rfb.addEventListener("desktopname", updateDesktopName);
-        rfb.scaleViewport = true;
-        rfb.resizeSession = WebUtil.getConfigVar('resize', false);
     }
     // If a token variable is passed in, set the parameter in a cookie.
     // This is used by nova-novncproxy.

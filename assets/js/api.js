@@ -12,27 +12,27 @@ function apipost(myurl,object){
             xhrFields: { withCredentials: true },
             // timeout:60000,
             success:function(data){
+                // $("#page_loading").hide();
                 if(data.result||data.result == undefined){
                     resolve(data)
                 }else{
-                    $(".loading").hide();
                     swal("","network timeout","error")
                 }
             },
             error:function(err){
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(err.status == 401){
                     swal("","Login expired","error").then(function(){
                           window.location.href = "Login.html"
                     }) 
                 }else if(err.status == 403){
-                    $(".loading").hide();
+                    $("#page_loading").hide();
                     swal("",JSON.parse(err.responseText).Description,"error")
                     
                 }
             },
             complete: function (XMLHttpRequest,status) {
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
@@ -55,15 +55,16 @@ function apiput(myurl,object){
             data: JSON.stringify(object),
             timeout:10000,
             success:function(data){
+               
                 if(data.result||data.result == undefined){
                     resolve(data)
                 }else{
-                    $(".loading").hide();
+                    $("#page_loading").hide();
                     swal("","network timeout","error")
                 }  
             },
             error:function(err){
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(err.status == 401){
                         swal("","Login expired","error").then(function(){
                             window.location.href = "Login.html"
@@ -73,6 +74,7 @@ function apiput(myurl,object){
                 }
             },
             complete: function (XMLHttpRequest,status) {
+                $("#page_loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
@@ -97,14 +99,13 @@ function apidelete(myurl){
             xhrFields: { withCredentials: true },
             timeout:10000,
             success:function(data){
+                $("#page_loading").hide();
                 if(data.result||data.result == undefined){
                     resolve(data)
-                }else{
-                    $(".loading").hide();
-                }  
+                }
             },
             error:function(err){
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(err.status == 401){
                     swal("","Login expired","error").then(function(){
                           window.location.href = "Login.html"
@@ -114,7 +115,7 @@ function apidelete(myurl){
                 }
             },
             complete: function (XMLHttpRequest,status) {
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
@@ -140,11 +141,12 @@ function apifile(myurl,data){
                 if(data.result||data.result == undefined){
                     resolve(data)
                 }else{
-                    $(".loading").hide();
+                    $("#page_loading").hide();
                     swal("","network timeout","error");
                 }  
             },
             error:function(err){
+                $("#page_loading").hide();
                 if(err.status == 401){
                     swal("","Login expired","error").then(function(){
                         window.location.href = "Login.html"
@@ -154,7 +156,7 @@ function apifile(myurl,data){
                 }
             },
             complete: function (XMLHttpRequest,status) {
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求
@@ -196,14 +198,15 @@ function apiget(myurl, object, isasync){
                 withCredentials: true
             }, 
             success:function(data){
+                
                 if(data.result||data.result == undefined){
                     resolve(data)
                 }else{
-                    $(".loading").hide();
-                }               
+                    $("#page_loading").hide();
+                }         
             },
             error:function(err){
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(err.status == 401){
                     if(location.pathname.indexOf("index.html") >-1){
                         window.location.href = "Login.html" 
@@ -221,7 +224,7 @@ function apiget(myurl, object, isasync){
                 }
             },
             complete: function (XMLHttpRequest,status) {
-                $(".loading").hide();
+                $("#page_loading").hide();
                 if(status == 'timeout') {
                     XMLHttpRequest.abort();  
                       // 超时后中断请求

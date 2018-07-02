@@ -8,9 +8,7 @@
 
 // IE does not define XMLHttpRequest by default, so we provide a suitable
 // wrapper.
-$(window).load(function () {
-    new ShellInABox();
-})
+
 
 function IsString(str) {
     return (typeof str == 'string') && str.constructor == String;
@@ -34,30 +32,29 @@ function extend(subClass, baseClass) {
 }
 ;
 
-function ShellInABox(url, container,) {
-    if (url == undefined) {
-        this.rooturl = document.location.href;
-        this.url = document.location.href.replace(/[?#].*/, '');
-    } else {
-        this.rooturl = url;
-        this.url = url;
-    }
-    if (document.location.hash != '') {
-        var hash = decodeURIComponent(document.location.hash).
-                replace(/^#/, '');
-        this.nextUrl = hash.replace(/,.*/, '');
-        this.session = hash.replace(/[^,]*,/, '');
-    } else {
-        this.nextUrl = this.url;
-        this.session = null;
-    }
+function ShellInABox(container,agentId, sessionId, host, type) {
+    // this.rooturl = "https://"+host+"/terminal.html?"+"agentid="+agentId+"/sessionId="+sessionId;
+    // var hash = "agentid="+agentId+"/sessionId="+sessionId;
+    // this.url = this.rooturl.replace(/[?#].*/, '');
+    
+    // if (document.location.hash != '') {
+    //     var hash = decodeURIComponent(hash).
+    //             replace(/^#/, '');
+    //     this.nextUrl = hash.replace(/,.*/, '');
+    //     this.session = hash.replace(/[^,]*,/, '');
+    // } else {
+    //     this.nextUrl = this.url;
+    //     this.session = null;
+    // }
 
-    this.agentID = this.agentId;
-    this.sessionID = this.sesssionId;
+    this.agentID = agentId;
+    this.sessionID = sessionId;
+    this.type =type;
+    this.host = host;
     this.user = GetParams("user");
     this.password = GetParams("password");
     this.subServer = GetParams("subServer");
-    this.type = GetParams("type");
+   
     //console.log("AgentID:"+this.agentID+",sessionID:"+this.sessionID+",user:"+this.user+",password:"+this.password);
     this.path = window.parent.location.href;
 
@@ -304,20 +301,16 @@ ShellInABox.prototype.extendContextMenu = function (entries, actions) {
 ShellInABox.prototype.terminalStartCmd = function(callback) {
     try {
         var self = this;
-        var serverEndpoint = window.location.origin.split('//')[1];
-        if (serverEndpoint.indexOf('localhost') !== -1 || serverEndpoint.indexOf('127.0.0.1') !== -1) {
-            serverEndpoint = '172.22.12.21:8080';
-        }
         var strHost;
         if (this.type === 'SSO') {
-            strHost = "ws://"+ serverEndpoint +"/terminal/-1/" + this.agentID  + "/" + this.sessionID;
+            strHost = "ws://"+ this.host +"/terminal/-1/" + this.agentID  + "/" + this.sessionID;
             if (location.protocol === 'https:')
-               strHost = "wss://"+ serverEndpoint +"/terminal/-1/" + this.agentID  + "/" + this.sessionID;
+               strHost = "wss://"+ this.host +"/terminal/-1/" + this.agentID  + "/" + this.sessionID;
         }
         else {
-            strHost = "ws://"+ serverEndpoint +"/terminal/" + $.base64.encode(this.user + ":" + this.password) + '/' + this.agentID  + "/" + this.sessionID;
+            strHost = "ws://"+ this.host +"/terminal/" + $.base64.encode(this.user + ":" + this.password) + '/' + this.agentID  + "/" + this.sessionID;
             if (location.protocol === 'https:')
-               strHost = "wss://"+ serverEndpoint +"/terminal/" + $.base64.encode(this.user + ":" + this.password) + '/' + this.agentID  + "/" + this.sessionID;
+               strHost = "wss://"+ this.host +"/terminal/" + $.base64.encode(this.user + ":" + this.password) + '/' + this.agentID  + "/" + this.sessionID;
         }
         _terminalWebsocket.turnOnTerminal(strHost, callback, function(msg) {
             var response;

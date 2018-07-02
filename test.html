@@ -5,133 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <!--[if IE]>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <![endif]-->
+
     <title>AIM Android Link</title>
 	<link rel="icon" href="http://www.aimobile.com.tw/wp-content/uploads/2016/09/cropped-AIMobile-icon-1-32x32.png" sizes="32x32">
-    <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/thirdpart/bootstrap.css" rel="stylesheet" />
     <link href="assets/css/thirdpart/bootstrap-tagsinput.css" rel="stylesheet" />
-    <!-- FONT AWESOME STYLE  -->
-	
-    <!-- GOOGLE FONT -->
-	
-    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' /> -->
-    <script src="assets/js/thirdpart/jquery-1.11.1.js"></script>
-    <script src="assets/js/thirdpart/bootstrap.js"></script>
-    <link rel="stylesheet" href="assets/css/thirdpart/bootstrap-multiselect.css">
-    <script src="assets/js/thirdpart/bootstrap-multiselect.js"></script>
-	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-    <script src="assets/js/thirdpart/bootstrap-tagsinput.js"></script>
-    <body data-spy="scroll" data-target="#nav-exp"> 
-            <div class="btn-group" ></div>>
-                    <select id="devId" multiple="multiple" class="cc">
-                        <optgroup class="group-1 cc" label="a-class">
-                            <option value="a1">aaa1</option>       
-                            <option value="a2">aaa2</option>
-                        </optgroup>
-                        <optgroup class="group-2" label="b-class">
-                            <option value="b1">bbb1</option> 
-                            <option value="b2">bbb2</option> 
-                            <option value="b3">bbb3</option>
-                            
-                        </optgroup>      
-                    </select>
-                    <select name="" class="cc">
-                        <option value="">aa</option>
-                    </select>
-                    <input type="text" value="aaaa" id="abc">
-<button value='click ma' onclick="aaa()">'click ma</button>
-<script>
-    function aaa(){
-        alert('click me');
-        $(".cc").empty();
-        $("#abc").val('');
-    }
-</script>
-        
-                 
-                    <button class="info" id="getdevice" data-type=false > getdevice</button> 
-            </div>
-            <button type="button" class="btn btn-default tooltip-options" data-toggle="tooltip" data-html=true
-                    data-placement="right" data-html=true title="<p>右侧的 Tooltip</p><p>sssss</p><p>aaaaaaaa</p>">
-                右侧的 Tooltip
-            </button>
-            
-            <input id="toggle-event" type="checkbox" data-toggle="toggle">
-            <div id="console-event"></div>
-            <label for="">
-                <input type="checkbox">
-                <input type="button" value="submit" class="btn btn-info" disabled>
-                click me  aa
-            </label>
-            
-            <div class="col-md-2" style="background-color:aquamarine">
-                <input type="text" id="DevicesControl">
-            </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <body > 
+            <button onclick="start()">start</button>
+            <input type="button" onclick="aaa()" value="clear"/>
+    
             <script>
-                var obj = document.getElementById("toggle-event").width
-                console.log(obj);
-                // $(function () { $(".tooltip-options").tooltip({html : true });
-        // }); 
+            var timer
+            var b=0
+            function aa(){
+                b++;
+                console.log("aa"+b);
+            }
+            function start(){
+                if(timer == undefined)
+                 timer = window.setInterval(function(){
+                    aa();
+                },1000)
+            }
+            
+            function aaa(){
+                window.clearInterval(timer);
+                timer = undefined
+            }
             </script>
-            
-            <!-- <script>
-            $(function() {
-                $('#toggle-event').next(".toggle-group").on("click",function() {
-                    console.log($("#toggle-event").prop('checked'));
-                })
-                // $('#toggle-event').change(function() {
-                //     console.log($(this));
-                // $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-                // })
-            })
-            </script> -->
-            
-
-<ul>
-    <li class="notification-body" style="padding-top:25px;float:right;padding-right:10px;" >
-
-        <div class="container-bell">
-            <div class="notification" ></div>
-        </div>
-        <ul class="dropdown-menu scrollable-menu" id="notification_content">
-        </ul>
-    </li>
-</ul>
-            
-    </body>  
-</html>  
-<script>
-    console.log(getFromNowTimes(28,1))
-    function getFromNowTimes(fday,fmonth){
-        var now = new Date();
-        fday = parseInt(fday);
-        var d = new Date(now.getTime() - fday * 24 * 3600 * 1000);
-        var time = "";
-        fmonth = parseInt(fmonth);
-        var Day = d.getUTCDate();if(Day<10) Day = "0"+Day;
-        var Month = (d.getUTCMonth()+1);
-        var Year = d.getUTCFullYear();
-        if(Month<10) Month = "0"+Month;
-        var Hours = d.getHours();
-        if(Hours<10) Hours = "0"+Hours;var Min = d.getUTCMinutes();if(Min<10) Min = "0"+Min;
-        var Sec = d.getUTCSeconds();if(Sec<10) Sec = "0"+Sec;
-        if(Month - fmonth <= 0)  
-        {  
-            Year -= 1;  
-            Month = 12 + Month - fmonth;  
-        }  
-        else  
-        {  
-            Month -= fmonth;  
-        } 
-        time = d.getUTCFullYear()+"-"+Month+"-"+Day+" "+Hours+":"+Min+":"+Sec;
-        return time;
-    }
-</script>
 	 
 </body>
 </html>

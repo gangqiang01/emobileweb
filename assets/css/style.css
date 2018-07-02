@@ -264,7 +264,7 @@ height: 60px;
     }
 
     /* 模态框样式 */
-.loading {
+#page_loading {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -276,7 +276,7 @@ height: 60px;
    }
     
    /* 动图样式 */
-   .loading .load_gif {
+   #page_loading .load_gif {
     height: 32px;
     width: 32px;
     color:#337ab7;

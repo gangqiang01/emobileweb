@@ -810,7 +810,7 @@ function VT100(container) {
                          '<div id="scrollable">' +
                            '<table id="kbd_button">' +
                              '<tr><td width="100%">&nbsp;</td>' +
-                             '<td><img id="kbd_img" src="./keyboard.png" /></td>' +
+                             '<td><img id="kbd_img" src="./shellinabox/keyboard.png" /></td>' +
                              '<td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>' +
                            '</table>' +
                            '<pre id="lineheight">&nbsp;</pre>' +
@@ -830,7 +830,7 @@ function VT100(container) {
                            (typeof suppressAllAudio != 'undefined' &&
                             suppressAllAudio ? "" :
                            embed + '<bgsound id="beep_bgsound" loop=1 />') +
-                            '<iframe id="layout" src="keyboard.html" />' +
+                            '<iframe id="layout" src="./shellinabox/keyboard.html" />' +
                           '</div>';
     }
   
@@ -2404,16 +2404,16 @@ function VT100(container) {
             '<li id="reset">Reset</li>' +
             '<hr />' +
             '<li id="beginconfig">' +
-               (this.utfEnabled ? '<img src="images/enabled.gif" />' : '') +
+               (this.utfEnabled ? '<img src="./shellinabox/enabled.gif" />' : '') +
                'Unicode</li>' +
             '<li>' +
-               (this.visualBell ? '<img src="images/enabled.gif" />' : '') +
+               (this.visualBell ? '<img src="./shellinabox/enabled.gif" />' : '') +
                'Visual Bell</li>'+
             '<li>' +
-               (this.softKeyboard ? '<img src="images/enabled.gif" />' : '') +
+               (this.softKeyboard ? '<img src="./shellinabox/enabled.gif" />' : '') +
                'Onscreen Keyboard</li>' +
             '<li id="endconfig">' +
-               (this.blinkingCursor ? '<img src="images/enabled.gif" />' : '') +
+               (this.blinkingCursor ? '<img src="./shellinabox/enabled.gif" />' : '') +
                'Blinking Cursor</li>'+
             (this.usercss.firstChild ?
              '<hr id="beginusercss" />' +
@@ -3411,10 +3411,7 @@ function VT100(container) {
           'width=800,height=600,directories=no,location=no,menubar=yes,' +
           'status=no,toolbar=no,titlebar=yes,scrollbars=yes,resizable=yes');
         this.printWin.document.body.innerHTML =
-          '<link rel="stylesheet" href="' +
-            document.location.protocol + '//' + document.location.host +
-            document.location.pathname.replace(/[^/]*$/, '') +
-            'print-styles.css" type="text/css">\n' +
+          '<link rel="stylesheet" href="./shellinabox/print-styles.css" type="text/css">\n' +
           '<div id="options"><input id="autoprint" type="checkbox"' +
             (this.autoprint ? ' checked' : '') + '>' +
             'Automatically, print page(s) when job is ready' +

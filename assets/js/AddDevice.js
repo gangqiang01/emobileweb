@@ -50,9 +50,9 @@ $(function(){
         devgetdata.orderType = "did";
         devgetdata.like = "";
         devgetdata._ = new Date().getTime();
-        $(".loading").show();
+        $("#page_loading").show();
         apiget("rmm/v1/devices/unassigned", devgetdata).then(function(data){
-            $(".loading").hide();
+            $("#page_loading").hide();
             var tableData = data.devices;
             var table = $('#UnassignedDevicesTables').DataTable();
             table.column( 1 ).visible( false )
@@ -117,7 +117,7 @@ $(function(){
         devgetdata.orderType = "aid";
         devgetdata.like = "";
         devgetdata._ = new Date().getTime();
-        $(".loading").show();
+        $("#page_loading").show();
         apiget("rmm/v1/accounts", devgetdata).then(function(data){
             var accountsid = data.accounts[0].aid;
             setCookie("aid",accountsid,60);
@@ -126,6 +126,7 @@ $(function(){
             groupgetdata._ = new Date().getTime();
             apiget("rmm/v1/accounts/"+accountsid+"/groups", groupgetdata).then(
                 function(data){
+                    $("#page_loading").hide();
                     var devicegroupmsg='';
                     var groupids=[]
                     if(data.accounts[0].groups.length != 0){

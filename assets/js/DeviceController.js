@@ -154,9 +154,8 @@ $(function(){
             GetSensorsData.sensorId = sensorId;
             GetSensorsData._ = Date.parse(new Date());
             var myurl = "rmm/v1/devicectrl/"+devicedid+"/data";
-            $(".loading").show();
+            $("#page_loading").show();
             apiget(myurl, GetSensorsData).then(function(obj){
-                $(".loading").hide();
                 $("#sensor_dialog_title").html(PluginId);
                 $("#dialog_plugin").html(PluginId);
                 $("#dialog_sensorid").html(sensorId);
@@ -201,9 +200,9 @@ $(function(){
         }
         getsensorsdata._ = new Date().getTime();
         var myurl = "rmm/v1/devices/"+devicedid+"/"+deviceplugin+"/sensors";
-        $(".loading").show();
+        $("#page_loading").show();
         apiget(myurl, getsensorsdata).then(function(data){
-            $(".loading").hide();
+            $("#page_loading").hide();
             var tableData = data.sensorIds;
             if ( $.fn.dataTable.isDataTable('#DeviceSensorsTables') ) {
                 table = $('#DeviceSensorsTables').DataTable();

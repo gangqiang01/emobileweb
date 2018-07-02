@@ -43,7 +43,7 @@ function GetDeviceGroup(){
     devgetdata.orderType = "aid";
     devgetdata.like = "";
     devgetdata._ = new Date().getTime();
-    $(".loading").show();
+    $("#page_loading").show();
     apiget("rmm/v1/accounts", devgetdata).then(function(data){
         var accountsid = data.accounts[0].aid;
         setCookie("aid",accountsid,60);
@@ -52,6 +52,7 @@ function GetDeviceGroup(){
         groupgetdata._ = new Date().getTime();
         apiget("rmm/v1/accounts/"+accountsid+"/groups", groupgetdata).then(
             function(data){
+                $("#page_loading").hide();
                 var devicegroupmsg='';
                 var groupids=[]
                 if(data.accounts[0].groups.length != 0){
@@ -107,10 +108,10 @@ function getEventMessages(){
     }
     eventMsgData.amount = 20;
     eventMsgData._ = new Date().getTime();
-    $(".loading").show();
+    $("#page_loading").show();
     apiget("rmm/v1/events/devices", eventMsgData).then(function(data){
-        $(".loading").hide();
         var eventMsgs = data.events;
+        $("#page_loading").hide();
         if ( $.fn.dataTable.isDataTable('#DataTables') ) {
             table = $('#DataTables').DataTable();
         }else {

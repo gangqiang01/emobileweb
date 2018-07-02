@@ -34,7 +34,46 @@ $(function() {
     SetHTML("barset_batchcontrol");
     getDeviceGroup();
     drawAppManagement([])
+    // bind func on html
+    $(".app_control_func").on("click", function(){
+        var cid = $(this).attr("data-type");
+        var setsensorval;
+        if($('#devId option:selected').length == 0){
+            swal("","Please select your device","info")
+            return;
+        }
+        setsensorval = $("#"+cid).val();
+        setAppSensor(cid, setsensorval)
+    })
 
+    $(".shutdown_reboot_func").on("click", function(){
+        var cid = $(this).attr("data-type");
+        if($('#devId option:selected').length == 0){
+            swal("","Please select your device","info")
+            return;
+        }
+        swal({
+            title: "Are you sure?",
+            text: cid+"all device",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(function(willfunc){
+            if (willfunc) {
+                $('#devId option:selected').each(function() {
+                    var powdata = {};
+                    powdata.action = cid;
+                    powdata.did = $(this).val();
+                    apiput("rmm/v1/power/device", powdata).then(function(data){
+                        if(data.result == true){
+                            swal("", cid+" success", "success")
+                        }
+                    })
+                })           
+            }
+        })  
+    })
     // init device
     function getDeviceGroup(){
         var devgetdata = {};
@@ -76,7 +115,6 @@ $(function() {
         devicegetdata.like = "";
         devicegetdata._ = new Date().getTime();
         apiget("rmm/v1/devicegroups/"+groupid+"/devices", devicegetdata).then(function(data){
-            $(".loading").hide();
             console.log(data);
             var DeviceDetails = [];
             var DeviceData = data.groups[0].devices;
@@ -339,45 +377,7 @@ $(function() {
         });
         $("select.applist").html(optmsg).selectpicker('refresh');
     }
-        
-    function powfunc(cid){
-        if($('#devId option:selected').length == 0){
-            swal("","Please select your device","info")
-            return;
-        }
-        swal({
-            title: "Are you sure?",
-            text: cid+"all device",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-        .then(function(willfunc){
-            if (willfunc) {
-                $('#devId option:selected').each(function() {
-                    var powdata = {};
-                    powdata.action = cid;
-                    powdata.did = $(this).val();
-                    apiput("rmm/v1/power/device", powdata).then(function(data){
-                        if(data.result == true){
-                            swal("", cid+" success", "success")
-                        }
-                    })
-                })           
-            }
-        })  
-    }
 
-    // html trigger
-    function appcontrol(cid){
-        var setsensorval;
-        if($('#devId option:selected').length == 0){
-            swal("","Please select your device","info")
-            return;
-        }
-        setsensorval = $("#"+cid).val();
-        setAppSensor(cid, setsensorval)
-    }
 
     function　setAppSensor(cid, setsensorval){
         if(cid === "removeapp" || cid === "disableapp" || cid === "installapp" || cid === "upgradeapp"){
@@ -390,7 +390,7 @@ $(function() {
             })
             .then(function(willfunc){
                 if (willfunc) {
-                    $(".loading").show();
+                    $("#page_loading").show();
                     var optionLength = $('#devId option:selected').length;
                     $('#devId option:selected').each(function() {
                         var setsensordata = {};
@@ -402,10 +402,10 @@ $(function() {
                         setsensordata.sensorIds[0]={"n":setsensorid, "sv":setsensorval};
                         apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
                             if(data.items[0].statusCode == "200"){
-                                $(".loading").hide();
-                                window.setTimeout(function(){
-                                    getSensorStatus();
-                                },3000)
+                                $("#page_loading").hide();
+                                swal("","success","success").then(function(){
+                                        getSensorStatus();
+                                })
                                 
                             }
                         })
