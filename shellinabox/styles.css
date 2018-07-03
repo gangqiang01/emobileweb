@@ -143,6 +143,10 @@
     visibility:           hidden;
   }
   
+  #vt100 #kbd_img{
+      margin-top:1rem;
+  }
+
   #vt100 #keyboard {
     z-index:              3;
     position:             absolute;

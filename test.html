@@ -10,10 +10,24 @@
 	<link rel="icon" href="http://www.aimobile.com.tw/wp-content/uploads/2016/09/cropped-AIMobile-icon-1-32x32.png" sizes="32x32">
     <link href="assets/css/thirdpart/bootstrap.css" rel="stylesheet" />
     <link href="assets/css/thirdpart/bootstrap-tagsinput.css" rel="stylesheet" />
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="assets/js/thirdpart/jquery-1.11.1.js"></script>
+    <link href="assets/css/thirdpart/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="assets/js/thirdpart/bootstrap-toggle.min.js"></script>
+    <link rel="stylesheet" href="assets/css/devicesetting.css">
     <body > 
             <button onclick="start()">start</button>
             <input type="button" onclick="aaa()" value="clear"/>
+            <input type="checkbox" checked data-toggle="toggle" data-on="Hello<br>World" data-off="Goodbye<br>World">
+            <div class="col-md-4 col-sm-6 col-xs-6">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green">
+                            <i class="fa fa-caret-left info-box-icon-white"></i>
+                            <p class="info-box-icon-title">Back Key</p>
+                        </span>
+                        <input class="btnFunction" value="backkey" type="checkbox" data-toggle="toggle" id="backkey" data-on="Enable" data-off="Disable">
+                        
+                    </div>
+                </div>
     
             <script>
             var timer

@@ -810,7 +810,7 @@ function VT100(container) {
                          '<div id="scrollable">' +
                            '<table id="kbd_button">' +
                              '<tr><td width="100%">&nbsp;</td>' +
-                             '<td><img id="kbd_img" src="keyboard.png" /></td>' +
+                             '<td><img id="kbd_img" src="./keyboard.png" /></td>' +
                              '<td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>' +
                            '</table>' +
                            '<pre id="lineheight">&nbsp;</pre>' +
@@ -830,7 +830,7 @@ function VT100(container) {
                            (typeof suppressAllAudio != 'undefined' &&
                             suppressAllAudio ? "" :
                            embed + '<bgsound id="beep_bgsound" loop=1 />') +
-                            '<iframe id="layout" src="keyboard.html" />' +
+                            '<iframe id="layout" src="./keyboard.html" />' +
                           '</div>';
     }
   

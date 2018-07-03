@@ -1,22 +1,33 @@
 $(function(){
     var selectedrowids=[];
-    var accountsid, deivcedecription, groupname;
+    var accountsid, deivcedecription, groupname, table;;
     LoginStatus("DeviceGroup.html");
     SetHTML("barset_devicemanagement");
-    GetDeviceGroup();
+    drawDevicegroup();
     dialogmodel();
 
     $("#delete-group").on("click",function(){
         if(selectedrowids.length == 0){
             swal( "", "Please select the device you want to delete", "info")
         }else{
-            selectedrowids.forEach(function(gid){
-                var myurl = "rmm/v1/devicegroups/"+gid;
-                apidelete(myurl).then(function(data){
-                    swal( "", "Delete group successfully!", "success").then(function(val){
-                        GetDeviceGroup();
-                    });
-                })
+            swal({
+                title: "Are you sure?",
+                text: "delete this devicegroup(this group must be empty)",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then(function(willDelete){
+                if(willDelete){
+                    selectedrowids.forEach(function(gid){
+                        var myurl = "rmm/v1/devicegroups/"+gid;
+                        apidelete(myurl).then(function(data){
+                            swal( "", "Delete group successfully!", "success").then(function(val){
+                                getAllDevicegroup();
+                            });
+                        })
+                    })
+                }
             })
         }
      
@@ -60,7 +71,7 @@ $(function(){
                 apipost("rmm/v1/devicegroups", groupdata).then(function(data){
                     if(data.result == true){
                         swal( "", "Add group successfully!", "success").then(function(val){
-                            GetDeviceGroup();
+                            getAllDevicegroup();
                             $('#myModal').modal('hide');
                         });
                     }
@@ -68,8 +79,7 @@ $(function(){
             }
         })
     }
-    function GetDeviceGroup(){
-        var table;
+    function drawDevicegroup(){
         if ( $.fn.dataTable.isDataTable('#DataTables') ) {
             table = $('#DataTables').DataTable();
         }else {
@@ -99,6 +109,11 @@ $(function(){
             console.log(selectedrowids)
         });
 
+        getAllDevicegroup();
+    }
+
+    function getAllDevicegroup(){
+        selectedrowids=[];
         var devgetdata = {};
         devgetdata.pageSize = 10000;
         devgetdata.no = 1;

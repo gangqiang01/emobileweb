@@ -419,7 +419,7 @@ function SetNavbar(){
 				'<div class="navbar-header">'+
 					'<a class="navbar-brand" href="index.html">'+
 
-                        '<img src="assets/img/aimlink_logo.png" style="width:28rem;margin:10px" />'+
+                        '<img src="assets/img/aimlink_logo.png" style="max-width:27rem;margin:12px 0" />'+
                         // '<span style="display:inline-block;position:relative;top:5px;left:10px;color:#337ab7;font-size:23px">Android Control</span>'+
 					'</a>'+
 

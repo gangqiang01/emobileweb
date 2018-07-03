@@ -2,18 +2,10 @@ $(function(){
     var selectedrowids=[];
     LoginStatus("AllDevice.html");
 	SetHTML("barset_alldevice");
-    getunassigneddevices();
-    GetDeviceGroup()
-    function AllSelect(){
-        $("#UnassignedDevicesTables tbody tr").addClass("selected");
-    }
-    
-    function AllCancel(){
-        $("#UnassignedDevicesTables tbody tr").removeClass("selected");
-    }
-    function getunassigneddevices(){
+    GetDeviceGroup();
+    drawunassigneddevices();
 
-        //---- device table ----//
+    function drawunassigneddevices(){
         $('#UnassignedDevicesTables').dataTable({
             "columnDefs": 
             [{
@@ -42,8 +34,12 @@ $(function(){
             }
             console.log(selectedrowids)
         });
+        getunassigneddevices()
+    }
 
+    function getunassigneddevices(){
 
+        //---- device table ----//
         var devgetdata = {};
         devgetdata.pageSize = 10000;
         devgetdata.no = 1;
@@ -142,3 +138,21 @@ $(function(){
         })
     }
 })
+
+function AllSelect(){
+    // $("#UnassignedDevicesTables tbody tr").addClass("selected");
+    $("#UnassignedDevicesTables tbody tr>td:first-child").each(function(){
+        if(!$(this).parent().hasClass("selected")){
+            $(this).click()
+        }
+    });
+}
+
+function AllCancel(){
+    // $("#UnassignedDevicesTables tbody tr").removeClass("selected");
+    $("#UnassignedDevicesTables tbody tr>td:first-child").each(function(){
+        if($(this).parent().hasClass("selected")){
+            $(this).click()
+        }
+    });
+}

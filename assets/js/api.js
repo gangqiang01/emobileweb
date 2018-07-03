@@ -22,13 +22,28 @@ function apipost(myurl,object){
             error:function(err){
                 $("#page_loading").hide();
                 if(err.status == 401){
-                    swal("","Login expired","error").then(function(){
-                          window.location.href = "Login.html"
-                    }) 
+                        swal("","Login expired","error").then(function(){
+                            window.location.href = "Login.html";
+                        })
                 }else if(err.status == 403){
-                    $("#page_loading").hide();
-                    swal("",JSON.parse(err.responseText).Description,"error")
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error");
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error");
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
                     
+                }else if(err.status = 400){
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error");
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error");
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                }else{
+                    console.log(err);
                 }
             },
             complete: function (XMLHttpRequest,status) {
@@ -70,7 +85,25 @@ function apiput(myurl,object){
                             window.location.href = "Login.html"
                         })
                 }else if(err.status == 403){
-                    swal("",JSON.parse(err.responseText).Description,"error")
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error")
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error")
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else if(err.status = 400){
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error");
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error");
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else{
+                    console.log(err);
                 }
             },
             complete: function (XMLHttpRequest,status) {
@@ -107,11 +140,29 @@ function apidelete(myurl){
             error:function(err){
                 $("#page_loading").hide();
                 if(err.status == 401){
-                    swal("","Login expired","error").then(function(){
-                          window.location.href = "Login.html"
-                    }) 
+                        swal("","Login expired","error").then(function(){
+                            window.location.href = "Login.html"
+                        })
                 }else if(err.status == 403){
-                    swal("",JSON.parse(err.responseText).Description,"error")
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error")
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error")
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else if(err.status = 400){
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error");
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error");
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else{
+                    console.log(err);
                 }
             },
             complete: function (XMLHttpRequest,status) {
@@ -148,11 +199,29 @@ function apifile(myurl,data){
             error:function(err){
                 $("#page_loading").hide();
                 if(err.status == 401){
-                    swal("","Login expired","error").then(function(){
-                        window.location.href = "Login.html"
-                    }) 
+                        swal("","Login expired","error").then(function(){
+                            window.location.href = "Login.html"
+                        })
                 }else if(err.status == 403){
-                    swal("",JSON.parse(err.responseText).Description,"error")
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error")
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error")
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else if(err.status = 400){
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error");
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error");
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else{
+                    console.log(err);
                 }
             },
             complete: function (XMLHttpRequest,status) {
@@ -208,19 +277,29 @@ function apiget(myurl, object, isasync){
             error:function(err){
                 $("#page_loading").hide();
                 if(err.status == 401){
-                    if(location.pathname.indexOf("index.html") >-1){
-                        window.location.href = "Login.html" 
-                    }else if(location.pathname.indexOf("Login.html") >-1){
-                        swal("","Username and Password is error","error")
-                    }else{
                         swal("","Login expired","error").then(function(){
                             window.location.href = "Login.html"
                         })
-                    } 
                 }else if(err.status == 403){
-                    swal("","Login expired","error").then(function(){
-                        window.location.href = "Login.html"
-                    })
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error")
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error")
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else if(err.status = 400){
+                    if(JSON.parse(err.responseText).Description != undefined){
+                        swal("",JSON.parse(err.responseText).Description,"error");
+                    }else if(JSON.parse(err.responseText).Field != undefined){
+                        swal("",JSON.parse(err.responseText).Field,"error");
+                    }else{
+                        console.log(JSON.parse(err.responseText));
+                    }
+                    
+                }else{
+                    console.log(err);
                 }
             },
             complete: function (XMLHttpRequest,status) {

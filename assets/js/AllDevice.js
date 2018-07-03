@@ -169,7 +169,7 @@ $(function() {
                     }else{
                         devicegroupmsg += '<option >Device group is null</option>'
                     }
-                    $("#devicegroup").html(devicegroupmsg);
+                    $("#devicegroup").html(devicegroupmsg).selectpicker('refresh');
                     GetAllDevices();
                 }
             )

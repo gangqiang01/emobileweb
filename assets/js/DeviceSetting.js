@@ -18,6 +18,8 @@ $(function() {
         systemboard: "/devicectrl/get-system-board",
         systemmodel: "/devicectrl/get-system-model",
         agentversion: "/devicectrl/get-agent-version",
+        backkey: "/interfacectrl/ctrl-backbt",
+        homekey: "/interfacectrl/ctrl-homebt"
     };
     var cpudata = new Array(7);
     var memorydata = new Array(7);
@@ -78,11 +80,15 @@ $(function() {
     });
 
     $("#device-tab a[href!=#monitor]").on("click",function(){
+
         window.clearInterval(deviceMonitorTimer);
         deviceMonitorTimer = undefined;
     })
     
     $("#device-tab a[href=#monitor]").on("click", function(){
+        if(!SelectedAgentId){
+            return;
+        }
         startDeviceMonitor();
     })
 
@@ -448,6 +454,14 @@ $(function() {
                 case "lockscreen":
                     setsensorid = SettingsStatusSensor.lockscreen;
                     setsensorval = !$("#lockscreen").prop('checked');
+                    break;
+                case "backkey":
+                    setsensorid = SettingsStatusSensor.backkey;
+                    setsensorval = !$("#backkey").prop('checked');
+                    break;
+                case "homekey":
+                    setsensorid = SettingsStatusSensor.homekey;
+                    setsensorval = !$("#homekey").prop('checked');
                     break;
                 default:
                     break;
