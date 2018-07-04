@@ -14,10 +14,8 @@ $(function() {
         wifi: "/devicectrl/ctrl-wifi",
         bluetooth: "/devicectrl/ctrl-bluetooth",
         lockscreen: "/securityctrl/ctrl-lockscreen", 
-        systemversion: "/devicectrl/get-system-version",
-        systemboard: "/devicectrl/get-system-board",
-        systemmodel: "/devicectrl/get-system-model",
-        agentversion: "/devicectrl/get-agent-version",
+        backkey: "/interfacectrl/ctrl-backbt",
+        homekey: "/interfacectrl/ctrl-homebt"
     };
 
     var AppFuncSensor = {
@@ -282,16 +280,25 @@ $(function() {
                 case "lockscreen":
                     setsensorid = SettingsStatusSensor.lockscreen;
                     break;
+                case "backkey":
+                    setsensorid = SettingsStatusSensor.backkey;
+                    break;
+                case "homekey":
+                    setsensorid = SettingsStatusSensor.homekey;
+                    break;
                 default:
                     break;
             }
-            $('#devId option:selected').each(function() {
+           
+            $('#devId option:selected').each(function(i) {
                 var selectedagentid =　getSelectedAgentId($(this));
                 setsensordata.agentId = selectedagentid;
                 setsensordata.plugin = AimSdkPlugin;
                 setsensordata.sensorIds = [];
                 setsensordata.sensorIds[0] = {"n":setsensorid, "bv":setsensorval};
+                $("#page_loading").show();
                 apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+                        $("#page_loading").hide();
                     if(data.items[0].statusCode == "200"){
                         swal("","success","success");
                     }else{
@@ -393,7 +400,7 @@ $(function() {
             })
             .then(function(willfunc){
                 if (willfunc) {
-                    $("#page_loading").show();
+                    
                     var optionLength = $('#devId option:selected').length;
                     $('#devId option:selected').each(function() {
                         var setsensordata = {};
@@ -403,6 +410,7 @@ $(function() {
                         setsensordata.plugin = AimSdkPlugin;
                         setsensordata.sensorIds = [];
                         setsensordata.sensorIds[0]={"n":setsensorid, "sv":setsensorval};
+                        $("#page_loading").show();
                         apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
                             if(data.items[0].statusCode == "200"){
                                 $("#page_loading").hide();

@@ -49,7 +49,7 @@
          <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-                <h4 class="header-line"><i class="fa fa-desktop fa-x" style="padding:5px"></i>Batch Control</h4>
+                <h4 class="header-line"><i class="fa fa-window-restore fa-x" style="padding:5px"></i>Batch Control</h4>
             </div>
 
         </div>
@@ -99,65 +99,110 @@
 						</ul>
 						<div class="tab-content" id="tab-content">
                             <div class="tab-pane fade active in" id="settings">
-                                <div class="col-md-4 col-sm-6 col-xs-6">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-aqua" >
-                                            <i class="fa fa-wifi info-box-icon-white"></i>
-                                            <p class="info-box-icon-title">Wifi</p>
-                                        </span>
-                                        <div class="btn-group" role="group" >
-                                            <button type="button" class="btn btn-default btnFunction" data-val="wifi" data-type="on">ON</button>
-                                            <button type="button" class="btn btn-info btnFunction" data-val="wifi" data-type="off">OFF</button>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-aqua" >
+                                                <i class="fa fa-wifi info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">Wifi</p>
+                                            </span>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="wifi" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="wifi" data-type="off">OFF</button>
+                                            </div>
+                                            
                                         </div>
-                                        
                                     </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-6">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-DarkViolet" >
-                                            <i class="fa fa-bluetooth-b info-box-icon-white"></i>
-                                            <p class="info-box-icon-title">Bluetooth</p>
-                                        </span>
-                                        <div class="btn-group" role="group" >
-                                            <button type="button" class="btn btn-default btnFunction" data-val="bluetooth" data-type="on">ON</button>
-                                            <button type="button" class="btn btn-info btnFunction" data-val="bluetooth" data-type="off">OFF</button>
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-yellow" >
+                                                <i class="fa fa-bluetooth-b info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">Bluetooth</p>
+                                            </span>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="bluetooth" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="bluetooth" data-type="off">OFF</button>
+                                            </div>
+                                            
                                         </div>
-                                        
                                     </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-6">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-DarkRed" >
-                                            <i class="fa fa-lock info-box-icon-white"></i>
-                                            <p class="info-box-icon-title">Lock Screen</p>
-                                        </span>
-                                        <div class="btn-group" role="group" >
-                                            <button type="button" class="btn btn-default btnFunction" data-val="lockscreen" data-type="on">ON</button>
-                                            <button type="button" class="btn btn-info btnFunction" data-val="lockscreen" data-type="off">OFF</button>
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-DimGray" >
+                                                <i class="fa fa-map-marker info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">GPS</p>
+                                            </span>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="gps" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="gps" data-type="off">OFF</button>
+                                            </div>
                                         </div>
-                                        
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-6 col-xs-6">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-Indigo" >
-                                            <i class="fa  fa-power-off info-box-icon-white"></i>
-                                            <p class="info-box-icon-title">shutdown</p>
-                                        </span>
-                                        <button class="btn btn-info shutdown_reboot_func" data-type='shutdown'>shutdown</button>
-                                        
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-DarkRed" >
+                                                <i class="fa fa-lock info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">Lock Screen</p>
+                                            </span>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="lockscreen" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="lockscreen" data-type="off">OFF</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-DarkViolet" >
+                                                <i class="fa fa-home info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">Home Key</p>
+                                            </span>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="homekey" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="homekey" data-type="off">OFF</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-green">
+                                                <i class="fa fa-caret-left info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">Back Key</p>
+                                            </span>
+                                            <div class="btn-group" role="group" >
+                                                <button type="button" class="btn btn-default btnFunction" data-val="backkey" data-type="on">ON</button>
+                                                <button type="button" class="btn btn-info btnFunction" data-val="backkey" data-type="off">OFF</button>
+                                            </div>
+                                            
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-6 col-xs-6">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-SteelBlue" >
-                                            <i class="fa fa-recycle info-box-icon-white"></i>
-                                            <p class="info-box-icon-title">Reboot</p>
-                                        </span>
-                                        <button class="btn btn-info shutdown_reboot_func" data-type='restart'>Reboot</button>
-                                        
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-Indigo" >
+                                                <i class="fa  fa-power-off info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">shutdown</p>
+                                            </span>
+                                            <button class="btn btn-info shutdown_reboot_func" data-type='shutdown'>shutdown</button>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <div class="info-box">
+                                            <span class="info-box-icon bg-SteelBlue" >
+                                                <i class="fa fa-recycle info-box-icon-white"></i>
+                                                <p class="info-box-icon-title">Reboot</p>
+                                            </span>
+                                            <button class="btn btn-info shutdown_reboot_func" data-type='restart'>Reboot</button>
+                                            
+                                        </div>
                                     </div>
                                 </div>
+                                
                             </div>
 
                             <!-- app control -->

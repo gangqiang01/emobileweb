@@ -21,6 +21,7 @@ body {
     line-height:28px;
    
 }
+
 .set-radius-zero {
     border-radius:0px;
     -moz-border-radius:0px;
@@ -34,10 +35,14 @@ body {
 .header-line {
     font-weight:900;
     font-size:2rem;
-    color:#0081C6;
+    /* color:#0081C6; */
     padding-bottom:25px;
     border-bottom:1px solid #eeeeee;
 }
+.header-line i{
+    color:#337ab7;
+}
+
 .title-line {
     font-weight:900;
     font-size:1.5rem;
@@ -109,8 +114,10 @@ body {
 
 }
 .navbar-inverse {
-background-color: #FFF;
-border-color: rgba(155, 153, 153, 0.23);
+background-color: #F4F4F4;
+/* border-color: rgba(155, 153, 153, 0.23); */
+padding-bottom: 5px;
+border-bottom: 4px solid #9170E4
 
 }
 
@@ -274,6 +281,9 @@ height: 60px;
   
   .color-red{
     color: #dd4b39;
+  }
+  .color-aqua{
+      color: #00c0ef;
   }
   .bg-aqua{
     background-color: #00c0ef;

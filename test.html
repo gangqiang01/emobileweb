@@ -28,8 +28,19 @@
                         
                     </div>
                 </div>
-    
+            <ul>
+                <li>aa</li>
+                <li>bb</li>
+                <li>cc</li>
+            </ul>
             <script>
+                $("ul>li").each(function(i,val){
+                    console.log(i);
+                    console.log(val);
+                    console.log($("ul>li").length);
+
+                })
+                console.log($("ul>li").toArray());
             var timer
             var b=0
             function aa(){

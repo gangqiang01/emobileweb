@@ -15,6 +15,7 @@ $(function() {
     $("#groupId").on("change", function(){
         GetAllDevices();
     })
+    
     document.getElementById("Terminal_closed").onclick = disconnectTerminal;
     getDeviceGroup();
     
@@ -23,7 +24,7 @@ $(function() {
             console.log("agentid:","is null")
             return;
         }
-
+// disconnect websocket of terminal
         disconnectTerminal();
 
         SelectedDeviceId = deviceid;
@@ -122,7 +123,7 @@ $(function() {
     // device settings
     function startTerminal(){
         if(!SelectedAgentId){
-            swal("","Please select your device","info")
+            swal("","Please select your device","info");
             return;
         }
         var container = document.getElementById("vt100");
@@ -137,7 +138,7 @@ $(function() {
         $("#terminal_iframe").attr("src",iframeSrcMsg);
         $("#Terminal_closed").show();
         $("#Terminal_closed").on('click', function(){
-            disconnectTerminal()
+            disconnectTerminal();
         })
     }
 
@@ -153,7 +154,7 @@ $(function() {
             </div>
             <i class="fa fa-times fa-x pointer" id="Terminal_closed" style="display:none" ></i>
             <iframe src="" frameborder="0" id="terminal_iframe"></iframe>
-        `
+        `;
         $("#terminal").html( disconnectTerminalMsg);
         // _terminalWebsocket.closeTerminal();
         $('#open_terminal_button').on("click", function(){

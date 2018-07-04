@@ -470,7 +470,9 @@ $(function() {
             setsensordata.plugin = AimSdkPlugin;
             setsensordata.sensorIds = [];
             setsensordata.sensorIds[0]={"n":setsensorid, "bv":setsensorval};
+            $("#page_loading").show();
             apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+                $("#page_loading").hide();
                 if(data.items[0].statusCode == "200"){
                     swal("","success","success")
                 }else{
@@ -494,23 +496,29 @@ $(function() {
         repoapipost(repourl, formData).then(function(token_data){
             token = token_data.token;
             repoapiget(AppInfoUrl, info_data , token).then(function(installappdata){
-                console.log(installappdata);
                 if(installappdata.data){
                     var installappopt = "";
                     var upgradeappopt = "";
                     var lastVersionCode = [];
                     installappdata.data.forEach(function(val){
                         var version = val.versionName != null ? val.versionName:"";
-                        InstallAppManagementInfo = {type : "installapp", appname: val.filename, package: val.pkgname, versioncode: val.versioncode, version: val.versionname};
+                        InstallAppManagementInfo = {
+                            type : "installapp", 
+                            appname: val.filename, 
+                            package: val.pkgname, 
+                            versioncode: val.versioncode, 
+                            version: val.versionname};
                         AppManagementInfoArray.push(InstallAppManagementInfo);
                         deviceapparray.forEach(function(deviceapp_val){
                             if(val.pkgname === deviceapp_val.package){
                                 if (val.versioncode > deviceapp_val.versioncode){
+                                    // select latest version apk
                                     if(lastVersionCode[val.pkgname] === undefined || val.versioncode > lastVersionCode[val.pkgname]){
                                         lastVersionCode[val.pkgname] = val.versioncode;
+                                        // pop latest app info
                                         AppManagementInfoArray.pop(); 
+                                        // remove install app push update app 
                                         removeObjInArray(AppManagementInfoArray, val.pkgname);
-                                        // upgradeappopt+="<option value='"+val.pkgname+"' data-subtext='"+val.versionname+"'>"+val.filename+"</option>";
                                         UpgradeAppManagementInfo = {
                                             type : "upgradeapp", 
                                             appname: deviceapp_val.appname,
@@ -550,7 +558,12 @@ $(function() {
         data.forEach(function(val, index){
 
             var version = val.versionName != null?val.versionName:"";
-            UninstallAppManagementInfo = {type : "uninstallapp", appname: val.appName, package: val.packageName, versioncode: val.versionCode, version: val.versionName};
+            UninstallAppManagementInfo = {
+                type : "uninstallapp", 
+                appname: val.appName, 
+                package: val.packageName, 
+                versioncode: val.versionCode, 
+                version: val.versionName};
             AppManagementInfoArray.push(UninstallAppManagementInfo);
             deviceapparray.push(UninstallAppManagementInfo);
             optmsg+="<option value='"+val.packageName+"' data-subtext='"+val.versionName+"'>"+val.appName+"</option>";
@@ -577,8 +590,8 @@ $(function() {
                     setsensordata.sensorIds = [];
                     setsensordata.sensorIds[0]={"n":setsensorid, "sv":setsensorval};
                     apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+                        $("#page_loading").hide();
                         if(data.items[0].statusCode == "200"){
-                            $("#page_loading").hide();
                             swal("","success","success").then(function(){
                                     getSensorStatus();
                             })
@@ -593,7 +606,9 @@ $(function() {
             setsensordata.plugin = cid == "stopapp" ? DroidRoot : AimSdkPlugin;
             setsensordata.sensorIds = [];
             setsensordata.sensorIds[0]={"n":setsensorid, "sv":setsensorval};
+            $("#page_loading").show();
             apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+                $("#page_loading").hide();
                 if(data.items[0].statusCode == "200"){
                     swal("","success","success")
                 }
