@@ -34,6 +34,8 @@ $(function() {
         stopapp: "/rootctrl/stop-some-app"
     };
 
+    var disableAppArray = ["org.flyve.mdm.agent"];
+
 	LoginStatus("DeviceSetting.html"); 
     SetHTML("barset_devicesetting");
     getDeviceGroup();
@@ -78,6 +80,57 @@ $(function() {
             }
         })  
     });
+
+    // control device settings
+    $('.btnFunction').next(".toggle-group").on("click",function() {
+        var type = $(this).prev(".btnFunction").attr('value');
+        var setsensordata = {};
+        var setsensorid,setsensorval;
+        switch(type) {
+            case "wifi":
+                setsensorid = SettingsStatusSensor.wifi;
+                setsensorval = !$("#wifi").prop('checked');
+                break;
+            case "bluetooth":
+                setsensorid = SettingsStatusSensor.bluetooth;
+                setsensorval = !$("#bluetooth").prop('checked');
+                break;
+            case "lockscreen":
+                setsensorid = SettingsStatusSensor.lockscreen;
+                setsensorval = !$("#lockscreen").prop('checked');
+                break;
+            case "backkey":
+                setsensorid = SettingsStatusSensor.backkey;
+                setsensorval = !$("#backkey").prop('checked');
+                break;
+            case "homekey":
+                setsensorid = SettingsStatusSensor.homekey;
+                setsensorval = !$("#homekey").prop('checked');
+                break;
+            default:
+                break;
+        }
+        if(!SelectedAgentId){
+            swal("","Please select your device","info").then(function(){
+                !setsensorval ? $("#"+type).bootstrapToggle('on') : $("#"+type).bootstrapToggle('off');
+            })
+            return;
+        }
+        setsensordata.agentId = SelectedAgentId;
+        setsensordata.plugin = AimSdkPlugin;
+        setsensordata.sensorIds = [];
+        setsensordata.sensorIds[0]={"n":setsensorid, "bv":setsensorval};
+        $("#page_loading").show();
+        apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+            $("#page_loading").hide();
+            if(data.items[0].statusCode == "200"){
+                swal("","success","success");
+            }else{
+                !setsensorval ? $("#"+type).bootstrapToggle('on') : $("#"+type).bootstrapToggle('off');
+            }
+        })
+    
+    })
 
     $("#device-tab a[href!=#monitor]").on("click",function(){
 
@@ -433,54 +486,6 @@ $(function() {
                 
             })  
         })
-
-        $('.btnFunction').next(".toggle-group").on("click",function() {
-            if(!SelectedAgentId){
-                swal("","Please select your device","info")
-                return;
-            }
-            var type = $(this).prev(".btnFunction").attr('value');
-            var setsensordata = {};
-            var setsensorid,setsensorval;
-            switch(type) {
-                case "wifi":
-                    setsensorid = SettingsStatusSensor.wifi;
-                    setsensorval = !$("#wifi").prop('checked');
-                    break;
-                case "bluetooth":
-                    setsensorid = SettingsStatusSensor.bluetooth;
-                    setsensorval = !$("#bluetooth").prop('checked');
-                    break;
-                case "lockscreen":
-                    setsensorid = SettingsStatusSensor.lockscreen;
-                    setsensorval = !$("#lockscreen").prop('checked');
-                    break;
-                case "backkey":
-                    setsensorid = SettingsStatusSensor.backkey;
-                    setsensorval = !$("#backkey").prop('checked');
-                    break;
-                case "homekey":
-                    setsensorid = SettingsStatusSensor.homekey;
-                    setsensorval = !$("#homekey").prop('checked');
-                    break;
-                default:
-                    break;
-            }
-            setsensordata.agentId = SelectedAgentId;
-            setsensordata.plugin = AimSdkPlugin;
-            setsensordata.sensorIds = [];
-            setsensordata.sensorIds[0]={"n":setsensorid, "bv":setsensorval};
-            $("#page_loading").show();
-            apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
-                $("#page_loading").hide();
-                if(data.items[0].statusCode == "200"){
-                    swal("","success","success")
-                }else{
-                    $("#"+type).bootstrapToggle(setsensorval);
-                }
-            })
-        
-        })
     }
 
     //get repo apps
@@ -648,7 +653,7 @@ $(function() {
                                 '<i class="fa fa-download fa-x" style="padding-right:5px"></i>Install</a>'+
                             '</div>';
                         }else if(data[3] == "uninstallapp"){
-                            if(data[1] === "org.flyve.mdm.agent"){
+                            if( $.inArray(data[1], disableAppArray) > -1){
                                 fa = '<div class="btn-group" role="group" >'+
                                 '<a class="btn btn-danger" data-type="removeapp" disabled>'+
                                 '<i class="fa fa-trash fa-x" style="padding-right:5px"></i>Uninstall</a>'+
@@ -661,7 +666,7 @@ $(function() {
                             }
                             
                         }else if(data[3] == "upgradeapp"){
-                            if(data[1] === "org.flyve.mdm.agent"){
+                            if($.inArray(data[1], disableAppArray) > -1){
                                 fa = '<div class="btn-group" role="group" >'+
                                 '<a class="btn btn-info" data-type="upgradeapp">'+
                                 '<i class="fa fa-arrow-circle-up fa-x" ></i>Upgrade</a>'+

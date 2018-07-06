@@ -77,6 +77,59 @@ $(function() {
         // emptyDeviceOptions();
         GetAllDevices();
     })
+
+    // set settings
+    $('.btnFunction').on("click",function() {
+        if($('#devId option:selected').length == 0){
+            swal("","Please select your device","info")
+            return;
+        }
+        var type = $(this).attr('data-val');
+        var setsensordata = {};
+        var setsensorid,setsensorval;
+        var sensorval = $(this).attr("data-type");
+        if(sensorval == "on"){
+            setsensorval = true;
+        }else{
+            setsensorval = false;
+        }
+        switch(type) {
+            case "wifi":
+                setsensorid = SettingsStatusSensor.wifi;
+                break;
+            case "bluetooth":
+                setsensorid = SettingsStatusSensor.bluetooth;
+                break;
+            case "lockscreen":
+                setsensorid = SettingsStatusSensor.lockscreen;
+                break;
+            case "backkey":
+                setsensorid = SettingsStatusSensor.backkey;
+                break;
+            case "homekey":
+                setsensorid = SettingsStatusSensor.homekey;
+                break;
+            default:
+                break;
+        }
+        var setDevCount = 0;
+       
+        $('#devId option:selected').each(function(i) {
+            var selectedagentid =　getSelectedAgentId($(this));
+            setsensordata.agentId = selectedagentid;
+            setsensordata.plugin = AimSdkPlugin;
+            setsensordata.sensorIds = [];
+            setsensordata.sensorIds[0] = {"n":setsensorid, "bv":setsensorval};
+            $("#page_loading").show();
+            apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
+                    $("#page_loading").hide();
+                if(data.items[0].statusCode == "200"){
+                    setDevCount++;
+                    swal("",setDevCount+" devices have been set successfully","success");
+                }
+            })
+        });
+    })
     // init device
     function getDeviceGroup(){
         var devgetdata = {};
@@ -254,60 +307,6 @@ $(function() {
                 }
                 
             })  
-        })
-
-        $('.btnFunction').on("click",function() {
-            if($('#devId option:selected').length == 0){
-                swal("","Please select your device","info")
-                return;
-            }
-            var type = $(this).attr('data-val');
-            var setsensordata = {};
-            var setsensorid,setsensorval;
-            var sensorval = $(this).attr("data-type");
-            if(sensorval == "on"){
-                setsensorval = true;
-            }else{
-                setsensorval = false;
-            }
-            switch(type) {
-                case "wifi":
-                    setsensorid = SettingsStatusSensor.wifi;
-                    break;
-                case "bluetooth":
-                    setsensorid = SettingsStatusSensor.bluetooth;
-                    break;
-                case "lockscreen":
-                    setsensorid = SettingsStatusSensor.lockscreen;
-                    break;
-                case "backkey":
-                    setsensorid = SettingsStatusSensor.backkey;
-                    break;
-                case "homekey":
-                    setsensorid = SettingsStatusSensor.homekey;
-                    break;
-                default:
-                    break;
-            }
-           
-            $('#devId option:selected').each(function(i) {
-                var selectedagentid =　getSelectedAgentId($(this));
-                setsensordata.agentId = selectedagentid;
-                setsensordata.plugin = AimSdkPlugin;
-                setsensordata.sensorIds = [];
-                setsensordata.sensorIds[0] = {"n":setsensorid, "bv":setsensorval};
-                $("#page_loading").show();
-                apipost("rmm/v1/devicectrl/data",setsensordata).then(function(data){
-                        $("#page_loading").hide();
-                    if(data.items[0].statusCode == "200"){
-                        swal("","success","success");
-                    }else{
-                        $("#"+type).bootstrapToggle(setsensorval);
-                    }
-                })
-            });
-            
-        
         })
     }
 

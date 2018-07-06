@@ -16,6 +16,7 @@ $(function() {
         var groupid = $(this).val();
         GetAllDevices()
     })
+
     $("#BatchControl").on("click", function(){
         if (DatchControlData.length ==0){
             swal("","Please select the online device you want to control","info")
@@ -52,6 +53,14 @@ $(function() {
                 } 
             })
         }
+    })
+
+    $("#allSelect").on("click", function(){
+        allSelect();
+    })
+
+    $("#allCancel").on("click", function(){
+        allCancel();
     })
     function drawData() {
         var DeviceTable ;
@@ -223,29 +232,25 @@ $(function() {
             .responsive.recalc();
         })
     }
+
+    function allSelect(){
+        $("#dataTables-example tbody tr>td:first-child").each(function(){
+            if(!$(this).parent().hasClass("selected")){
+                $(this).click()
+            }
+        });
+        // $("#dataTables-example tbody tr").click();
+        // $("#dataTables-example tbody tr").addClass("selected");
+    }
+    
+    function allCancel(){
+        $("#dataTables-example tbody tr>td:first-child").each(function(){
+            if($(this).parent().hasClass("selected")){
+                $(this).click()
+            }
+        });
+    }
 });
-
-
-//get devicedata draw table    
-
-
-function AllSelect(){
-    $("#dataTables-example tbody tr>td:first-child").each(function(){
-        if(!$(this).parent().hasClass("selected")){
-            $(this).click()
-        }
-    });
-    // $("#dataTables-example tbody tr").click();
-	// $("#dataTables-example tbody tr").addClass("selected");
-}
-
-function AllCancel(){
-	$("#dataTables-example tbody tr>td:first-child").each(function(){
-        if($(this).parent().hasClass("selected")){
-            $(this).click()
-        }
-    });
-}
 
 // single device control
 function DeviceDataController(data){
@@ -258,7 +263,3 @@ function DeviceDataController(data){
     window.location.href = "DeviceController.html"
 }
 
-//single device vcn
-function DeviceVnc(data){
-	console.log("vnc",data);
-}

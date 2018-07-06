@@ -5,6 +5,14 @@ $(function(){
     GetDeviceGroup();
     drawunassigneddevices();
 
+    $("#allSelect").on("click", function(){
+        allSelect();
+    })
+
+    $("#allCancel").on("click", function(){
+        allCancel();
+    })
+
     function drawunassigneddevices(){
         $('#UnassignedDevicesTables').dataTable({
             "columnDefs": 
@@ -137,22 +145,24 @@ $(function(){
             )
         })
     }
+
+    function allSelect(){
+        // $("#UnassignedDevicesTables tbody tr").addClass("selected");
+        $("#UnassignedDevicesTables tbody tr>td:first-child").each(function(){
+            if(!$(this).parent().hasClass("selected")){
+                $(this).click()
+            }
+        });
+    }
+    
+    function allCancel(){
+        // $("#UnassignedDevicesTables tbody tr").removeClass("selected");
+        $("#UnassignedDevicesTables tbody tr>td:first-child").each(function(){
+            if($(this).parent().hasClass("selected")){
+                $(this).click()
+            }
+        });
+    }
+    
 })
 
-function AllSelect(){
-    // $("#UnassignedDevicesTables tbody tr").addClass("selected");
-    $("#UnassignedDevicesTables tbody tr>td:first-child").each(function(){
-        if(!$(this).parent().hasClass("selected")){
-            $(this).click()
-        }
-    });
-}
-
-function AllCancel(){
-    // $("#UnassignedDevicesTables tbody tr").removeClass("selected");
-    $("#UnassignedDevicesTables tbody tr>td:first-child").each(function(){
-        if($(this).parent().hasClass("selected")){
-            $(this).click()
-        }
-    });
-}
