@@ -5,9 +5,11 @@
   
   #vt100 #scrollable, #vt100 #scrollable span{
     color:            #ffffff!important;
-    background-color: #000000!important;
+    background-color: #000000!important; 
   }
-
+  #scrollable{
+      padding-bottom: 0.5rem;
+  }
   
   #vt100 #scrollable.inverted {
     color:            #000000;

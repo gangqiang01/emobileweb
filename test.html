@@ -15,25 +15,17 @@
     <script src="assets/js/thirdpart/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="assets/css/devicesetting.css">
     <body > 
-            <button onclick="start()">start</button>
-            <input type="button" onclick="aaa()" value="clear"/>
-            <input type="checkbox" checked data-toggle="toggle" data-on="Hello<br>World" data-off="Goodbye<br>World">
-            <div class="col-md-4 col-sm-6 col-xs-6">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-green">
-                            <i class="fa fa-caret-left info-box-icon-white"></i>
-                            <p class="info-box-icon-title">Back Key</p>
-                        </span>
-                        <input class="btnFunction" value="backkey" type="checkbox" data-toggle="toggle" id="backkey" data-on="Enable" data-off="Disable">
-                        
-                    </div>
-                </div>
-            <ul>
-                <li>aa</li>
-                <li>bb</li>
-                <li>cc</li>
-            </ul>
-            <script>
+        <div style="width:250px;height:250px;background-color:red;margin-top:100px" >
+            <table></table>
+            <div style="width:100px;height:100px;background-color:blue;margin-top:50px;" id="getposition">
+
+            </div>
+        </div>
+          
+                <script>
+                document.getElementById("getposition").onclick=function(event){
+                    console.log(event);
+                }
                 $("ul>li").each(function(i,val){
                     console.log(i);
                     console.log(val);
