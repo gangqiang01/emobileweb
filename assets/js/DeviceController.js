@@ -160,7 +160,7 @@ $(function(){
                 $("#dialog_plugin").html(PluginId);
                 $("#dialog_sensorid").html(sensorId);
                 if(sensorpower == 'rw'){
-                    var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v || obj.sensorIds[0].bv
+                    var sensorvalue = obj.sensorIds[0].vl|| obj.sensorIds[0].v || obj.sensorIds[0].bv ||obj.sensorIds[0].sv
                     var sensorboolean = obj.sensorIds[0].bv;
                     if(sensorvalue == 'true' || sensorvalue == 'false'){
                         var sensorupdate = " <input  type='checkbox' data-toggle='toggle' id='sensorvalue' >";
@@ -181,7 +181,7 @@ $(function(){
                     }
                   
                 }else{
-                    var sensorvalue = obj.sensorIds[0].vl || obj.sensorIds[0].v || obj.sensorIds[0].bv;
+                    var sensorvalue = obj.sensorIds[0].vl || obj.sensorIds[0].v || obj.sensorIds[0].bv ||obj.sensorIds[0].sv;
                     $("#dialog_sensorvalue").html(sensorvalue);
                     $("#sensor_dialog_save").hide();
                 }

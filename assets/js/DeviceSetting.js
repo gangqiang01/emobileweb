@@ -182,7 +182,7 @@ $(function() {
         // $('#AppTables').DataTable().destroy();
         startDeviceMonitor();
         // $("#device-tab a:first").tab("show");
-        getSensorStatus();
+        // getSensorStatus();
 
     }
 
@@ -221,6 +221,7 @@ $(function() {
             intervalReportData.timeout = timeoutTime;
             apiput("rmm/v1/devicectrl/intermittent_report", intervalReportData).then(function(data){
                 if(data.result = true){
+                    getSensorStatus();
                     deviceMonitor();
                     deviceMonitorTimer=window.setInterval(function(){
                         deviceMonitor()
